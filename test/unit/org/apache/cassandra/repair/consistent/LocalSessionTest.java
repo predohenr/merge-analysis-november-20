@@ -149,7 +149,7 @@ public class LocalSessionTest extends AbstractRepairTest
         }
 
         @Override
-        protected void sendMessage(InetAddressAndPort destination, Message<? extends RepairMessage> message)
+protected void sendMessage(InetAddressAndPort destination, Message<? extends RepairMessage> message)
         {
             if (!sentMessages.containsKey(destination))
             {
@@ -1136,4 +1136,3 @@ public class LocalSessionTest extends AbstractRepairTest
         Assert.assertEquals(session, checkedSession.get());
     }
 }
-
