@@ -797,7 +797,7 @@ public class AutoRepairUtils
         for (Map.Entry<AbstractReplicationStrategy, List<String>> entry : replicationStrategies.entrySet())
         {
             AbstractReplicationStrategy replicationStrategy = entry.getKey();
-            EndpointsByRange endpointsByRange = replicationStrategy.getRangeAddresses(ClusterMetadata.current());
+            EndpointsByRange endpointsByRange = replicationStrategy.getRangeAddresses(ClusterMetadata.current().cachedOnlyTokenMap());
 
             // get ranges of the eligible address for the given replication strategy.
             RangesAtEndpoint rangesAtEndpoint = StorageService.instance.getReplicas(replicationStrategy, eligibleBroadcastAddress);

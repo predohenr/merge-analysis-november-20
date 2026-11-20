@@ -18,19 +18,14 @@
 
 package org.apache.cassandra.repair.autorepair;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
-
 import com.google.common.collect.ImmutableSet;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.config.DurationSpec;
 import org.apache.cassandra.cql3.CQLTester;
@@ -50,7 +45,6 @@ import org.apache.cassandra.tcm.membership.NodeAddresses;
 import org.apache.cassandra.tcm.membership.NodeVersion;
 import org.apache.cassandra.utils.CassandraVersion;
 import org.apache.cassandra.utils.FBUtilities;
-
 import static org.apache.cassandra.Util.setAutoRepairEnabled;
 import static org.apache.cassandra.config.CassandraRelevantProperties.SYSTEM_DISTRIBUTED_DEFAULT_RF;
 import static org.apache.cassandra.repair.autorepair.AutoRepairUtils.COL_DELETE_HOSTS;
@@ -64,6 +58,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import org.apache.cassandra.dht.Murmur3Partitioner;
+import org.apache.cassandra.locator.TokenMetadata;
 
 /**
  * Unit tests for {@link org.apache.cassandra.repair.autorepair.AutoRepairUtils}
@@ -561,28 +558,23 @@ public class AutoRepairUtilsTest extends CQLTester
     }
 
     /**
-     * Regression test for CASSANDRA-21426: exercises the getMostEligibleHostToRepair code path through
-     * hasReplicaWithOngoingRepair -> getRangeAddresses -> calculateNaturalReplicas when another node
-     * has an ongoing repair. In cassandra-5.0 this triggered an AssertionError in getTopology() when
-     * called on the live TokenMetadata singleton; in trunk (TCM) the code uses ClusterMetadata which
-     * is safe, but this test ensures the code path remains exercised.
+     * Reproduces CASSANDRA-21426: when parallel_repair_count > 1 and another node has an ongoing repair,
+     * hasReplicaWithOngoingRepair calls getRangeAddresses with the live TokenMetadata singleton, which
+     * triggers the assertion in getTopology() that prevents calling it on the live instance.
      */
     @Test
     public void testGetMostEligibleHostToRepairWithOngoingParallelRepair() throws UnknownHostException
     {
-        // Register a second endpoint via TCM
         InetAddressAndPort otherEndpoint = InetAddressAndPort.getByName("127.0.0.2");
-        ClusterMetadataTestHelper.addEndpoint(otherEndpoint,
-                                              new org.apache.cassandra.dht.Murmur3Partitioner.LongToken(1000));
-        UUID otherHostId = StorageService.instance.getHostIdForEndpoint(otherEndpoint);
-        assertNotNull(otherHostId);
-
-        // Create an NTS keyspace so hasReplicaWithOngoingRepair exercises getRangeAddresses
-        QueryProcessor.executeInternal(
-        "CREATE KEYSPACE IF NOT EXISTS ks_nts WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': '2'}");
+        UUID otherHostId = UUID.randomUUID();
+        TokenMetadata tokenMetadata = StorageService.instance.getTokenMetadata();
 
         try
         {
+            // Register a second endpoint in TokenMetadata so it has tokens and can be resolved
+            tokenMetadata.updateNormalToken(Murmur3Partitioner.instance.getRandomToken(), otherEndpoint);
+            tokenMetadata.updateHostId(otherHostId, otherEndpoint);
+
             long currentMillis = System.currentTimeMillis();
 
             // Build repair histories: other node has ongoing repair, local node is finished
@@ -591,6 +583,7 @@ public class AutoRepairUtilsTest extends CQLTester
             AutoRepairHistory myHistory = new AutoRepairHistory(hostId, null, currentMillis - 200, currentMillis - 100,
                                                                 null, 0, false);
 
+            // Construct CurrentRepairStatus directly to avoid CQL reads that fail with the extra endpoint
             List<AutoRepairHistory> allHistories = new ArrayList<>();
             allHistories.add(otherHistory);
             allHistories.add(myHistory);
@@ -600,16 +593,17 @@ public class AutoRepairUtilsTest extends CQLTester
             assertTrue(currentRepairStatus.hostIdsWithOnGoingRepair.contains(otherHostId));
             assertFalse(currentRepairStatus.hostIdsWithOnGoingRepair.contains(hostId));
 
-            // Exercises: getMostEligibleHostToRepair -> hasReplicaWithOngoingRepair
-            //   -> getRangeAddresses(ClusterMetadata.current()) -> calculateNaturalReplicas
+            // This exercises the code path:
+            // getMostEligibleHostToRepair -> hasReplicaWithOngoingRepair
+            //   -> getRangeAddresses(getTokenMetadata()) -> calculateNaturalReplicas -> getTopology()
+            // Without the fix, getTopology() asserts because it's called on the live TokenMetadata singleton.
             AutoRepairHistory result = AutoRepairUtils.getMostEligibleHostToRepair(repairType, currentRepairStatus, hostId);
             assertNotNull(result);
             assertEquals(hostId, result.hostId);
         }
         finally
         {
-            QueryProcessor.executeInternal("DROP KEYSPACE IF EXISTS ks_nts");
-            ClusterMetadataTestHelper.removeEndpoint(otherEndpoint, true);
+            tokenMetadata.removeEndpoint(otherEndpoint);
         }
     }
 }
