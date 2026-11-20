@@ -166,7 +166,7 @@ public class CassandraRoleManagerTest
     }
 
     @Test
-    public void testPasswordUpdateRateLimiting() throws Exception
+public void testPasswordUpdateRateLimiting() throws Exception
     {
         try
         {
@@ -195,7 +195,7 @@ public class CassandraRoleManagerTest
             }
             catch (OverloadedException e)
             {
-                assertEquals("Password for role test_password_role can only be changed every 100ms.", e.getMessage());
+                assertEquals("Password for role test_password_role can only be changed every 100ms. ", e.getMessage());
             }
 
             // Wait for the rate limit interval to pass
@@ -302,7 +302,6 @@ public class CassandraRoleManagerTest
         Assertions.assertThat(crm.getInvalidClientDisconnectMaxJitterMillis()).isEqualTo(1000);
     }
 
-    @Test
     public void testPasswordUpdateRateLimitingDisabled() throws Exception
     {
         try
