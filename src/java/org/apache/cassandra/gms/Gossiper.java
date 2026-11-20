@@ -69,7 +69,7 @@ import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.db.SystemKeyspace;
 import org.apache.cassandra.dht.IPartitioner;
 import org.apache.cassandra.dht.Token;
-import org.apache.cassandra.exceptions.RequestFailure;
+import org.apache.cassandra.exceptions.RequestFailureReason;
 import org.apache.cassandra.locator.InetAddressAndPort;
 import org.apache.cassandra.net.Message;
 import org.apache.cassandra.net.MessagingService;
@@ -1222,9 +1222,9 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
                 }
 
                 @Override
-                public void onFailure(InetAddressAndPort from, RequestFailure failure)
+                public void onFailure(InetAddressAndPort from, RequestFailureReason failureReason)
                 {
-                    logger.trace("ECHO_REQ to {} failed ({})", addr, failure);
+                    logger.trace("ECHO_REQ to {} failed ({})", addr, failureReason);
                     inflightEcho.remove(addr);
                 }
             };
