@@ -837,9 +837,9 @@ public class SelectStatement implements CQLStatement.SingleKeyspaceCqlStatement,
         else
         {
             decoratedKeys = new ArrayList<>(keys.size());
-            for (ByteBuffer key : keys)
-            {
-                QueryProcessor.validateKey(key);
+        for (ByteBuffer key : keys)
+        {
+            QueryProcessor.validateKey(key);
                 decoratedKeys.add(table.partitioner.decorateKey(key));
             }
         }
