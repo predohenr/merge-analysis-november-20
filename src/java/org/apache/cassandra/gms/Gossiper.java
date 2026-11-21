@@ -51,39 +51,39 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Uninterruptibles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.apache.cassandra.concurrent.FutureTask;
 import org.apache.cassandra.concurrent.ScheduledExecutorPlus;
-import org.apache.cassandra.concurrent.Stage;
 import org.apache.cassandra.config.CassandraRelevantProperties;
+import org.apache.cassandra.locator.InetAddressAndPort;
+import org.apache.cassandra.net.NoPayload;
+import org.apache.cassandra.net.Verb;
+import org.apache.cassandra.utils.CassandraVersion;
+import org.apache.cassandra.utils.ExecutorUtils;
+import org.apache.cassandra.utils.ExpiringMemoizingSupplier;
+import org.apache.cassandra.utils.MBeanWrapper;
+import org.apache.cassandra.utils.NoSpamLogger;
+import org.apache.cassandra.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.cassandra.concurrent.Stage;
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.db.SystemKeyspace;
 import org.apache.cassandra.dht.Token;
 import org.apache.cassandra.exceptions.RequestFailureReason;
-import org.apache.cassandra.locator.InetAddressAndPort;
+import org.apache.cassandra.net.RequestCallback;
 import org.apache.cassandra.net.Message;
 import org.apache.cassandra.net.MessagingService;
-import org.apache.cassandra.net.NoPayload;
-import org.apache.cassandra.net.RequestCallback;
-import org.apache.cassandra.net.Verb;
 import org.apache.cassandra.service.StorageService;
-import org.apache.cassandra.utils.CassandraVersion;
-import org.apache.cassandra.utils.ExecutorUtils;
-import org.apache.cassandra.utils.ExpiringMemoizingSupplier;
 import org.apache.cassandra.utils.FBUtilities;
 import org.apache.cassandra.utils.JVMStabilityInspector;
-import org.apache.cassandra.utils.MBeanWrapper;
-import org.apache.cassandra.utils.NoSpamLogger;
-import org.apache.cassandra.utils.Pair;
 import org.apache.cassandra.utils.RecomputingSupplier;
-import org.apache.cassandra.utils.concurrent.NotScheduledFuture;
 import org.apache.cassandra.utils.concurrent.UncheckedInterruptedException;
+import org.apache.cassandra.utils.concurrent.NotScheduledFuture;
 
 import static org.apache.cassandra.concurrent.ExecutorFactory.Global.executorFactory;
 import static org.apache.cassandra.config.CassandraRelevantProperties.DISABLE_GOSSIP_ENDPOINT_REMOVAL;
@@ -98,9 +98,9 @@ import static org.apache.cassandra.gms.VersionedValue.BOOTSTRAPPING_STATUS;
 import static org.apache.cassandra.net.NoPayload.noPayload;
 import static org.apache.cassandra.net.Verb.ECHO_REQ;
 import static org.apache.cassandra.net.Verb.GOSSIP_DIGEST_SYN;
+import static org.apache.cassandra.utils.FBUtilities.getBroadcastAddressAndPort;
 import static org.apache.cassandra.utils.Clock.Global.currentTimeMillis;
 import static org.apache.cassandra.utils.Clock.Global.nanoTime;
-import static org.apache.cassandra.utils.FBUtilities.getBroadcastAddressAndPort;
 
 /**
  * This module is responsible for Gossiping information for the local endpoint. This abstraction
@@ -480,7 +480,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
      * @param subscriber module which implements the IEndpointStateChangeSubscriber
      */
     @Override
-    public void register(IEndpointStateChangeSubscriber subscriber)
+public void register(IEndpointStateChangeSubscriber subscriber)
     {
         subscribers.add(subscriber);
     }
@@ -491,7 +491,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
      * @param subscriber module which implements the IEndpointStateChangeSubscriber
      */
     @Override
-    public void unregister(IEndpointStateChangeSubscriber subscriber)
+public void unregister(IEndpointStateChangeSubscriber subscriber)
     {
         subscribers.remove(subscriber);
     }
@@ -633,7 +633,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
      * @deprecated see CASSANDRA-18913
      */
     @Deprecated(since = "5.0") // can remove once 4.x is not supported
-    protected void markAsShutdown(InetAddressAndPort endpoint)
+protected void markAsShutdown(InetAddressAndPort endpoint)
     {
         checkProperThreadForStateMutation();
         EndpointState epState = endpointStateMap.get(endpoint);
@@ -1171,7 +1171,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
                             // to make sure that the previous read data was correct
                             logger.info("Race condition marking {} as a FatClient; ignoring", endpoint);
                             return;
-                        }                        
+                        }
                         removeEndpoint(endpoint); // will put it in justRemovedEndpoints to respect quarantine delay
                         evictFromMembership(endpoint); // can get rid of the state immediately
                     });
@@ -1231,7 +1231,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
     }
 
     @Override
-    public EndpointState getEndpointStateForEndpoint(InetAddressAndPort ep)
+public EndpointState getEndpointStateForEndpoint(InetAddressAndPort ep)
     {
         return endpointStateMap.get(ep);
     }
@@ -1382,7 +1382,7 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
     }
 
     @Override
-    public void notifyFailureDetector(Map<InetAddressAndPort, EndpointState> remoteEpStateMap)
+public void notifyFailureDetector(Map<InetAddressAndPort, EndpointState> remoteEpStateMap)
     {
         for (Entry<InetAddressAndPort, EndpointState> entry : remoteEpStateMap.entrySet())
         {
@@ -1448,12 +1448,12 @@ public class Gossiper implements IFailureDetectionEventListener, GossiperMBean, 
             {
                 @Override
                 public void onResponse(Message msg)
-                {
-                    runInGossipStageBlocking(() -> {
-                        EndpointState epState = inflightEcho.remove(addr);
-                        if (epState != null)
-                            realMarkAlive(addr, epState);
-                    });
+            {
+                runInGossipStageBlocking(() -> {
+                    EndpointState epState = inflightEcho.remove(addr);
+                    if (epState != null)
+                        realMarkAlive(addr, epState);
+                });
                 }
 
                 @Override
