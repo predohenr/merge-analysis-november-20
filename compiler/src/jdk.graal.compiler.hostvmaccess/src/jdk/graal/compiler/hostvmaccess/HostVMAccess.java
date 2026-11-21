@@ -133,7 +133,7 @@ final class HostVMAccess implements VMAccess {
                 if (argument.isNull()) {
                     unboxedArguments[i] = null;
                 } else {
-                    unboxedArguments[i] = snippetReflection.asObject(parameterTypes[i], argument);
+                unboxedArguments[i] = snippetReflection.asObject(parameterTypes[i], argument);
                     if (unboxedArguments[i] == null) {
                         throw new IllegalArgumentException(
                                         "Illegal argument type: arguments[" + i + "] of type " + providers.getMetaAccess().lookupJavaType(arguments[i]).toClassName() +
@@ -158,7 +158,7 @@ final class HostVMAccess implements VMAccess {
                     if (receiver.isNull()) {
                         unboxedReceiver = null;
                     } else {
-                        unboxedReceiver = snippetReflection.asObject(reflectionMethod.getDeclaringClass(), receiver);
+                    unboxedReceiver = snippetReflection.asObject(reflectionMethod.getDeclaringClass(), receiver);
                         if (unboxedReceiver == null) {
                             throw new IllegalArgumentException(
                                             "Illegal argument type: receiver of type " + providers.getMetaAccess().lookupJavaType(receiver).toClassName() +
