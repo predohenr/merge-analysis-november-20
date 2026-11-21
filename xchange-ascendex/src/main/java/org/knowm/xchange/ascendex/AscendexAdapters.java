@@ -133,7 +133,7 @@ public class AscendexAdapters {
   }
 
   public static OpenOrders adaptOpenOrders(
-          List<AscendexOpenOrdersResponse> ascendexOpenOrdersRespons) {
+      List<AscendexOpenOrdersResponse> ascendexOpenOrdersRespons) {
 
     List<LimitOrder> openOrders = ascendexOpenOrdersRespons.stream()
             .flatMap(r -> AscendexAdapters.adaptOpenOrderById(r).stream())
