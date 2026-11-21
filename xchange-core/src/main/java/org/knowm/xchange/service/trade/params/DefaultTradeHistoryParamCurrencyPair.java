@@ -10,6 +10,10 @@ import org.knowm.xchange.currency.CurrencyPair;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DefaultTradeHistoryParamCurrencyPair implements TradeHistoryParamCurrencyPair {
 
   private CurrencyPair currencyPair;
