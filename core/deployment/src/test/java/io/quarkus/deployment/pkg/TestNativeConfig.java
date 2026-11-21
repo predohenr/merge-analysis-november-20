@@ -46,16 +46,16 @@ public class TestNativeConfig implements NativeConfig {
     @Override
     public Optional<List<String>> additionalBuildArgs() {
         if (additionalBuildArgs == null) {
-            return Optional.empty();
-        }
+        return Optional.empty();
+    }
         return Optional.of(additionalBuildArgs);
     }
 
     @Override
     public Optional<List<String>> additionalBuildArgsAppend() {
         if (additionalBuildArgsAppend == null) {
-            return Optional.empty();
-        }
+        return Optional.empty();
+    }
         return Optional.of(additionalBuildArgsAppend);
     }
 
