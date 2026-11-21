@@ -18,7 +18,8 @@ package org.springframework.security.oauth2.server.authorization.authentication;
 
 import java.io.Serial;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
@@ -52,6 +53,14 @@ public class OAuth2AuthorizationCodeRequestAuthenticationException extends OAuth
 		super(error);
 		this.authorizationCodeRequestAuthentication = authorizationCodeRequestAuthentication;
 	}
+	public OAuth2AuthorizationCodeRequestAuthenticationException(OAuth2Error error, Throwable cause,
+			@Nullable OAuth2AuthorizationCodeRequestAuthenticationToken authorizationCodeRequestAuthentication) {
+		super(error, cause);
+		this.authorizationCodeRequestAuthentication = authorizationCodeRequestAuthentication;
+	}
+	public @Nullable OAuth2AuthorizationCodeRequestAuthenticationToken getAuthorizationCodeRequestAuthentication() {
+		return this.authorizationCodeRequestAuthentication;
+	}
 
 	/**
 	 * Constructs an {@code OAuth2AuthorizationCodeRequestAuthenticationException} using
@@ -61,19 +70,11 @@ public class OAuth2AuthorizationCodeRequestAuthenticationException extends OAuth
 	 * @param authorizationCodeRequestAuthentication the {@link Authentication} instance
 	 * of the OAuth 2.0 Authorization Request (or Consent)
 	 */
-	public OAuth2AuthorizationCodeRequestAuthenticationException(OAuth2Error error, Throwable cause,
-			@Nullable OAuth2AuthorizationCodeRequestAuthenticationToken authorizationCodeRequestAuthentication) {
-		super(error, cause);
-		this.authorizationCodeRequestAuthentication = authorizationCodeRequestAuthentication;
-	}
 
 	/**
 	 * Returns the {@link Authentication} instance of the OAuth 2.0 Authorization Request
 	 * (or Consent), or {@code null} if not available.
 	 * @return the {@link OAuth2AuthorizationCodeRequestAuthenticationToken}
 	 */
-	public @Nullable OAuth2AuthorizationCodeRequestAuthenticationToken getAuthorizationCodeRequestAuthentication() {
-		return this.authorizationCodeRequestAuthentication;
-	}
 
 }
