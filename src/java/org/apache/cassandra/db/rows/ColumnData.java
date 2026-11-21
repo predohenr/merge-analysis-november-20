@@ -24,11 +24,11 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Function;
 
 import org.apache.cassandra.cache.IMeasurableMemory;
+import org.apache.cassandra.db.Digest;
+import org.apache.cassandra.schema.ColumnMetadata;
 import org.apache.cassandra.db.DeletionPurger;
 import org.apache.cassandra.db.DeletionTime;
-import org.apache.cassandra.db.Digest;
 import org.apache.cassandra.db.partitions.PartitionUpdate;
-import org.apache.cassandra.schema.ColumnMetadata;
 import org.apache.cassandra.serializers.MarshalException;
 import org.apache.cassandra.utils.btree.BTree;
 import org.apache.cassandra.utils.btree.UpdateFunction;
