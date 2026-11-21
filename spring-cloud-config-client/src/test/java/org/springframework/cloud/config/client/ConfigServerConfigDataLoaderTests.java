@@ -217,7 +217,7 @@ public class ConfigServerConfigDataLoaderTests {
 		assertThatExceptionOfType(ConfigClientFailFastException.class)
 			.isThrownBy(() -> this.loader.load(context, resource))
 			.withMessageContaining(
-					"fail fast property is set, failing: None of labels [WeSetUpToReturn_NOT_FOUND_ForThisLabel] found");
+				"fail fast property is set, failing: None of labels [WeSetUpToReturn_NOT_FOUND_ForThisLabel] found");
 	}
 
 	@Test
@@ -373,8 +373,8 @@ public class ConfigServerConfigDataLoaderTests {
 		// is never tried, due to the strategy.
 		assertNextUriIsNotTried(true, ConfigClientProperties.MultipleUriStrategy.CONNECTION_TIMEOUT_ONLY,
 				HttpStatus.TEMPORARY_REDIRECT, null // IllegalStateException has no cause,
-		// because getRemoteEnvironment did
-		// not throw an exception
+													// because getRemoteEnvironment did
+													// not throw an exception
 		);
 	}
 
