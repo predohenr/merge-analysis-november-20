@@ -33,6 +33,13 @@ import org.springframework.boot.ssl.SslBundle;
  *
  * @author Andy Wilkinson
  */
+
+/**
+ * {@link DockerComposeConnectionDetailsFactory} to create
+ * {@link RabbitStreamConnectionDetails} for a {@code rabbitmq} service.
+ *
+ * @author Andy Wilkinson
+ */
 class RabbitDockerComposeConnectionDetailsFactory
 		extends DockerComposeConnectionDetailsFactory<RabbitConnectionDetails> {
 
@@ -46,8 +53,8 @@ class RabbitDockerComposeConnectionDetailsFactory
 	protected @Nullable RabbitConnectionDetails getDockerComposeConnectionDetails(
 			DockerComposeConnectionSource source) {
 		try {
-			return new RabbitDockerComposeConnectionDetails(source.getRunningService());
-		}
+		return new RabbitDockerComposeConnectionDetails(source.getRunningService());
+	}
 		catch (IllegalStateException ex) {
 			return null;
 		}
