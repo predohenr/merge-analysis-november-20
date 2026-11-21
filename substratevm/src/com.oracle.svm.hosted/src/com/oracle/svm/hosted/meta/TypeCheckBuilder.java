@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import com.oracle.svm.hosted.DeadlockWatchdog;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
@@ -55,7 +56,6 @@ import com.oracle.svm.core.hub.DynamicHubSupport;
 import com.oracle.svm.core.hub.DynamicHubUtils;
 import com.oracle.svm.core.imagelayer.ImageLayerBuildingSupport;
 import com.oracle.svm.core.util.VMError;
-import com.oracle.svm.hosted.DeadlockWatchdog;
 import com.oracle.svm.hosted.OpenTypeWorldFeature;
 
 import jdk.graal.compiler.core.common.calc.UnsignedMath;
@@ -1169,7 +1169,7 @@ public final class TypeCheckBuilder {
             enum AddGroupingResult {
                 CAPACITY_OVERFLOW,
                 INVALID_C1P,
-                SUCCESS,
+                SUCCESS
             }
 
             /**
@@ -1619,6 +1619,11 @@ public final class TypeCheckBuilder {
                     }
                 }
             }
+
+            /**
+             * When trying to find a valid c1POrdering, a "color" is assigned to each set based on
+             * the new set of grouping constraints being added.
+             */
 
             /**
              * When trying to find a valid c1POrdering, a "color" is assigned to each set based on
