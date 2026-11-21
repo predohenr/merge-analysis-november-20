@@ -313,7 +313,7 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                         calculatedFields.remove(cfId);
                         List<CalculatedFieldLink> links = calculatedFieldLinks.remove(cfId);
                         if (links != null) {
-                            links.forEach(link -> removedLinkEntityIds.add(link.entityId()));
+                            links.forEach(link -> removedLinkEntityIds.add(link.getEntityId()));
                         }
                         calculatedFieldsCtx.remove(cfId);
                         removedCfIds.add(cfId);
@@ -333,7 +333,7 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                 removedLinkEntityIds.forEach(entityId -> {
                     List<CalculatedFieldLink> entityLinks = entityIdCalculatedFieldLinks.get(entityId);
                     if (entityLinks != null) {
-                        entityLinks.removeIf(link -> removedCfIds.contains(link.calculatedFieldId()));
+                        entityLinks.removeIf(link -> removedCfIds.contains(link.getCalculatedFieldId()));
                         if (entityLinks.isEmpty()) {
                             entityIdCalculatedFieldLinks.remove(entityId);
                         }
@@ -356,7 +356,7 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                         cfIds.add(cf.getId());
                         log.debug("[{}] evict calculated field from cache on entity deletion: {}", cf.getId(), cf);
                     });
-                    entityIdCalculatedFieldLinks.values().forEach(list -> list.removeIf(link -> cfIds.contains(link.calculatedFieldId())));
+                    entityIdCalculatedFieldLinks.values().forEach(list -> list.removeIf(link -> cfIds.contains(link.getCalculatedFieldId())));
                     cfIds.forEach(calculatedFieldFetchLocks::remove);
                 }
                 entityIdCalculatedFieldLinks.remove(entityId);
