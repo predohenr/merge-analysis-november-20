@@ -187,13 +187,13 @@ public class HttpClientTest extends AbstractHttpClientServerTest
 
         for (int i = 0; i < 2; ++i)
         {
-            ContentResponse response = client.GET(scenario.getScheme() + "://localhost:" + connector.getLocalPort());
+        ContentResponse response = client.GET(scenario.getScheme() + "://localhost:" + connector.getLocalPort());
 
-            assertNotNull(response);
-            assertEquals(200, response.getStatus());
-            byte[] content = response.getContent();
-            assertArrayEquals(data, content);
-        }
+        assertNotNull(response);
+        assertEquals(200, response.getStatus());
+        byte[] content = response.getContent();
+        assertArrayEquals(data, content);
+    }
     }
 
     @ParameterizedTest
@@ -1948,6 +1948,18 @@ public class HttpClientTest extends AbstractHttpClientServerTest
     public void testBindAddress(Scenario scenario) throws Exception
     {
         String bindAddress = "127.0.0.2";
+
+        // Pre-check if the address is bindable (on macOS probably not)
+        try (ServerSocket testSocket = new ServerSocket())
+        {
+            testSocket.bind(new InetSocketAddress(bindAddress, 0));
+        }
+        catch (IOException e)
+        {
+            Assumptions.assumeTrue(false, 
+                "Cannot bind to " + bindAddress + " address on this system");
+        }
+
         start(scenario, new EmptyServerHandler()
         {
             @Override
