@@ -43,6 +43,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Brian Clozel
  * @author Andy Wilkinson
  */
+
+/**
+ * Tests for {@link MustacheAutoConfiguration}.
+ *
+ * @author Brian Clozel
+ * @author Andy Wilkinson
+ */
 class MustacheAutoConfigurationTests {
 
 	@Test

@@ -37,6 +37,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link MustacheView}.
+ *
+ * @author Brian Clozel
+ */
 class MustacheViewTests {
 
 	private final StaticApplicationContext context = new StaticApplicationContext();

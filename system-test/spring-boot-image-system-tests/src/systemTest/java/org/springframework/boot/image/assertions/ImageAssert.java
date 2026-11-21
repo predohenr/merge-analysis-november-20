@@ -76,7 +76,7 @@ public class ImageAssert extends AbstractAssert<ImageAssert, ImageReference> {
 		}
 
 		@CheckReturnValue
-		public ListAssert<String> entries() {
+public ListAssert<String> entries() {
 			List<String> entryNames = new ArrayList<>();
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
