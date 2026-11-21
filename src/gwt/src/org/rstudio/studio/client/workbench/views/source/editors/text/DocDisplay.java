@@ -110,7 +110,7 @@ public interface DocDisplay extends HasValueChangeHandlers<Void>,
    public enum InsertionBehavior
    {
       EditorBehaviorsEnabled,
-      EditorBehaviorsDisabled,
+      EditorBehaviorsDisabled
    }
    
    public Element getElement();
@@ -313,9 +313,9 @@ public interface DocDisplay extends HasValueChangeHandlers<Void>,
                                boolean regexpModex);
 
    int getScrollLeft();
-   int getScrollTop();
 
    void scrollToX(int x);
+   int getScrollTop();
    void scrollToY(int y, int animateMs);
    void scrollToLine(int row, boolean center);
 
