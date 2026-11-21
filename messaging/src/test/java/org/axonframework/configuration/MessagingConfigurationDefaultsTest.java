@@ -76,6 +76,12 @@ import static org.mockito.Mockito.*;
  *
  * @author Steven van Beelen
  */
+
+/**
+ * Test class validating the {@link MessagingConfigurationDefaults}.
+ *
+ * @author Steven van Beelen
+ */
 class MessagingConfigurationDefaultsTest {
 
     @Test
