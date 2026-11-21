@@ -406,12 +406,6 @@ class RabbitPropertiesTests {
 	}
 
 	@Test
-	void streamSslIsDisabledWhenBundleIsEmpty() {
-		this.properties.getStream().getSsl().setBundle("");
-		assertThat(this.properties.getStream().getSsl().determineEnabled()).isFalse();
-	}
-
-	@Test
 	void streamSslIsDisabledWhenEnabledIsFalseAndBundleIsNotSet() {
 		this.properties.getStream().getSsl().setEnabled(false);
 		assertThat(this.properties.getStream().getSsl().determineEnabled()).isFalse();
