@@ -459,7 +459,7 @@ public class Configuration {
    * @deprecated You can safely remove the call to this method as this option had no effect.
    */
   @Deprecated
-  public boolean isMultipleResultSetsEnabled() {
+public boolean isMultipleResultSetsEnabled() {
     return true;
   }
 
@@ -467,7 +467,7 @@ public class Configuration {
    * @deprecated You can safely remove the call to this method as this option had no effect.
    */
   @Deprecated
-  public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
+public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
     // nop
   }
 
