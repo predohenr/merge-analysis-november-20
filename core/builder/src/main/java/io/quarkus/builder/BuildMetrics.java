@@ -52,7 +52,7 @@ public class BuildMetrics {
                 || Boolean.getBoolean("quarkus.debug.dump-build-metrics");
         this.buildTargetName = buildTargetName;
         if (enabled) {
-            this.idGenerator = new AtomicInteger();
+        this.idGenerator = new AtomicInteger();
             this.records = new ConcurrentHashMap<>();
             if (Boolean.getBoolean(BUILDER_METRICS_EXTENDED_CAPTURE)) {
                 this.buildItemsExtended = new ConcurrentHashMap<>();
@@ -83,15 +83,15 @@ public class BuildMetrics {
 
     public void buildStepFinished(StepInfo stepInfo, String thread, LocalTime started, long duration) {
         if (enabled()) {
-            records.put(stepInfo.getBuildStep().getId(),
-                    new BuildStepRecord(idGenerator.incrementAndGet(), stepInfo, thread, started, duration));
-        }
+        records.put(stepInfo.getBuildStep().getId(),
+                new BuildStepRecord(idGenerator.incrementAndGet(), stepInfo, thread, started, duration));
+    }
     }
 
     public void buildItemProduced(StepInfo stepInfo, BuildItem buildItem) {
         if (enabled()) {
             if (buildItems != null) {
-                buildItems.compute(buildItem.getClass().getName(), this::itemProduced);
+        buildItems.compute(buildItem.getClass().getName(), this::itemProduced);
             } else {
                 buildItemsExtended.compute(stepInfo.getBuildStep().getId(), (key, list) -> {
                     String buildItemClass = buildItem.getClass().getName();
@@ -111,40 +111,40 @@ public class BuildMetrics {
 
     public void dumpTo(Path file) throws IOException {
         if (enabled()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
-            List<BuildStepRecord> sortedSteps = new ArrayList<>(records.values());
-            sortedSteps.sort(new Comparator<BuildStepRecord>() {
-                @Override
-                public int compare(BuildStepRecord o1, BuildStepRecord o2) {
-                    return Long.compare(o2.duration, o1.duration);
+        List<BuildStepRecord> sortedSteps = new ArrayList<>(records.values());
+        sortedSteps.sort(new Comparator<BuildStepRecord>() {
+            @Override
+            public int compare(BuildStepRecord o1, BuildStepRecord o2) {
+                return Long.compare(o2.duration, o1.duration);
+            }
+        });
+
+        JsonObjectBuilder json = Json.object();
+        json.put("buildTarget", buildTargetName);
+        json.put("started", started.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        json.put("duration", duration);
+
+        JsonArrayBuilder steps = Json.array();
+        json.put("records", steps);
+        for (BuildStepRecord rec : sortedSteps) {
+            JsonObjectBuilder recObject = Json.object();
+            recObject.put("id", rec.id);
+            recObject.put("stepId", rec.stepInfo.getBuildStep().getId());
+            recObject.put("thread", rec.thread);
+            recObject.put("started", rec.started.format(formatter));
+            recObject.put("duration", rec.duration);
+            JsonArrayBuilder dependentsArray = Json.array();
+            for (StepInfo dependent : rec.stepInfo.getDependents()) {
+                BuildStepRecord dependentRecord = records.get(dependent.getBuildStep().getId());
+                if (dependentRecord != null) {
+                    dependentsArray.add(dependentRecord.id);
+                } else {
+                    LOG.warnf("Dependent record not found for stepId: %s", dependent.getBuildStep().getId());
                 }
-            });
-
-            JsonObjectBuilder json = Json.object();
-            json.put("buildTarget", buildTargetName);
-            json.put("started", started.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            json.put("duration", duration);
-
-            JsonArrayBuilder steps = Json.array();
-            json.put("records", steps);
-            for (BuildStepRecord rec : sortedSteps) {
-                JsonObjectBuilder recObject = Json.object();
-                recObject.put("id", rec.id);
-                recObject.put("stepId", rec.stepInfo.getBuildStep().getId());
-                recObject.put("thread", rec.thread);
-                recObject.put("started", rec.started.format(formatter));
-                recObject.put("duration", rec.duration);
-                JsonArrayBuilder dependentsArray = Json.array();
-                for (StepInfo dependent : rec.stepInfo.getDependents()) {
-                    BuildStepRecord dependentRecord = records.get(dependent.getBuildStep().getId());
-                    if (dependentRecord != null) {
-                        dependentsArray.add(dependentRecord.id);
-                    } else {
-                        LOG.warnf("Dependent record not found for stepId: %s", dependent.getBuildStep().getId());
-                    }
-                }
-                recObject.put("dependents", dependentsArray);
+            }
+            recObject.put("dependents", dependentsArray);
                 if (buildItemsExtended != null) {
                     JsonArrayBuilder producedItems = Json.array();
                     List<String> items = buildItemsExtended.get(rec.stepInfo.getBuildStep().getId());
@@ -163,8 +163,8 @@ public class BuildMetrics {
                         recObject.put("producedItems", producedItems);
                     }
                 }
-                steps.add(recObject);
-            }
+            steps.add(recObject);
+        }
 
             List<Entry<String, Long>> sortedItems;
             if (buildItemsExtended != null) {
@@ -176,25 +176,25 @@ public class BuildMetrics {
                 sortedItems = new ArrayList<>(counts.entrySet());
             } else {
                 sortedItems = new ArrayList<>(buildItems.size());
-                buildItems.entrySet().forEach(sortedItems::add);
+        buildItems.entrySet().forEach(sortedItems::add);
             }
             sortedItems.sort(this::compareBuildItems);
-            JsonArrayBuilder items = Json.array();
-            json.put("items", items);
+        JsonArrayBuilder items = Json.array();
+        json.put("items", items);
             long itemsCount = 0;
             for (Entry<String, Long> e : sortedItems) {
-                JsonObjectBuilder itemObject = Json.object();
-                itemObject.put("class", e.getKey());
-                itemObject.put("count", e.getValue());
-                items.add(itemObject);
-                itemsCount += e.getValue();
-            }
-            json.put("itemsCount", itemsCount);
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(), StandardCharsets.UTF_8))) {
-                json.appendTo(writer);
-            }
+            JsonObjectBuilder itemObject = Json.object();
+            itemObject.put("class", e.getKey());
+            itemObject.put("count", e.getValue());
+            items.add(itemObject);
+            itemsCount += e.getValue();
         }
+        json.put("itemsCount", itemsCount);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(), StandardCharsets.UTF_8))) {
+            json.appendTo(writer);
+        }
+    }
     }
 
     private boolean enabled() {

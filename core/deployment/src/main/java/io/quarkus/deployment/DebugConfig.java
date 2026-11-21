@@ -50,6 +50,6 @@ public interface DebugConfig {
      * @deprecated Use {@link io.quarkus.runtime.BuilderConfig#Metrics()} instead.
      */
     @Deprecated(forRemoval = true, since = "3.31")
-    @WithDefault("false")
+@WithDefault("false")
     boolean dumpBuildMetrics();
 }
