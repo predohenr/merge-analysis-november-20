@@ -1010,6 +1010,13 @@ class TimedAspectTest {
 
         @NonNull
         @Override
+        protected Timer newTimer(@NonNull Meter.Id id, @NonNull DistributionStatisticConfig distributionStatisticConfig,
+                @NonNull PauseDetector pauseDetector) {
+            throw new RuntimeException("FailingMeterRegistry");
+        }
+
+        @NonNull
+        @Override
         protected LongTaskTimer newLongTaskTimer(@Nonnull Meter.Id id,
                 @Nonnull DistributionStatisticConfig distributionStatisticConfig) {
             throw new RuntimeException("FailingMeterRegistry");

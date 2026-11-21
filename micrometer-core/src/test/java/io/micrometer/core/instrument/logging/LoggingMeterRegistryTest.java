@@ -40,6 +40,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Francois Staudt
  * @author Jonatan Ivanov
  */
+
+/**
+ * Tests for {@link LoggingMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ * @author Matthieu Borgraeve
+ * @author Francois Staudt
+ * @author Jonatan Ivanov
+ */
 class LoggingMeterRegistryTest {
 
     private final MockClock clock = new MockClock();
