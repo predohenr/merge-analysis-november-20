@@ -663,13 +663,13 @@ public class QueryProcessor implements QueryHandler
     }
 
     @VisibleForTesting
-    public static UntypedResultSet resultify(String query, RowIterator partition)
+public static UntypedResultSet resultify(String query, RowIterator partition)
     {
         return resultify(query, PartitionIterators.singletonIterator(partition));
     }
 
     @VisibleForTesting
-    public static UntypedResultSet resultify(String query, PartitionIterator partitions)
+public static UntypedResultSet resultify(String query, PartitionIterator partitions)
     {
         try (PartitionIterator iter = partitions)
         {
