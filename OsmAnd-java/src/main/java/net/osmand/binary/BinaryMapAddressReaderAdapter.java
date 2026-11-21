@@ -44,9 +44,7 @@ public class BinaryMapAddressReaderAdapter {
 		// the correct type is -1, this is order in sections for postcode
 		POSTCODES_TYPE(2, true),
 		VILLAGES_TYPE(3, true),
-		STREET_TYPE(4, false),
-//		BOUNDARY_TYPE(5, true), // crash ?
-		;
+		STREET_TYPE(4, false);
 
 		public final int index;
 		public final boolean cityGroupType;
