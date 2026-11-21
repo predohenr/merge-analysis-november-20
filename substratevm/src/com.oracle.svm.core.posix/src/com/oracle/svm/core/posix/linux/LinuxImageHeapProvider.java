@@ -64,7 +64,7 @@ import org.graalvm.word.UnsignedWord;
 import org.graalvm.word.impl.Word;
 
 import com.oracle.svm.core.SubstrateOptions;
-import com.oracle.svm.core.SubstrateTarget;
+import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
 import com.oracle.svm.core.code.DynamicMethodAddressResolutionHeapSupport;
 import com.oracle.svm.core.config.ObjectLayout;
 import com.oracle.svm.core.headers.LibC;
@@ -83,7 +83,6 @@ import com.oracle.svm.core.util.PointerUtils;
 import com.oracle.svm.core.util.UnsignedUtils;
 import com.oracle.svm.guest.staging.c.CGlobalData;
 import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
-import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
 import com.oracle.svm.hosted.imagelayer.ImageLayerSectionFeature;
 import com.oracle.svm.hosted.imagelayer.LayeredDispatchTableFeature;
 import com.oracle.svm.shared.Uninterruptible;
@@ -92,6 +91,7 @@ import com.oracle.svm.shared.singletons.traits.BuiltinTraits.SingleLayer;
 import com.oracle.svm.shared.singletons.traits.SingletonLayeredInstallationKind.InitialLayerOnly;
 import com.oracle.svm.shared.singletons.traits.SingletonTraits;
 import com.oracle.svm.shared.util.NumUtil;
+import com.oracle.svm.core.SubstrateTarget;
 import com.oracle.svm.shared.util.VMError;
 
 import jdk.graal.compiler.nodes.NamedLocationIdentity;

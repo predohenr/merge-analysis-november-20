@@ -41,7 +41,6 @@ import org.graalvm.word.impl.Word;
 
 import com.oracle.svm.core.NeverInline;
 import com.oracle.svm.core.SubstrateOptions;
-import com.oracle.svm.core.SubstrateTarget;
 import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
 import com.oracle.svm.guest.staging.c.function.CFunctionOptions;
 import com.oracle.svm.core.feature.InternalFeature;
@@ -63,6 +62,7 @@ import com.oracle.svm.core.threadlocal.FastThreadLocalWord;
 import com.oracle.svm.core.threadlocal.VMThreadLocalSupport;
 import com.oracle.svm.core.util.UnsignedUtils;
 import com.oracle.svm.shared.Uninterruptible;
+import com.oracle.svm.core.SubstrateTarget;
 import com.oracle.svm.shared.feature.AutomaticallyRegisteredFeature;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.BuildtimeAccessOnly;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.NoLayeredCallbacks;
