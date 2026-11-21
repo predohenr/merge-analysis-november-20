@@ -645,12 +645,12 @@ class KafkaMetricsTest {
         return new KafkaMetric(this, metricName, new Value(), new MetricConfig(), Time.SYSTEM);
     }
 
-    private KafkaMetric createKafkaMetric(MetricName metricName, int value) {
-        return new KafkaMetric(this, metricName, new KafkaGauge(value), new MetricConfig(), Time.SYSTEM);
-    }
-
     private KafkaMetric createKafkaMetric(MetricName metricName, org.apache.kafka.common.metrics.Gauge<?> gauge) {
         return new KafkaMetric(this, metricName, gauge, new MetricConfig(), Time.SYSTEM);
+    }
+
+    private KafkaMetric createKafkaMetric(MetricName metricName, int value) {
+        return new KafkaMetric(this, metricName, new KafkaGauge(value), new MetricConfig(), Time.SYSTEM);
     }
 
     private static boolean isDefaultMetricsSchedulerThreadAlive() {
