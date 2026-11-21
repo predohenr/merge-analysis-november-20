@@ -2169,7 +2169,7 @@ public final class TypeOps {
      * are always context dependent.
      */
     @Deprecated
-    public static boolean isContextDependent(JMethodSig sig) {
+public static boolean isContextDependent(JMethodSig sig) {
         return isContextDependent(sig.getSymbol());
     }
 
