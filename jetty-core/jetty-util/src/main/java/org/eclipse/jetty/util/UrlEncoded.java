@@ -565,7 +565,7 @@ public class UrlEncoded
      * @deprecated use {@link #decodeUtf8To(InputStream, Fields, int, int)} instead.
      */
     @Deprecated(since = "12.0.17", forRemoval = true)
-    public static void decodeUtf8To(InputStream in, MultiMap<String> map, int maxLength, int maxKeys)
+public static void decodeUtf8To(InputStream in, MultiMap<String> map, int maxLength, int maxKeys)
         throws IOException
     {
         decodeUtf8To(in, map::add, maxLength, maxKeys);
