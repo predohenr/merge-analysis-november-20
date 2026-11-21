@@ -536,6 +536,10 @@ public interface NativeConfig {
     /**
      * Supported Builder Image providers/distributions
      */
+
+    /**
+     * Supported Builder Image providers/distributions
+     */
     enum BuilderImageProvider {
         GRAALVM,
         MANDREL;
