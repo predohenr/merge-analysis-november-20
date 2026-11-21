@@ -242,7 +242,7 @@ public class Manager {
   // the capacity is equal to Integer.MAX_VALUE default
   private BlockingQueue<TransactionCapsule> rePushTransactions;
   @Getter
-  private BlockingQueue<TriggerCapsule> triggerCapsuleQueue;
+private BlockingQueue<TriggerCapsule> triggerCapsuleQueue;
   // log filter
   private boolean isRunFilterProcessThread = true;
   private BlockingQueue<FilterTriggerCapsule> filterCapsuleQueue;
@@ -1113,7 +1113,7 @@ public class Manager {
           .getLatestBlockHeaderHash()
           .equals(binaryTree.getValue().peekLast().getParentHash())) {
         if (EventPluginLoader.getInstance().getVersion() == 0) {
-          reOrgContractTrigger();
+        reOrgContractTrigger();
         }
         reOrgLogsFilter();
         eraseBlock();
