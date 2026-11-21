@@ -7,7 +7,7 @@ import java.util.function.BooleanSupplier;
 import io.quarkus.deployment.configuration.NativeConfigUtils;
 import io.quarkus.deployment.pkg.NativeConfig;
 
-public enum NativeImageFutureDefault {
+public enum NativeImageFutureDefault {,
     RUN_TIME_INITIALIZE_FILE_SYSTEM_PROVIDERS,
     RUN_TIME_INITIALIZE_SECURITY_PROVIDERS;
 
@@ -20,31 +20,31 @@ public enum NativeImageFutureDefault {
     private static boolean isFutureDefault(NativeImageFutureDefault futureDefault, NativeConfig nativeConfig) {
         final List<String> additionalBuildArgs = NativeConfigUtils.getNativeAdditionalBuildArgs(nativeConfig);
         for (String buildArg : additionalBuildArgs) {
-            String trimmedBuildArg = buildArg.trim();
-            if (trimmedBuildArg.contains(FUTURE_DEFAULTS_MARKER)) {
-                int index = trimmedBuildArg.indexOf('=');
-                String[] futureDefaultStringArgs = trimmedBuildArg.substring(index + 1).split(",");
-                for (String futureDefaultString : futureDefaultStringArgs) {
-                    if ("all".equals(futureDefaultString)) {
-                        return true;
-                    }
-
-                    if ("run-time-initialize-jdk".equals(futureDefaultString)) {
-                        switch (futureDefault) {
-                            case RUN_TIME_INITIALIZE_SECURITY_PROVIDERS:
-                            case RUN_TIME_INITIALIZE_FILE_SYSTEM_PROVIDERS:
-                                return true;
+                String trimmedBuildArg = buildArg.trim();
+                if (trimmedBuildArg.contains(FUTURE_DEFAULTS_MARKER)) {
+                    int index = trimmedBuildArg.indexOf('=');
+                    String[] futureDefaultStringArgs = trimmedBuildArg.substring(index + 1).split(",");
+                    for (String futureDefaultString : futureDefaultStringArgs) {
+                        if ("all".equals(futureDefaultString)) {
+                            return true;
                         }
-                    }
 
-                    final NativeImageFutureDefault futureDefaultArg = NativeImageFutureDefault
-                            .valueOf(futureDefaultString.toUpperCase(Locale.ROOT).replace('-', '_'));
-                    if (futureDefaultArg == futureDefault) {
-                        return true;
+                        if ("run-time-initialize-jdk".equals(futureDefaultString)) {
+                            switch (futureDefault) {
+                                case RUN_TIME_INITIALIZE_SECURITY_PROVIDERS:
+                                case RUN_TIME_INITIALIZE_FILE_SYSTEM_PROVIDERS:
+                                    return true;
+                            }
+                        }
+
+                        final NativeImageFutureDefault futureDefaultArg = NativeImageFutureDefault
+                                .valueOf(futureDefaultString.toUpperCase(Locale.ROOT).replace('-', '_'));
+                        if (futureDefaultArg == futureDefault) {
+                            return true;
+                        }
                     }
                 }
             }
-        }
 
         return false;
     }
