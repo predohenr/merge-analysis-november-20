@@ -1,5 +1,7 @@
 package info.bitrich.xchangestream.bybit;
 
+import static info.bitrich.xchangestream.bybit.BybitStreamingExchange.EXCHANGE_TYPE;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import dto.BybitSubscribeMessage;
 import info.bitrich.xchangestream.service.netty.JsonNettyStreamingService;
@@ -12,18 +14,16 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import lombok.Setter;
-import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.bybit.dto.BybitCategory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-
-import static info.bitrich.xchangestream.bybit.BybitStreamingExchange.EXCHANGE_TYPE;
+import lombok.Setter;
+import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bybit.dto.BybitCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BybitStreamingService extends JsonNettyStreamingService {
 
@@ -131,6 +131,10 @@ public class BybitStreamingService extends JsonNettyStreamingService {
     LOG.info("Registering BybitWebSocketClientHandler");
     return new BybitWebSocketClientHandler(handshake, handler);
   }
+
+  /**
+   * Custom client handler in order to execute an external, user-provided handler on channel events.
+   */
 
   /**
    * Custom client handler in order to execute an external, user-provided handler on channel events.

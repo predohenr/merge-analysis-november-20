@@ -17,10 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +75,7 @@ public class OkexStreamingService extends JsonNettyStreamingService {
       jsonNode = objectMapper.readTree(message);
     } catch (IOException e) {
       if ("pong".equals(message)) {
-        // ping pong message
+          LOG.info("Received pong message: {}", message);
         return;
       }
       LOG.error("Error parsing incoming message to JSON: {}", message);
@@ -152,6 +148,10 @@ public class OkexStreamingService extends JsonNettyStreamingService {
       WebSocketClientHandler.WebSocketMessageHandler channelInactiveHandler) {
     this.channelInactiveHandler = channelInactiveHandler;
   }
+
+  /**
+   * Custom client handler in order to execute an external, user-provided handler on channel events.
+   */
 
   /**
    * Custom client handler in order to execute an external, user-provided handler on channel events.

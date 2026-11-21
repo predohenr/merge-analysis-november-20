@@ -39,6 +39,8 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
+import static info.bitrich.xchangestream.binance.dto.trade.BinanceWebsocketOrderCancelAndReplacePayload.CancelReplaceMode.STOP_ON_FAILURE;
+
 public class BinanceUserTradeStreamingService extends JsonNettyStreamingService {
 
   private static final Logger LOG = LoggerFactory.getLogger(BinanceUserTradeStreamingService.class);
@@ -198,14 +200,14 @@ public class BinanceUserTradeStreamingService extends JsonNettyStreamingService 
           if (params.getOrderId() != null && !params.getOrderId().isEmpty()) {
             orderId = Long.valueOf(params.getOrderId());
           }
-            BinanceWebsocketOrderCancelPayload cancelOrderPayload =
-                    BinanceWebsocketOrderCancelPayload.builder()
-                            .symbol(BinanceAdapters.toSymbol(params.getInstrument()))
-                            .orderId(orderId)
-                            .origClientOrderId(params.getUserReference())
+          BinanceWebsocketOrderCancelPayload cancelOrderPayload =
+              BinanceWebsocketOrderCancelPayload.builder()
+                  .symbol(BinanceAdapters.toSymbol(params.getInstrument()))
+                  .orderId(orderId)
+                  .origClientOrderId(params.getUserReference())
                             .newClientOrderId(params.getUserReference())
-                            .timestamp(System.currentTimeMillis())
-                            .build();
+                  .timestamp(System.currentTimeMillis())
+                  .build();
           BinanceWebsocketPayload<BinanceWebsocketOrderCancelPayload> payload =
               new BinanceWebsocketPayload<>(channelName, method, cancelOrderPayload);
           return objectMapper.writeValueAsString(payload);
