@@ -374,7 +374,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null, null);
       if (!useCollectionConstructorInjection) {
-        storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
+      storeObject(resultHandler, resultContext, rowValue, parentMapping, resultSet);
       } else {
         if (!(rowValue instanceof PendingConstructorCreation)) {
           throw new ExecutorException("Expected result object to be a pending constructor creation!");
@@ -709,7 +709,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (resultMap.hasResultMapsUsingConstructorCollection() && resultObject instanceof PendingConstructorCreation) {
         linkNestedPendingCreations(rsw, resultMap, columnPrefix, parentRowKey,
             (PendingConstructorCreation) resultObject, constructorArgs);
-      }
+    }
     }
 
     this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty(); // set current mapping result
