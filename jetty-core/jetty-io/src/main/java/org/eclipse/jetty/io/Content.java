@@ -164,6 +164,9 @@ public class Content
         /**
          * Factory of {@link Content.Source}.
          */
+        /**
+         * Factory of {@link Content.Source}.
+         */
         interface Factory
         {
             /**
@@ -1287,6 +1290,13 @@ public class Content
                 return asChunk(getByteBuffer().asReadOnlyBuffer(), isLast(), this);
             return from(getByteBuffer().asReadOnlyBuffer(), isLast());
         }
+
+        /**
+         * <p>Implementations of this interface may process {@link Chunk}s being copied by the
+         * {@link Content#copy(Source, Sink, Processor, Callback)} method, so that
+         * {@link Chunk}s of unknown types can be copied.
+         * @see Content#copy(Source, Sink, Processor, Callback)
+         */
 
         /**
          * <p>Implementations of this interface may process {@link Chunk}s being copied by the
