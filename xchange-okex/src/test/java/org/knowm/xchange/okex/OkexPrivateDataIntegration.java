@@ -2,7 +2,6 @@ package org.knowm.xchange.okex;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.knowm.xchange.okex.dto.trade.OkexOrderFlags.POST_ONLY;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,7 +58,6 @@ public class OkexPrivateDataIntegration {
     spec.setExchangeSpecificParametersItem(
         OkexExchange.PARAM_PASSPHRASE, properties.getProperty("passphrase"));
     spec.setExchangeSpecificParametersItem(OkexExchange.PARAM_SIMULATED, "1");
-
     exchange = ExchangeFactory.INSTANCE.createExchange(spec);
   }
 

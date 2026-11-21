@@ -5,7 +5,6 @@ import static org.knowm.xchange.okex.OkexAdapters.adaptTradeMode;
 import static org.knowm.xchange.okex.OkexAdapters.adaptTradingFee;
 import static org.knowm.xchange.okex.dto.OkexInstType.SPOT;
 import static org.knowm.xchange.okex.dto.OkexInstType.SWAP;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

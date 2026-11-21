@@ -363,7 +363,7 @@ public class OkexAdapters {
     BigDecimal quoteVolume = BigDecimal.ZERO;
     // for new coins 24h volume can be zero and getLast null
     if ((okexTicker.getInstrumentType().equals("SWAP")
-        || okexTicker.getInstrumentType().equals("FUTURES"))) {
+            || okexTicker.getInstrumentType().equals("FUTURES"))) {
       if (okexTicker.getLast() != null) {
         quoteVolume = okexTicker.getVolumeCurrency24h().multiply(okexTicker.getLast());
       }
@@ -702,10 +702,11 @@ public class OkexAdapters {
         return new Fee(
             new BigDecimal(okexTradeFee.getMakerUSDC()).negate(),
             new BigDecimal(okexTradeFee.getTakerUSDC()).negate());
-      } else
+      } else {
         return new Fee(
             new BigDecimal(okexTradeFee.getMaker()).negate(),
             new BigDecimal(okexTradeFee.getTaker()).negate());
+      }
     }
   }
 
