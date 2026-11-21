@@ -315,7 +315,7 @@ public class OsmandDevelopmentPlugin extends OsmandPlugin {
 
 	private String getThermalStateName(int stateCode) {
 		String name;
-		switch (stateCode) {
+		switch (stateCode){
 			case PowerManager.THERMAL_STATUS_NONE:
 				name = "None";
 				break;
