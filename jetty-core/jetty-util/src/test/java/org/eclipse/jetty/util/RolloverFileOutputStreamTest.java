@@ -63,11 +63,11 @@ public class RolloverFileOutputStreamTest
     {
         try
         {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd-hh:mm:ss.S a z")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd-hh:mm:ss.S a z")
                 .withLocale(Locale.ENGLISH)
-                .withZone(zone);
-            return ZonedDateTime.parse(timendate, formatter);
-        }
+            .withZone(zone);
+        return ZonedDateTime.parse(timendate, formatter);
+    }
         catch (Exception e)
         {
             // Skip this test if timezone abbreviation parsing fails (for example, on macOS).
