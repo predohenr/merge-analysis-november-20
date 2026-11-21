@@ -131,7 +131,7 @@ public class LanguageVersionDiscoverer {
     public List<Language> getLanguagesForFile(String fileName) {
         String extension = getExtension(fileName);
         List<Language> matching = languageRegistry.getLanguages().stream()
-                                                  .filter(it -> it.hasExtension(extension))
+                               .filter(it -> it.hasExtension(extension))
                                                   .collect(CollectionUtil.toMutableList());
 
         if (matching.size() > 1) {
