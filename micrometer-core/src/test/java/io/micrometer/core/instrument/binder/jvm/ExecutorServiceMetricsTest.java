@@ -47,6 +47,16 @@ import static org.awaitility.Awaitility.await;
  * @author Sebastian Lövdahl
  * @author Daeho Kwon
  */
+
+/**
+ * Tests for {@link ExecutorServiceMetrics}.
+ *
+ * @author Clint Checketts
+ * @author Jon Schneider
+ * @author Johnny Lim
+ * @author Sebastian Lövdahl
+ * @author Daeho Kwon
+ */
 class ExecutorServiceMetricsTest {
 
     private MeterRegistry registry = new SimpleMeterRegistry(SimpleConfig.DEFAULT, new MockClock());
