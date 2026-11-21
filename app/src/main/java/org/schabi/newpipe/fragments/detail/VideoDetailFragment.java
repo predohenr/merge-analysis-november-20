@@ -1906,7 +1906,7 @@ public final class VideoDetailFragment
 
         if (binding.relatedItemsLayout != null) {
             if (showRelatedItems) {
-                binding.relatedItemsLayout.setVisibility(fullscreen ? View.GONE : View.VISIBLE);
+            binding.relatedItemsLayout.setVisibility(fullscreen ? View.GONE : View.VISIBLE);
             } else {
                 binding.relatedItemsLayout.setVisibility(View.GONE);
             }
