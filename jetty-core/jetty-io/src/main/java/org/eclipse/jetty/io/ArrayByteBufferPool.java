@@ -88,61 +88,18 @@ public class ArrayByteBufferPool implements ByteBufferPool, Dumpable
     {
         this(0, -1, -1);
     }
-
-    /**
-     * Creates a new ArrayByteBufferPool with the given configuration.
-     * Both {@code maxHeapMemory} and {@code maxDirectMemory} default to 0 to use default heuristic.
-     *
-     * @param minCapacity the minimum ByteBuffer capacity
-     * @param factor the capacity factor
-     * @param maxCapacity the maximum ByteBuffer capacity
-     */
     public ArrayByteBufferPool(int minCapacity, int factor, int maxCapacity)
     {
         this(minCapacity, factor, maxCapacity, Integer.MAX_VALUE);
     }
-
-    /**
-     * Creates a new ArrayByteBufferPool with the given configuration.
-     * Both {@code maxHeapMemory} and {@code maxDirectMemory} default to 0 to use default heuristic.
-     *
-     * @param minCapacity the minimum ByteBuffer capacity
-     * @param factor the capacity factor
-     * @param maxCapacity the maximum ByteBuffer capacity
-     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
-     */
     public ArrayByteBufferPool(int minCapacity, int factor, int maxCapacity, int maxBucketSize)
     {
         this(minCapacity, factor, maxCapacity, maxBucketSize, 0L, 0L);
     }
-
-    /**
-     * Creates a new ArrayByteBufferPool with the given configuration.
-     *
-     * @param minCapacity the minimum ByteBuffer capacity
-     * @param factor the capacity factor
-     * @param maxCapacity the maximum ByteBuffer capacity
-     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
-     * @param maxHeapMemory the max heap memory in bytes, -1 for unlimited memory or 0 to use default heuristic
-     * @param maxDirectMemory the max direct memory in bytes, -1 for unlimited memory or 0 to use default heuristic
-     */
     public ArrayByteBufferPool(int minCapacity, int factor, int maxCapacity, int maxBucketSize, long maxHeapMemory, long maxDirectMemory)
     {
         this(minCapacity, factor, maxCapacity, maxBucketSize, maxHeapMemory, maxDirectMemory, null, null);
     }
-
-    /**
-     * Creates a new ArrayByteBufferPool with the given configuration.
-     *
-     * @param minCapacity the minimum ByteBuffer capacity
-     * @param factor the capacity factor
-     * @param maxCapacity the maximum ByteBuffer capacity
-     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
-     * @param maxHeapMemory the max heap memory in bytes, -1 for unlimited memory or 0 to use default heuristic
-     * @param maxDirectMemory the max direct memory in bytes, -1 for unlimited memory or 0 to use default heuristic
-     * @param bucketIndexFor a {@link IntUnaryOperator} that takes a capacity and returns a bucket index
-     * @param bucketCapacity a {@link IntUnaryOperator} that takes a bucket index and returns a capacity
-     */
     protected ArrayByteBufferPool(int minCapacity, int factor, int maxCapacity, int maxBucketSize, long maxHeapMemory, long maxDirectMemory, IntUnaryOperator bucketIndexFor, IntUnaryOperator bucketCapacity)
     {
         if (minCapacity <= 0)
@@ -260,6 +217,32 @@ public class ArrayByteBufferPool implements ByteBufferPool, Dumpable
                 return v + 1L;
             });
         }
+    }
+
+    @Override
+    public boolean removeAndRelease(RetainableByteBuffer buffer)
+    {
+        RetainableByteBuffer actual = buffer;
+        while (actual instanceof RetainableByteBuffer.Wrapper wrapper)
+        {
+            actual = wrapper.getWrapped();
+        }
+
+        if (actual instanceof ReservedBuffer reservedBuffer)
+        {
+            // remove the actual reserved buffer, but release the wrapped buffer
+            reservedBuffer.remove();
+            return buffer.release();
+        }
+
+        if (actual instanceof Buffer poolBuffer)
+        {
+            // remove the actual pool buffer, but release the wrapped buffer
+            poolBuffer.remove();
+            return buffer.release();
+        }
+
+        return ByteBufferPool.super.removeAndRelease(buffer);
     }
 
     private void reserve(RetainedBucket bucket, ByteBuffer byteBuffer)
@@ -533,6 +516,49 @@ public class ArrayByteBufferPool implements ByteBufferPool, Dumpable
             getDirectMemory(), _maxDirectMemory);
     }
 
+    /**
+ * Creates a new ArrayByteBufferPool with the given configuration.
+ * Both {@code maxHeapMemory} and {@code maxDirectMemory} default to 0 to use default heuristic.
+ *
+ * @param minCapacity the minimum ByteBuffer capacity
+ * @param factor the capacity factor
+ * @param maxCapacity the maximum ByteBuffer capacity
+ */
+
+    /**
+     * Creates a new ArrayByteBufferPool with the given configuration.
+     * Both {@code maxHeapMemory} and {@code maxDirectMemory} default to 0 to use default heuristic.
+     *
+     * @param minCapacity the minimum ByteBuffer capacity
+     * @param factor the capacity factor
+     * @param maxCapacity the maximum ByteBuffer capacity
+     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
+     */
+
+    /**
+     * Creates a new ArrayByteBufferPool with the given configuration.
+     *
+     * @param minCapacity the minimum ByteBuffer capacity
+     * @param factor the capacity factor
+     * @param maxCapacity the maximum ByteBuffer capacity
+     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
+     * @param maxHeapMemory the max heap memory in bytes, -1 for unlimited memory or 0 to use default heuristic
+     * @param maxDirectMemory the max direct memory in bytes, -1 for unlimited memory or 0 to use default heuristic
+     */
+
+    /**
+     * Creates a new ArrayByteBufferPool with the given configuration.
+     *
+     * @param minCapacity the minimum ByteBuffer capacity
+     * @param factor the capacity factor
+     * @param maxCapacity the maximum ByteBuffer capacity
+     * @param maxBucketSize the maximum number of ByteBuffers for each bucket
+     * @param maxHeapMemory the max heap memory in bytes, -1 for unlimited memory or 0 to use default heuristic
+     * @param maxDirectMemory the max direct memory in bytes, -1 for unlimited memory or 0 to use default heuristic
+     * @param bucketIndexFor a {@link IntUnaryOperator} that takes a capacity and returns a bucket index
+     * @param bucketCapacity a {@link IntUnaryOperator} that takes a bucket index and returns a capacity
+     */
+
     private class RetainedBucket
     {
         private final LongAdder _acquires = new LongAdder();
@@ -772,14 +798,14 @@ public class ArrayByteBufferPool implements ByteBufferPool, Dumpable
                 _usages = 0;
             return _usages;
         }
-
-        /**
-         * @see ReferenceCounter#acquire()
-         */
         protected void acquire()
         {
             _referenceCounter.acquire();
         }
+
+        /**
+         * @see ReferenceCounter#acquire()
+         */
     }
 
     /**
