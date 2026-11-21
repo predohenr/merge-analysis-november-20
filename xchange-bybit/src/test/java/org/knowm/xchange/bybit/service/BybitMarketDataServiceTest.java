@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.knowm.xchange.Exchange;
@@ -18,12 +19,6 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.instrument.Instrument;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.params.DefaultCandleStickParam;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class BybitMarketDataServiceTest extends BaseWiremockTest {
 
@@ -93,19 +88,6 @@ public class BybitMarketDataServiceTest extends BaseWiremockTest {
   }
 
   @Test
-  public void testGetFundingRateHistory() throws Exception {
-    initGetStub("/v5/market/funding/history", "/getFundingRateHistory.json5");
-
-    List<BybitFundingRateHistory> fundingRateHistory = ((BybitMarketDataService) marketDataService).getFundingRateHistory(new FuturesContract("ETH/USDT/PERP"),
-        null, null, null);
-
-    assertThat(fundingRateHistory.get(0).getInstrument().toString()).isEqualTo("ETH/USDT/PERP");
-    assertThat(fundingRateHistory.get(0).getFundingRate()).isEqualTo(new BigDecimal("0.0001"));
-    assertThat(fundingRateHistory.get(0).getFundingRateTimestamp()).isEqualTo(Instant.ofEpochMilli(1672051897447L));
-
-  }
-
-  @Test
   public void testGetCandleStickData() throws Exception {
     initGetStub("/v5/market/kline", "/getKlines.json5");
 
@@ -130,5 +112,18 @@ public class BybitMarketDataServiceTest extends BaseWiremockTest {
         .isEqualTo(new BigDecimal("268611"));
     assertThat(candleStickData.getCandleSticks().get(0).getQuotaVolume())
         .isEqualTo(new BigDecimal("15.74462667"));
+  }
+
+  @Test
+  public void testGetFundingRateHistory() throws Exception {
+    initGetStub("/v5/market/funding/history", "/getFundingRateHistory.json5");
+
+    List<BybitFundingRateHistory> fundingRateHistory = ((BybitMarketDataService) marketDataService).getFundingRateHistory(new FuturesContract("ETH/USDT/PERP"),
+        null, null, null);
+
+    assertThat(fundingRateHistory.get(0).getInstrument().toString()).isEqualTo("ETH/USDT/PERP");
+    assertThat(fundingRateHistory.get(0).getFundingRate()).isEqualTo(new BigDecimal("0.0001"));
+    assertThat(fundingRateHistory.get(0).getFundingRateTimestamp()).isEqualTo(Instant.ofEpochMilli(1672051897447L));
+
   }
 }
