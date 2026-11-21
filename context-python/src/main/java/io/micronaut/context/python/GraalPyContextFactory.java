@@ -253,7 +253,7 @@ public class GraalPyContextFactory implements BeanDestroyedEventListener<org.gra
                     closeContext(ctx, true);
                     if (!providedContext && PythonContextRuntime.isCurrentContext(ctx)) {
                         PythonContextRuntime.resetContext();
-                    }
+            }
                 });
                 return;
             }
