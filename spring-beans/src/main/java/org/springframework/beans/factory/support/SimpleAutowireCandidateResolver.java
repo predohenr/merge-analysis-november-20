@@ -16,12 +16,18 @@
 
 package org.springframework.beans.factory.support;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.LinkedHashMap;
+
 import java.util.Map;
 
 import org.springframework.beans.BeansException;
+
 import org.springframework.beans.factory.BeanFactoryUtils;
+
 import org.springframework.beans.factory.ListableBeanFactory;
+
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
@@ -39,6 +45,26 @@ public class SimpleAutowireCandidateResolver implements AutowireCandidateResolve
 	 * @since 5.2.7
 	 */
 	public static final SimpleAutowireCandidateResolver INSTANCE = new SimpleAutowireCandidateResolver();
+
+	@Override
+	public @Nullable String getSuggestedName(DependencyDescriptor descriptor) {
+		return null;
+	}
+
+	@Override
+	public @Nullable Object getSuggestedValue(DependencyDescriptor descriptor) {
+		return null;
+	}
+
+	@Override
+	public @Nullable Object getLazyResolutionProxyIfNecessary(DependencyDescriptor descriptor, @Nullable String beanName) {
+		return null;
+	}
+
+	@Override
+	public @Nullable Class<?> getLazyResolutionProxyClass(DependencyDescriptor descriptor, @Nullable String beanName) {
+		return null;
+	}
 
 	/**
 	 * This implementation returns {@code this} as-is.
