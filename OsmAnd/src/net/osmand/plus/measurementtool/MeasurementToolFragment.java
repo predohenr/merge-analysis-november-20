@@ -273,8 +273,8 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 					}
 				}
 				if(shouldQuit) {
-					quit(true);
-				}
+				quit(true);
+			}
 			}
 		};
 	}
@@ -689,7 +689,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		}
 		if (params != null) {
 			if (!InsetsUtils.isEdgeToEdgeSupported()) {
-				AndroidUtils.setMargins(params, 0, 0, 0, bottomMargin);
+			AndroidUtils.setMargins(params, 0, 0, 0, bottomMargin);
 			}
 			cardsContainer.setLayoutParams(params);
 		}
