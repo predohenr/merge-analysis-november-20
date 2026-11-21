@@ -126,7 +126,7 @@ public class CalculatedFieldServiceTest extends AbstractServiceTest {
                 .isInstanceOf(DataValidationException.class)
                 .hasCauseInstanceOf(IllegalArgumentException.class)
                 .hasMessageStartingWith("Scheduled update interval is less than configured " +
-                        "minimum allowed interval in tenant profile: ");
+                                        "minimum allowed interval in tenant profile: ");
     }
 
     @Test
@@ -145,7 +145,7 @@ public class CalculatedFieldServiceTest extends AbstractServiceTest {
                 .getMaxRelationLevelPerCfArgument();
 
         // Zone-group argument (ATTRIBUTE)
-        ZoneGroupConfiguration zoneGroupConfiguration = new ZoneGroupConfiguration("allowed", REPORT_TRANSITION_EVENTS_AND_PRESENCE_STATUS, false);
+        ZoneGroupConfiguration zoneGroupConfiguration = new ZoneGroupConfiguration( "allowed", REPORT_TRANSITION_EVENTS_AND_PRESENCE_STATUS, false);
         var dynamicSourceConfiguration = new RelationPathQueryDynamicSourceConfiguration();
 
         List<RelationPathLevel> levels = new ArrayList<>();
@@ -185,7 +185,7 @@ public class CalculatedFieldServiceTest extends AbstractServiceTest {
         cfg.setEntityCoordinates(entityCoordinates);
 
         // Zone-group argument (ATTRIBUTE) — make it DYNAMIC so scheduling is enabled
-        ZoneGroupConfiguration zoneGroupConfiguration = new ZoneGroupConfiguration("allowed", REPORT_TRANSITION_EVENTS_AND_PRESENCE_STATUS, false);
+        ZoneGroupConfiguration zoneGroupConfiguration = new ZoneGroupConfiguration( "allowed", REPORT_TRANSITION_EVENTS_AND_PRESENCE_STATUS, false);
         var dynamicSourceConfiguration = new RelationPathQueryDynamicSourceConfiguration();
         dynamicSourceConfiguration.setLevels(List.of(new RelationPathLevel(EntitySearchDirection.FROM, EntityRelation.CONTAINS_TYPE)));
         zoneGroupConfiguration.setRefDynamicSourceConfiguration(dynamicSourceConfiguration);
