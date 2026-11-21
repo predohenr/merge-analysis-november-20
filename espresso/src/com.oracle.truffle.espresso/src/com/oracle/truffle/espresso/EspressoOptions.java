@@ -668,7 +668,7 @@ public final class EspressoOptions {
 
     public enum JImageMode {
         NATIVE,
-        JAVA,
+        JAVA
     }
 
     private static final OptionType<JImageMode> JIMAGE_MODE_OPTION_TYPE = new OptionType<>("JImageMode", new Function<String, JImageMode>() {
