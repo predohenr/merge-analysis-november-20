@@ -45,7 +45,7 @@ public class SystemParams {
     long minAllowedAggregationIntervalInSecForCF;
     long intermediateAggregationIntervalInSecForCF;
     TrendzSettings trendzSettings;
+    String iotHubBaseUrl;
     String nullsOrderStrategy;
     boolean edqsEnabled;
-    String iotHubBaseUrl;
 }
