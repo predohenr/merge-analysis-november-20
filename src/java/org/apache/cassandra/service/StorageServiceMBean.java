@@ -41,14 +41,6 @@ import org.apache.cassandra.utils.BreaksJMX;
 
 public interface StorageServiceMBean extends NotificationEmitter
 {
-    /**
-     * Retrieve the list of live nodes in the cluster, where "liveness" is
-     * determined by the failure detector of the node being queried.
-     *
-     * @return set of IP addresses, as Strings
-     * @deprecated See CASSANDRA-7544
-     */
-    @Deprecated(since = "4.0") public List<String> getLiveNodes();
     public List<String> getLiveNodesWithPort();
 
     /**
@@ -94,14 +86,6 @@ public interface StorageServiceMBean extends NotificationEmitter
      * @return a collection of tokens formatted as strings
      */
     public List<String> getTokens();
-
-    /**
-     * Fetch string representations of the tokens for a specified node.
-     *
-     * @param endpoint string representation of an node
-     * @return a collection of tokens formatted as strings
-     */
-    public List<String> getTokens(String endpoint) throws UnknownHostException;
 
     /**
      * Fetch a string representation of the Cassandra version.
@@ -1175,6 +1159,22 @@ public interface StorageServiceMBean extends NotificationEmitter
 
     List<String> getAccordManagedKeyspaces();
     List<String> getAccordManagedTables();
+    /**
+     * Retrieve the list of live nodes in the cluster, where "liveness" is
+     * determined by the failure detector of the node being queried.
+     *
+     * @return set of IP addresses, as Strings
+     * @deprecated See CASSANDRA-7544
+     */
+    @Deprecated(since = "4.0") public List<String> getLiveNodes();
+
+    /**
+     * Fetch string representations of the tokens for a specified node.
+     *
+     * @param endpoint string representation of an node
+     * @return a collection of tokens formatted as strings
+     */
+    public List<String> getTokens(String endpoint) throws UnknownHostException;
 
     /** Gets the concurrency settings for processing stages*/
     static class StageConcurrency implements Serializable
