@@ -29,6 +29,16 @@ import io.quarkus.maven.it.verifier.RunningInvoker;
  * changed), the second run fails with a port conflict.
  * <p>
  */
+
+/**
+ * Reproducer for <a href="https://github.com/quarkusio/quarkus/issues/53312">#53312</a>.
+ * <p>
+ * Runs a Quarkus application that uses DevServices PostgreSQL with a fixed port and
+ * {@code testcontainers.reuse.enable=true} twice in sequence. The second run should
+ * reuse the container from the first run. If it cannot (because the process-uuid label
+ * changed), the second run fails with a port conflict.
+ * <p>
+ */
 class DevServicesPostgresqlContainerReuseTest extends MojoTestBase {
 
     private static final int FIXED_PORT = 55432;
