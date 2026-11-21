@@ -368,8 +368,8 @@ public final class WebSocketMessageBrokerSecurityBeanDefinitionParser implements
 			interceptors.add(new RootBeanDefinition(SecurityContextChannelInterceptor.class));
 			if (!this.sameOriginDisabled) {
 				if (!registry.containsBeanDefinition(CSRF_CHANNEL_INTERCEPTOR_BEAN_ID)) {
-					interceptors.add(new RootBeanDefinition(CsrfChannelInterceptor.class));
-				}
+				interceptors.add(new RootBeanDefinition(CsrfChannelInterceptor.class));
+			}
 				else {
 					interceptors.add(new RuntimeBeanReference(CSRF_CHANNEL_INTERCEPTOR_BEAN_ID));
 				}
