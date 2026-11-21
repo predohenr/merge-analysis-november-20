@@ -70,18 +70,18 @@ public class ShadowIBluetoothManager {
       int bluetoothProfile,
       String serviceName,
       @ClassName("android.bluetooth.IBluetoothProfileServiceConnection") Object proxy) {
-    if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-      return false;
-    }
-    try {
+      if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+        return false;
+      }
+      try {
 
       reflector(IBluetoothProfileServiceConnectionReflector.class, proxy)
           .onServiceConnected(null, null);
-    } catch (RemoteException e) {
-      return false;
+      } catch (RemoteException e) {
+        return false;
+      }
+      return true;
     }
-    return true;
-  }
 
   /**
    * Allows the internal BluetoothProfileConnector associated with a {@link BluetoothProfile} to
@@ -91,13 +91,13 @@ public class ShadowIBluetoothManager {
   protected void unbindBluetoothProfileService(
       int bluetoothProfile,
       @ClassName("android.bluetooth.IBluetoothProfileServiceConnection") Object proxy) {
-    try {
+      try {
       reflector(IBluetoothProfileServiceConnectionReflector.class, proxy)
           .onServiceDisconnected(null);
-    } catch (RemoteException e) {
-      // nothing to do
+      } catch (RemoteException e) {
+        // nothing to do
+      }
     }
-  }
 
   @Implementation(minSdk = POST_BAKLAVA)
   protected android.os.Messenger getServiceMessenger() {
@@ -149,7 +149,7 @@ public class ShadowIBluetoothManager {
         serviceMessenger = null;
       }
     }
-  }
+    }
 
   @ForType(className = "android.bluetooth.IBluetoothProfileServiceConnection")
   private interface IBluetoothProfileServiceConnectionReflector {
