@@ -4,8 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
-import org.tron.common.math.StrictMathWrapper;
+import org.tron.common.runtime.vm.DataWord;
 import org.tron.common.utils.ByteArray;
+import org.tron.common.math.StrictMathWrapper;
 import org.tron.common.utils.ByteUtil;
 import org.tron.core.vm.PrecompiledContracts;
 import org.tron.core.vm.config.ConfigLoader;
@@ -16,6 +17,17 @@ public class AllowTvmOsakaTest extends VMTestBase {
 
   private static final PrecompiledContracts.PrecompiledContract modExp =
       new PrecompiledContracts.ModExp();
+  private static final DataWord P256_VERIFY_ADDR =
+      new DataWord(
+          "0000000000000000000000000000000000000000000000000000000000000100");
+  private static final String VALID_P256_INPUT =
+      "4cee90eb86eaa050036147a12d49004b6b9c72bd725d39d4785011fe190f0b4d"
+          + "a73bd4903f0ce3b639bbbf6e8e80d16931ff4bcf5993d58468e8fb19086e8cac"
+          + "36dbcd03009df8c59286b162af3bd7fcc0450c9aa81be5d10d312af6c66b1d60"
+          + "4aebd3099c618202fcfe16ae7770b0c49ab5eadf74b754204a3bb6060e44eff3"
+          + "7618b065f9832de4ca6ca971a7a1adc826d0f7c00181a5fb2ddf79ae00b4e10e";
+  private static final byte[] EXPECTED_VALID_OUTPUT = ByteUtil.merge(
+      new byte[31], new byte[]{0x01});
 
   private static byte[] toLenBytes(int value) {
     byte[] b = new byte[32];
@@ -61,10 +73,6 @@ public class AllowTvmOsakaTest extends VMTestBase {
       ConfigLoader.disable = false;
     }
   }
-
-  /**
-   * Build ModExp input data for energy calculation testing.
-   */
   private static byte[] buildModExpData(int baseLen, int expLen, int modLen, byte[] expValue) {
     byte[] base = new byte[baseLen];
     byte[] exp = new byte[expLen];
@@ -194,21 +202,6 @@ public class AllowTvmOsakaTest extends VMTestBase {
     }
   }
 
-  // P256VERIFY address per TIP-7951 / EIP-7951.
-  private static final DataWord P256_VERIFY_ADDR =
-      new DataWord(
-          "0000000000000000000000000000000000000000000000000000000000000100");
-
-  // First entry from the geth conformance vectors — known-valid signature.
-  private static final String VALID_P256_INPUT =
-      "4cee90eb86eaa050036147a12d49004b6b9c72bd725d39d4785011fe190f0b4d"
-          + "a73bd4903f0ce3b639bbbf6e8e80d16931ff4bcf5993d58468e8fb19086e8cac"
-          + "36dbcd03009df8c59286b162af3bd7fcc0450c9aa81be5d10d312af6c66b1d60"
-          + "4aebd3099c618202fcfe16ae7770b0c49ab5eadf74b754204a3bb6060e44eff3"
-          + "7618b065f9832de4ca6ca971a7a1adc826d0f7c00181a5fb2ddf79ae00b4e10e";
-  private static final byte[] EXPECTED_VALID_OUTPUT = ByteUtil.merge(
-      new byte[31], new byte[]{0x01});
-
   @Test
   public void testP256VerifyEnabled() {
     ConfigLoader.disable = true;
@@ -244,4 +237,12 @@ public class AllowTvmOsakaTest extends VMTestBase {
       ConfigLoader.disable = false;
     }
   }
+
+  /**
+   * Build ModExp input data for energy calculation testing.
+   */
+
+  // P256VERIFY address per TIP-7951 / EIP-7951.
+
+  // First entry from the geth conformance vectors — known-valid signature.
 }
