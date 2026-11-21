@@ -294,7 +294,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
 
     public static final int INDEFINITE = -1;
-    public static final int RING_DELAY_MILLIS = getRingDelay(); // delay after which we assume ring has stablized
+    public static final int RING_DELAY_MILLIS = getRingDelay();
 
     {
         PathUtils.setDeletionListener(path -> {
@@ -342,17 +342,17 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
 
     private final java.util.function.Predicate<Keyspace> anyOutOfRangeOpsRecorded
     = keyspace -> keyspace.metric.outOfRangeTokenReads.getCount() > 0
-                  || keyspace.metric.outOfRangeTokenWrites.getCount() > 0
-                  || keyspace.metric.outOfRangeTokenPaxosRequests.getCount() > 0;
+                            || keyspace.metric.outOfRangeTokenWrites.getCount() > 0
+                            || keyspace.metric.outOfRangeTokenPaxosRequests.getCount() > 0;
 
     private long[] getOutOfRangeOperationCounts(Keyspace keyspace)
     {
         return new long[]
-               {
-               keyspace.metric.outOfRangeTokenReads.getCount(),
-               keyspace.metric.outOfRangeTokenWrites.getCount(),
-               keyspace.metric.outOfRangeTokenPaxosRequests.getCount()
-               };
+        {
+            keyspace.metric.outOfRangeTokenReads.getCount(),
+            keyspace.metric.outOfRangeTokenWrites.getCount(),
+            keyspace.metric.outOfRangeTokenPaxosRequests.getCount()
+        };
     }
 
     public Map<String, long[]> getOutOfRangeOperationCounts()
@@ -427,43 +427,15 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     }
 
     @Deprecated(since = "CEP-21")
-    public Collection<Range<Token>> getPrimaryRanges(String keyspace)
+public Collection<Range<Token>> getPrimaryRanges(String keyspace)
     {
         return getPrimaryRangesForEndpoint(keyspace, getBroadcastAddressAndPort());
     }
 
     @Deprecated(since = "CEP-21")
-    public Collection<Range<Token>> getPrimaryRangesForEndpoint(String keyspace, InetAddressAndPort ep)
-    {
-        return TokenRingUtils.getPrimaryRangesForEndpoint(keyspace, ep);
-    }
-
-    @Deprecated(since = "CEP-21")
-    public Collection<Range<Token>> getPrimaryRangesWithinDC(String keyspace)
+public Collection<Range<Token>> getPrimaryRangesWithinDC(String keyspace)
     {
         return getPrimaryRangeForEndpointWithinDC(keyspace, getBroadcastAddressAndPort());
-    }
-
-    @Deprecated(since = "CEP-21")
-    public Collection<Range<Token>> getLocalPrimaryRangeForEndpoint(InetAddressAndPort referenceEndpoint)
-    {
-        ClusterMetadata metadata = ClusterMetadata.current();
-        NodeId node = metadata.directory.peerId(referenceEndpoint);
-        if (node == null)
-            throw new IllegalArgumentException("Unknown endpoint " + referenceEndpoint);
-        return SizeEstimatesRecorder.getLocalPrimaryRange(metadata, node);
-    }
-
-    @Deprecated(since = "CEP-21")
-    public Collection<Range<Token>> getPrimaryRangeForEndpointWithinDC(String keyspace, InetAddressAndPort endpoint)
-    {
-        return TokenRingUtils.getPrimaryRangeForEndpointWithinDC(keyspace, endpoint);
-    }
-
-    @Deprecated(since = "CEP-21")
-    public static List<Range<Token>> getAllRanges(List<Token> sortedTokens)
-    {
-        return TokenRingUtils.getAllRanges(sortedTokens);
     }
 
     private final Set<InetAddressAndPort> replicatingNodes = Sets.newConcurrentHashSet();
@@ -486,11 +458,11 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
 
     private volatile int totalCFs, remainingCFs;
 
+    public static final AtomicInteger nextRepairCommand = new AtomicInteger();
+
     private final List<IEndpointLifecycleSubscriber> lifecycleSubscribers = new CopyOnWriteArrayList<>();
 
     private final String jmxObjectName;
-
-    public static final AtomicInteger nextRepairCommand = new AtomicInteger();
 
     // true when keeping strict consistency while bootstrapping
     public static final boolean useStrictConsistency = CONSISTENT_RANGE_MOVEMENT.getBoolean();
@@ -2018,7 +1990,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
         // null localhost ID values, it's just that TokenMetadata was created earlier.
         ClusterMetadata metadata = ClusterMetadata.currentNullable();
         if (metadata == null || metadata.directory.peerId(getBroadcastAddressAndPort()) == null)
-            return null;
+        return null;
         return metadata.directory.peerId(getBroadcastAddressAndPort()).toUUID();
     }
 
@@ -2087,7 +2059,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
             else
             {
                 TokenMap tokenMap = metadata.tokenMap;
-                for (Range<Token> range : ranges)
+        for (Range<Token> range : ranges)
                 {
                     Token token = tokenMap.nextToken(tokenMap.tokens(), range.right.getToken());
                     rangeToEndpointMap.put(range, metadata.placements.get(keyspaceMetadata.params.replication)
@@ -2146,7 +2118,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
      */
     public void onChange(InetAddressAndPort endpoint, ApplicationState state, VersionedValue value)
     {
-        EndpointState epState = Gossiper.instance.getEndpointStateForEndpoint(endpoint);
+            EndpointState epState = Gossiper.instance.getEndpointStateForEndpoint(endpoint);
 
         // Special case to handle moving to hibernate state, which we now need to trigger
         // marking the node dead. Previously a node coming up in hibernate state would never
@@ -2171,11 +2143,11 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
             }
         }
 
-        if (epState == null || Gossiper.instance.isDeadState(epState))
-        {
-            logger.debug("Ignoring state change for dead or unknown endpoint: {}", endpoint);
-            return;
-        }
+            if (epState == null || Gossiper.instance.isDeadState(epState))
+            {
+                logger.debug("Ignoring state change for dead or unknown endpoint: {}", endpoint);
+                return;
+            }
 
         if (state == ApplicationState.INDEX_STATUS)
         {
@@ -2184,39 +2156,39 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
         }
 
         if (ClusterMetadata.current().directory.allJoinedEndpoints().contains(endpoint))
-        {
-            switch (state)
             {
-                case RELEASE_VERSION:
-                    SystemKeyspace.updatePeerInfo(endpoint, "release_version", value.value);
-                    break;
-                case RPC_ADDRESS:
-                    try
-                    {
-                        SystemKeyspace.updatePeerInfo(endpoint, "rpc_address", InetAddress.getByName(value.value));
-                    }
-                    catch (UnknownHostException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case NATIVE_ADDRESS_AND_PORT:
-                    try
-                    {
-                        InetAddressAndPort address = InetAddressAndPort.getByName(value.value);
-                        SystemKeyspace.updatePeerNativeAddress(endpoint, address);
-                    }
-                    catch (UnknownHostException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case RPC_READY:
-                    notifyRpcChange(endpoint, epState.isRpcReady());
-                    break;
-                case NET_VERSION:
-                    updateNetVersion(endpoint, value);
-                    break;
+                switch (state)
+                {
+                    case RELEASE_VERSION:
+                        SystemKeyspace.updatePeerInfo(endpoint, "release_version", value.value);
+                        break;
+                    case RPC_ADDRESS:
+                        try
+                        {
+                            SystemKeyspace.updatePeerInfo(endpoint, "rpc_address", InetAddress.getByName(value.value));
+                        }
+                        catch (UnknownHostException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    case NATIVE_ADDRESS_AND_PORT:
+                        try
+                        {
+                            InetAddressAndPort address = InetAddressAndPort.getByName(value.value);
+                            SystemKeyspace.updatePeerNativeAddress(endpoint, address);
+                        }
+                        catch (UnknownHostException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    case RPC_READY:
+                        notifyRpcChange(endpoint, epState.isRpcReady());
+                        break;
+                    case NET_VERSION:
+                        updateNetVersion(endpoint, value);
+                        break;
                 case STATUS_WITH_PORT:
                     String[] pieces = value.splitValue();
                     String moveName = pieces[0];
@@ -2228,14 +2200,14 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
                 case SCHEMA:
                     SystemKeyspace.updatePeerInfo(endpoint, "schema_version", UUID.fromString(value.value));
                     break;
+                }
+            }
+            else
+            {
+                logger.debug("Ignoring application state {} from {} because it is not a member in token metadata",
+                             state, endpoint);
             }
         }
-        else
-        {
-            logger.debug("Ignoring application state {} from {} because it is not a member in token metadata",
-                         state, endpoint);
-        }
-    }
 
     public static void updateIndexStatus(InetAddressAndPort endpoint, VersionedValue versionedValue)
     {
@@ -2834,6 +2806,39 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
         return status.statusCode;
     }
 
+    /**
+     * Takes the snapshot of a multiple column family from different keyspaces. A snapshot name must be specified.
+     *
+     * @param tag      the tag given to the snapshot; may not be null or empty
+     * @param options  Map of options (skipFlush is the only supported option for now)
+     * @param entities list of keyspaces / tables in the form of empty | ks1 ks2 ... | ks1.cf1,ks2.cf2,...
+     *
+     * @deprecated See CASSANDRA-18111
+     */
+    @Override
+    @Deprecated(since = "5.1")
+    public void takeSnapshot(String tag, Map<String, String> options, String... entities) throws IOException
+    {
+        SnapshotManager.instance.takeSnapshot(tag, options, entities);
+    }
+
+    /**
+     * Takes the snapshot of a specific table. A snapshot name must be
+     * specified.
+     *
+     * @param keyspaceName the keyspace which holds the specified table
+     * @param tableName    the table to snapshot
+     * @param tag          the tag given to the snapshot; may not be null or empty
+     *
+     * @deprecated use {@link #takeSnapshot(String tag, Map options, String... entities)} instead. See CASSANDRA-10907
+     */
+    @Override
+    @Deprecated(since = "3.4")
+    public void takeTableSnapshot(String keyspaceName, String tableName, String tag) throws IOException
+    {
+        SnapshotManager.instance.takeSnapshot(tag, Collections.emptyMap(), keyspaceName + '.' + tableName);
+    }
+
     @Override
     public void forceKeyspaceCompactionForTokenRange(String keyspaceName, String startToken, String endToken, String... tableNames) throws IOException, ExecutionException, InterruptedException
     {
@@ -2888,39 +2893,6 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     }
 
     /**
-     * Takes the snapshot of a multiple column family from different keyspaces. A snapshot name must be specified.
-     *
-     * @param tag      the tag given to the snapshot; may not be null or empty
-     * @param options  Map of options (skipFlush is the only supported option for now)
-     * @param entities list of keyspaces / tables in the form of empty | ks1 ks2 ... | ks1.cf1,ks2.cf2,...
-     *
-     * @deprecated See CASSANDRA-18111
-     */
-    @Override
-    @Deprecated(since = "5.1")
-    public void takeSnapshot(String tag, Map<String, String> options, String... entities) throws IOException
-    {
-        SnapshotManager.instance.takeSnapshot(tag, options, entities);
-    }
-
-    /**
-     * Takes the snapshot of a specific table. A snapshot name must be
-     * specified.
-     *
-     * @param keyspaceName the keyspace which holds the specified table
-     * @param tableName    the table to snapshot
-     * @param tag          the tag given to the snapshot; may not be null or empty
-     *
-     * @deprecated use {@link #takeSnapshot(String tag, Map options, String... entities)} instead. See CASSANDRA-10907
-     */
-    @Override
-    @Deprecated(since = "3.4")
-    public void takeTableSnapshot(String keyspaceName, String tableName, String tag) throws IOException
-    {
-        SnapshotManager.instance.takeSnapshot(tag, Collections.emptyMap(), keyspaceName + '.' + tableName);
-    }
-
-    /**
      * Takes the snapshot for the given keyspaces. A snapshot name must be specified.
      *
      * @param tag the tag given to the snapshot; may not be null or empty
@@ -2930,7 +2902,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
      */
     @Override
     @Deprecated(since = "3.4")
-    public void takeSnapshot(String tag, String... keyspaceNames) throws IOException
+public void takeSnapshot(String tag, String... keyspaceNames) throws IOException
     {
         SnapshotManager.instance.takeSnapshot(tag, Collections.emptyMap(), keyspaceNames);
     }
@@ -2965,20 +2937,20 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
 
     @Override
     @Deprecated(since = "5.1")
-    public void clearSnapshot(Map<String, Object> options, String tag, String... keyspaceNames)
+public void clearSnapshot(Map<String, Object> options, String tag, String... keyspaceNames)
     {
         SnapshotManager.instance.clearSnapshot(tag, options, keyspaceNames);
     }
 
     @Override
     @Deprecated(since = "5.1")
-    public Map<String, TabularData> getSnapshotDetails(Map<String, String> options)
+public Map<String, TabularData> getSnapshotDetails(Map<String, String> options)
     {
         return SnapshotManager.instance.listSnapshots(options);
     }
 
     @Override
-    @Deprecated(since = "4.1")
+@Deprecated(since = "4.1")
     public Map<String, TabularData> getSnapshotDetails()
     {
         return SnapshotManager.instance.listSnapshots(ImmutableMap.of());
@@ -2986,21 +2958,21 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
 
     @Override
     @Deprecated(since = "5.1")
-    public long trueSnapshotsSize()
+public long trueSnapshotsSize()
     {
         return SnapshotManager.instance.getTrueSnapshotSize();
     }
 
     @Override
     @Deprecated(since = "5.1")
-    public void setSnapshotLinksPerSecond(long throttle)
+public void setSnapshotLinksPerSecond(long throttle)
     {
         SnapshotManager.instance.setSnapshotLinksPerSecond(throttle);
     }
 
     @Override
     @Deprecated(since = "5.1")
-    public long getSnapshotLinksPerSecond()
+public long getSnapshotLinksPerSecond()
     {
         return SnapshotManager.instance.getSnapshotLinksPerSecond();
     }
@@ -3335,6 +3307,34 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
         return DatabaseDescriptor.getRepairSessionMaxTreeDepth();
     }
 
+    @Deprecated(since = "CEP-21")
+public Collection<Range<Token>> getPrimaryRangesForEndpoint(String keyspace, InetAddressAndPort ep)
+    {
+        return TokenRingUtils.getPrimaryRangesForEndpoint(keyspace, ep);
+    }
+
+    @Deprecated(since = "CEP-21")
+    public Collection<Range<Token>> getPrimaryRangeForEndpointWithinDC(String keyspace, InetAddressAndPort endpoint)
+    {
+        return TokenRingUtils.getPrimaryRangeForEndpointWithinDC(keyspace, endpoint);
+    }
+
+    @Deprecated(since = "CEP-21")
+public Collection<Range<Token>> getLocalPrimaryRangeForEndpoint(InetAddressAndPort referenceEndpoint)
+    {
+        ClusterMetadata metadata = ClusterMetadata.current();
+        NodeId node = metadata.directory.peerId(referenceEndpoint);
+        if (node == null)
+            throw new IllegalArgumentException("Unknown endpoint " + referenceEndpoint);
+        return SizeEstimatesRecorder.getLocalPrimaryRange(metadata, node);
+    }
+
+    @Deprecated(since = "CEP-21")
+    public static List<Range<Token>> getAllRanges(List<Token> sortedTokens)
+    {
+        return TokenRingUtils.getAllRanges(sortedTokens);
+    }
+
     /* End of MBean interface methods */
 
     /**
@@ -3382,6 +3382,18 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
         return getNaturalReplicasForToken(keyspaceName, partitionKeyToBytes(keyspaceName, cf, key));
     }
 
+    public EndpointsForToken getNaturalReplicasForToken(String keyspaceName, ByteBuffer key)
+    {
+        ClusterMetadata metadata = ClusterMetadata.current();
+        KeyspaceMetadata keyspaceMetadata = Keyspace.open(keyspaceName).getMetadata();
+        Token token;
+        if (keyspaceMetadata.params.replication.isMeta())
+            token = MetaStrategy.partitioner.getToken(key);
+        else
+            token = metadata.partitioner.getToken(key);
+        return metadata.placements.get(keyspaceMetadata.params.replication).reads.forToken(token).get();
+    }
+
     public DecoratedKey getKeyFromPartition(String keyspaceName, String table, String partitionKey)
     {
         IPartitioner partitioner = Keyspace.open(keyspaceName).getColumnFamilyStore(table).getPartitioner();
@@ -3406,18 +3418,6 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     {
         ColumnFamilyStore cfs = Keyspace.open(keyspaceName).getColumnFamilyStore(table);
         return cfs.getPartitioner().getToken(partitionKeyToBytes(keyspaceName, table, key)).toString();
-    }
-
-    public EndpointsForToken getNaturalReplicasForToken(String keyspaceName, ByteBuffer key)
-    {
-        ClusterMetadata metadata = ClusterMetadata.current();
-        KeyspaceMetadata keyspaceMetadata = Keyspace.open(keyspaceName).getMetadata();
-        Token token;
-        if (keyspaceMetadata.params.replication.isMeta())
-            token = MetaStrategy.partitioner.getToken(key);
-        else
-            token = metadata.partitioner.getToken(key);
-        return metadata.placements.get(keyspaceMetadata.params.replication).reads.forToken(token).get();
     }
 
     public boolean isEndpointValidForWrite(String keyspace, Token token)
@@ -3616,14 +3616,14 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
             NodeId nodeId = stateEntry.getKey();
             NodeState state = stateEntry.getValue();
             if (state == NodeState.LEAVING)
-            {
+        {
                 MultiStepOperation<?> seq = metadata.inProgressSequences.get(nodeId);
                 if (seq != null && seq.kind() == MultiStepOperation.Kind.REMOVE)
-                {
+            {
                     sb.append("Removing node ").append(nodeId.toUUID()).append(" (").append(metadata.directory.endpoint(nodeId)).append(')').append(": ").append(seq.status());
                     found = true;
-                }
             }
+        }
         }
         if (!found)
             sb.append("No removals in progress.");
@@ -3715,7 +3715,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     - Use system_views.local to get information about the node (todo: we might still need a jmx endpoint for that since you can't run cql queries on drained etc nodes)
      */
     @Deprecated(since = "CEP-21")
-    public String getOperationMode()
+public String getOperationMode()
     {
         return operationMode().toString();
     }
@@ -5604,7 +5604,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     }
 
     @Override
-    public void setSkipStreamDiskSpaceCheck(boolean value)
+public void setSkipStreamDiskSpaceCheck(boolean value)
     {
         if (value != DatabaseDescriptor.getSkipStreamDiskSpaceCheck())
             logger.info("Changing skip_stream_disk_space_check from {} to {}", DatabaseDescriptor.getSkipStreamDiskSpaceCheck(), value);
@@ -5612,7 +5612,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
     }
 
     @Override
-    public boolean getSkipStreamDiskSpaceCheck()
+public boolean getSkipStreamDiskSpaceCheck()
     {
         return DatabaseDescriptor.getSkipStreamDiskSpaceCheck();
     }

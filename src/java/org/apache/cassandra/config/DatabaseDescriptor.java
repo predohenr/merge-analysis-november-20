@@ -62,7 +62,7 @@ import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.google.common.util.concurrent.RateLimiter;
-import com.googlecode.concurrenttrees.common.Iterables;
+import org.apache.cassandra.utils.Pair;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +70,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import accord.impl.progresslog.DefaultProgressLog;
+import com.googlecode.concurrenttrees.common.Iterables;
 
 import org.apache.cassandra.audit.AuditLogOptions;
 import org.apache.cassandra.auth.AllowAllInternodeAuthenticator;
@@ -132,7 +133,6 @@ import org.apache.cassandra.service.paxos.Paxos;
 import org.apache.cassandra.tcm.RegistrationStatus;
 import org.apache.cassandra.utils.FBUtilities;
 import org.apache.cassandra.utils.MBeanWrapper;
-import org.apache.cassandra.utils.Pair;
 import org.apache.cassandra.utils.StorageCompatibilityMode;
 
 import static org.apache.cassandra.config.CassandraRelevantProperties.ALLOCATE_TOKENS_FOR_KEYSPACE;
@@ -744,12 +744,12 @@ public class DatabaseDescriptor
         if (conf.repair_session_space.toMebibytes() < 1)
             throw new ConfigurationException("repair_session_space must be > 0, but was " + conf.repair_session_space);
         else if (conf.repair_session_space.toMebibytes() > (int) (Runtime.getRuntime().maxMemory() / (4 * 1048576)))
-            logger.warn("A repair_session_space of " + conf.repair_session_space + " mebibytes is likely to cause heap pressure");
+            logger.warn("A repair_session_space of " + conf.repair_session_space+ " mebibytes is likely to cause heap pressure");
 
         checkForLowestAcceptedTimeouts(conf);
 
         long valueInBytes = conf.native_transport_max_frame_size.toBytes();
-        if (valueInBytes < 0 || valueInBytes > Integer.MAX_VALUE - 1)
+        if (valueInBytes < 0 || valueInBytes > Integer.MAX_VALUE-1)
         {
             throw new ConfigurationException(String.format("native_transport_max_frame_size must be positive value < %dB, but was %dB",
                                                            Integer.MAX_VALUE,
@@ -943,8 +943,8 @@ public class DatabaseDescriptor
         {
             // if prepared_statements_cache_size option was set to "auto" then size of the cache should be "max(1/256 of Heap (in MiB), 10MiB)"
             preparedStatementsCacheSizeInMiB = (conf.prepared_statements_cache_size == null)
-                                               ? Math.max(10, (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024 / 256))
-                                               : conf.prepared_statements_cache_size.toMebibytes();
+                                              ? Math.max(10, (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024 / 256))
+                                              : conf.prepared_statements_cache_size.toMebibytes();
 
             if (preparedStatementsCacheSizeInMiB == 0)
                 throw new NumberFormatException(); // to escape duplicating error message
@@ -962,8 +962,8 @@ public class DatabaseDescriptor
         {
             // if key_cache_size option was set to "auto" then size of the cache should be "min(5% of Heap (in MiB), 100MiB)
             keyCacheSizeInMiB = (conf.key_cache_size == null)
-                                ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.05 / 1024 / 1024)), 100)
-                                : conf.key_cache_size.toMebibytes();
+                               ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.05 / 1024 / 1024)), 100)
+                               : conf.key_cache_size.toMebibytes();
 
             if (keyCacheSizeInMiB < 0)
                 throw new NumberFormatException(); // to escape duplicating error message
@@ -981,8 +981,8 @@ public class DatabaseDescriptor
         {
             // if counter_cache_size option was set to "auto" then size of the cache should be "min(2.5% of Heap (in MiB), 50MiB)
             counterCacheSizeInMiB = (conf.counter_cache_size == null)
-                                    ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.025 / 1024 / 1024)), 50)
-                                    : conf.counter_cache_size.toMebibytes();
+                                   ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.025 / 1024 / 1024)), 50)
+                                   : conf.counter_cache_size.toMebibytes();
 
             if (counterCacheSizeInMiB < 0)
                 throw new NumberFormatException(); // to escape duplicating error message
@@ -990,15 +990,15 @@ public class DatabaseDescriptor
         catch (NumberFormatException e)
         {
             throw new ConfigurationException("counter_cache_size option was set incorrectly to '"
-                                             + (conf.counter_cache_size != null ? conf.counter_cache_size.toString() : null) + "', supported values are <integer> >= 0.", false);
+                                             + (conf.counter_cache_size !=null ?conf.counter_cache_size.toString() : null) + "', supported values are <integer> >= 0.", false);
         }
 
         try
         {
             // if paxosCacheSizeInMiB option was set to "auto" then size of the cache should be "min(1% of Heap (in MB), 50MB)
             paxosCacheSizeInMiB = (conf.paxos_cache_size == null)
-                                  ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.01 / 1024 / 1024)), 50)
-                                  : conf.paxos_cache_size.toMebibytes();
+                    ? Math.min(Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.01 / 1024 / 1024)), 50)
+                    : conf.paxos_cache_size.toMebibytes();
 
             if (paxosCacheSizeInMiB < 0)
                 throw new NumberFormatException(); // to escape duplicating error message
@@ -1006,7 +1006,7 @@ public class DatabaseDescriptor
         catch (NumberFormatException e)
         {
             throw new ConfigurationException("paxos_cache_size option was set incorrectly to '"
-                                             + conf.paxos_cache_size + "', supported values are <integer> >= 0.", false);
+                    + conf.paxos_cache_size + "', supported values are <integer> >= 0.", false);
         }
 
         try
@@ -1060,8 +1060,8 @@ public class DatabaseDescriptor
 
         // if set to empty/"auto" then use 5% of Heap size
         indexSummaryCapacityInMiB = (conf.index_summary_capacity == null)
-                                    ? Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.05 / 1024 / 1024))
-                                    : conf.index_summary_capacity.toMebibytes();
+                                   ? Math.max(1, (int) (Runtime.getRuntime().totalMemory() * 0.05 / 1024 / 1024))
+                                   : conf.index_summary_capacity.toMebibytes();
 
         if (indexSummaryCapacityInMiB < 0)
             throw new ConfigurationException("index_summary_capacity option was set incorrectly to '"
@@ -1079,7 +1079,7 @@ public class DatabaseDescriptor
         if (conf.allow_extra_insecure_udfs)
             logger.warn("Allowing java.lang.System.* access in UDFs is dangerous and not recommended. Set allow_extra_insecure_udfs: false to disable.");
 
-        if (conf.scripted_user_defined_functions_enabled)
+        if(conf.scripted_user_defined_functions_enabled)
             throw new ConfigurationException("JavaScript user-defined functions were removed in CASSANDRA-18252. " +
                                              "Hooks are planned to be introduced as part of CASSANDRA-17280");
 
@@ -1117,16 +1117,16 @@ public class DatabaseDescriptor
             conf.client_encryption_options.applyConfig();
 
         if (conf.jmx_server_options == null)
-        {
+            {
             conf.jmx_server_options = JMXServerOptions.createParsingSystemProperties();
         }
         else if (JMXServerOptions.isEnabledBySystemProperties())
-        {
+                {
                 throw new ConfigurationException("Configure either jmx_server_options in cassandra.yaml and comment out " +
                                                  "configure_jmx function call in cassandra-env.sh or keep cassandra-env.sh " +
                                                  "to call configure_jmx function but you have to keep jmx_server_options " +
                                                  "in cassandra.yaml commented out.");
-        }
+                }
 
         conf.jmx_server_options.jmx_encryption_options.applyConfig();
 
@@ -1137,7 +1137,7 @@ public class DatabaseDescriptor
             throw new ConfigurationException("max_value_size must be positive", false);
         else if (conf.max_value_size.toMebibytes() >= 2048)
             throw new ConfigurationException("max_value_size must be smaller than 2048, but was "
-                                             + conf.max_value_size.toString(), false);
+                    + conf.max_value_size.toString(), false);
 
         switch (conf.disk_optimization_strategy)
         {
@@ -1582,7 +1582,7 @@ public class DatabaseDescriptor
         try
         {
             Class<?> seedProviderClass = Class.forName(conf.seed_provider.class_name);
-            seedProvider = (SeedProvider) seedProviderClass.getConstructor(Map.class).newInstance(conf.seed_provider.parameters);
+            seedProvider = (SeedProvider)seedProviderClass.getConstructor(Map.class).newInstance(conf.seed_provider.parameters);
         }
         // there are about 5 checked exceptions that could be thrown here.
         catch (Exception e)
@@ -1596,42 +1596,42 @@ public class DatabaseDescriptor
     @VisibleForTesting
     static void checkForLowestAcceptedTimeouts(Config conf)
     {
-        if (conf.read_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.read_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("read_request_timeout", conf.read_request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.read_request_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
 
-        if (conf.range_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.range_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("range_request_timeout", conf.range_request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.range_request_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
 
-        if (conf.request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("request_timeout", conf.request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.request_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
 
-        if (conf.write_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.write_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("write_request_timeout", conf.write_request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.write_request_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
 
-        if (conf.cas_contention_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.cas_contention_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("cas_contention_timeout", conf.cas_contention_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.cas_contention_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
 
-        if (conf.counter_write_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.counter_write_request_timeout.toMilliseconds()< LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("counter_write_request_timeout", conf.counter_write_request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.counter_write_request_timeout = new DurationSpec.LongMillisecondsBound("10ms");
         }
-        if (conf.truncate_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
+        if(conf.truncate_request_timeout.toMilliseconds() < LOWEST_ACCEPTED_TIMEOUT.toMilliseconds())
         {
             logInfo("truncate_request_timeout", conf.truncate_request_timeout, LOWEST_ACCEPTED_TIMEOUT);
             conf.truncate_request_timeout = LOWEST_ACCEPTED_TIMEOUT;
@@ -2068,7 +2068,7 @@ public class DatabaseDescriptor
     {
         int defaultCidrGroupsCacheRefreshInterval = 5; // mins
 
-        if (conf.cidr_authorizer == null || conf.cidr_authorizer.parameters == null)
+        if (conf.cidr_authorizer == null  || conf.cidr_authorizer.parameters == null)
             return defaultCidrGroupsCacheRefreshInterval;
 
         String cidrGroupsCacheRefreshInterval = conf.cidr_authorizer.parameters.get("cidr_groups_cache_refresh_interval");
@@ -2082,7 +2082,7 @@ public class DatabaseDescriptor
     {
         int defaultIpCacheMaxSize = 100;
 
-        if (conf.cidr_authorizer == null || conf.cidr_authorizer.parameters == null)
+        if (conf.cidr_authorizer == null  || conf.cidr_authorizer.parameters == null)
             return defaultIpCacheMaxSize;
 
         String ipCacheMaxSize = conf.cidr_authorizer.parameters.get("ip_cache_max_size");
@@ -2125,8 +2125,8 @@ public class DatabaseDescriptor
     public static int getPermissionsUpdateInterval()
     {
         return conf.permissions_update_interval == null
-               ? conf.permissions_validity.toMilliseconds()
-               : conf.permissions_update_interval.toMilliseconds();
+             ? conf.permissions_validity.toMilliseconds()
+             : conf.permissions_update_interval.toMilliseconds();
     }
 
     public static void setPermissionsUpdateInterval(int updateInterval)
@@ -2170,8 +2170,8 @@ public class DatabaseDescriptor
     public static int getRolesUpdateInterval()
     {
         return conf.roles_update_interval == null
-               ? conf.roles_validity.toMilliseconds()
-               : conf.roles_update_interval.toMilliseconds();
+             ? conf.roles_validity.toMilliseconds()
+             : conf.roles_update_interval.toMilliseconds();
     }
 
     public static void setRolesCacheActiveUpdate(boolean update)
@@ -2316,7 +2316,7 @@ public class DatabaseDescriptor
         }
         catch (ConfigurationException e)
         {
-            throw new IllegalArgumentException("Bad configuration; unable to start server: " + e.getMessage());
+            throw new IllegalArgumentException("Bad configuration; unable to start server: "+e.getMessage());
         }
         catch (FSWriteError e)
         {
@@ -2417,7 +2417,7 @@ public class DatabaseDescriptor
 
     public static void setColumnIndexSizeInKiB(int val)
     {
-        conf.column_index_size = val != -1 ? createIntKibibyteBoundAndEnsureItIsValidForByteConversion(val, "column_index_size") : null;
+        conf.column_index_size = val != -1 ? createIntKibibyteBoundAndEnsureItIsValidForByteConversion(val,"column_index_size") : null;
     }
 
     public static int getColumnIndexCacheSize()
@@ -2432,7 +2432,7 @@ public class DatabaseDescriptor
 
     public static void setColumnIndexCacheSize(int val)
     {
-        conf.column_index_cache_size = createIntKibibyteBoundAndEnsureItIsValidForByteConversion(val, "column_index_cache_size");
+        conf.column_index_cache_size = createIntKibibyteBoundAndEnsureItIsValidForByteConversion(val,"column_index_cache_size");
     }
 
     public static int getBatchSizeWarnThreshold()
@@ -2462,7 +2462,7 @@ public class DatabaseDescriptor
 
     public static void setBatchSizeWarnThresholdInKiB(int threshold)
     {
-        conf.batch_size_warn_threshold = createIntKibibyteBoundAndEnsureItIsValidForByteConversion(threshold, "batch_size_warn_threshold");
+        conf.batch_size_warn_threshold = createIntKibibyteBoundAndEnsureItIsValidForByteConversion(threshold,"batch_size_warn_threshold");
     }
 
     public static void setBatchSizeFailThresholdInKiB(int threshold)
@@ -3029,7 +3029,7 @@ public class DatabaseDescriptor
     public static void setStreamThroughputOutboundMebibytesPerSecAsInt(int value)
     {
         if (MEBIBYTES_PER_SECOND.toMegabitsPerSecond(value) >= Integer.MAX_VALUE)
-            throw new IllegalArgumentException("stream_throughput_outbound: " + value +
+            throw new IllegalArgumentException("stream_throughput_outbound: " + value  +
                                                " is too large; it should be less than " +
                                                Integer.MAX_VALUE + " in megabits/s");
 
@@ -3153,10 +3153,10 @@ public class DatabaseDescriptor
     public static String[] getLocalSystemKeyspacesDataFileLocations()
     {
         if (useSpecificLocationForLocalSystemData())
-            return new String[]{ conf.local_system_data_file_directory };
+            return new String[] {conf.local_system_data_file_directory};
 
-        return conf.data_file_directories.length == 0 ? conf.data_file_directories
-                                                      : new String[]{ conf.data_file_directories[0] };
+        return conf.data_file_directories.length == 0  ? conf.data_file_directories
+                                                       : new String[] {conf.data_file_directories[0]};
     }
 
     /**
@@ -3856,7 +3856,7 @@ public class DatabaseDescriptor
     {
         DurationSpec.IntMillisecondsBound blockMillis = conf.periodic_commitlog_sync_lag_block;
         return blockMillis == null
-               ? (long) (getCommitLogSyncPeriod() * 1.5)
+               ? (long)(getCommitLogSyncPeriod() * 1.5)
                : blockMillis.toMilliseconds();
     }
 
@@ -4039,7 +4039,7 @@ public class DatabaseDescriptor
     public static File getSerializedCachePath(CacheType cacheType, String version, String extension)
     {
         String name = cacheType.toString()
-                      + (version == null ? "" : '-' + version + '.' + extension);
+                + (version == null ? "" : '-' + version + '.' + extension);
         return new File(conf.saved_caches_directory, name);
     }
 
@@ -4152,7 +4152,7 @@ public class DatabaseDescriptor
 
     public static long getMaxHintsFileSize()
     {
-        return conf.max_hints_file_size.toBytesInLong();
+        return  conf.max_hints_file_size.toBytesInLong();
     }
 
     public static void setMaxHintsFileSize(long value)
@@ -4978,7 +4978,7 @@ public class DatabaseDescriptor
 
     public static FullQueryLoggerOptions getFullQueryLogOptions()
     {
-        return conf.full_query_logging_options;
+        return  conf.full_query_logging_options;
     }
 
     public static void setFullQueryLogOptions(FullQueryLoggerOptions options)
