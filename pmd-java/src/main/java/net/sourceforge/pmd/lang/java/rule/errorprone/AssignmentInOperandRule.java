@@ -91,11 +91,11 @@ public class AssignmentInOperandRule extends AbstractJavaRulechainRule {
 
         if (toplevel == impureExpr) {
             if (parent instanceof ASTExpressionStatement
-                    || parent instanceof ASTStatementExpressionList
+                || parent instanceof ASTStatementExpressionList
                     || parent instanceof ASTLambdaExpression) {
-                // that's ok
-                return;
-            }
+            // that's ok
+            return;
+        }
             if (parent instanceof ASTSwitchArrowBranch
                     && parent.getParent() instanceof ASTSwitchStatement) {
                 // assignments in modern (->) switch statements are ok
