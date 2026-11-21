@@ -597,6 +597,27 @@ public final class SymbolTableResolver {
          * implement a visit method in the MyVisitor instance, this visitor will
          * default to that implementation.
          */
+
+        /**
+         * Handles statements. Every visit method should
+         * <ul>
+         * <li>Visit the statement and its <i>entire</i> subtree according to the
+         * scoping rules of the statement (eg, a for statement may declare
+         * some variables in its initializers). Note that the subtree should be visited
+         * with the enclosing instance of {@link MyVisitor}, not the statement visitor itself.
+         * <li>Pop any new symbol tables it pushes.
+         * <li>return the set of variables that are <i>introduced</i> by the statement (in following statements)
+         * as defined in the JLS: https://docs.oracle.com/javase/specs/jls/se17/html/jls-6.html#jls-6.3.2
+         * This is used to implement scoping of pat variables in blocks.
+         * <li>
+         * </ul>
+         *
+         * <p>{@link #visitBlockLike(Iterable, ReferenceCtx)} calls this to process a block scope.
+         *
+         * <p>Statements that have no special rules concerning pat bindings can
+         * implement a visit method in the MyVisitor instance, this visitor will
+         * default to that implementation.
+         */
         class StatementVisitor extends JavaVisitorBase<ReferenceCtx, PSet<ASTVariableId>> {
 
             @Override
