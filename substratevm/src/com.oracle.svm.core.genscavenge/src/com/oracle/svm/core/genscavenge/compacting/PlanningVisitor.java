@@ -174,7 +174,7 @@ public final class PlanningVisitor implements AlignedHeapChunk.Visitor {
             if (allocChunk.getShouldSweepInsteadOfCompact()) {
                 p = HeapChunk.getTopPointer(allocChunk); // use any free memory at the end
             } else {
-                p = AlignedHeapChunk.getObjectsStart(allocChunk);
+            p = AlignedHeapChunk.getObjectsStart(allocChunk);
             }
             allocPointer = p.add(size);
         }
