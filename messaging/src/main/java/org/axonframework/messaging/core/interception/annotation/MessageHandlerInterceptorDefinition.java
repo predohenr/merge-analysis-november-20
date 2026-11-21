@@ -119,8 +119,8 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
                 ProcessingContext contextWithException = ResultParameterResolverFactory.withResult(e, context);
                 if (super.canHandle(message, contextWithException)) {
                     return super.handleSync(message, contextWithException, target);
-                }
-                throw e;
+                    }
+                    throw e;
             }
         }
 
