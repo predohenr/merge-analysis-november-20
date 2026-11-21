@@ -490,16 +490,16 @@ public class KrakenAdapters {
 
     return InstrumentMetaData.builder()
             .tradingFee(tradingFee)
-            .feeTiers(adaptFeeTiers(krakenPair.getFees_maker(), krakenPair.getFees()))
-            .tradingFeeCurrency(
-                    KrakenUtils.translateKrakenCurrencyCode(krakenPair.getFeeVolumeCurrency()))
+        .feeTiers(adaptFeeTiers(krakenPair.getFees_maker(), krakenPair.getFees()))
+        .tradingFeeCurrency(
+            KrakenUtils.translateKrakenCurrencyCode(krakenPair.getFeeVolumeCurrency()))
             .minimumAmount(minimumAmount)
             .priceScale(krakenPair.getPairScale())
             .priceStepSize(krakenPair.getTickSize())
             .volumeScale(krakenPair.getVolumeLotScale())
             .amountStepSize(volumeStepSize)
-            .marketOrderEnabled(true)
-            .build();
+        .marketOrderEnabled(true)
+        .build();
   }
 
   public static List<FundingRecord> adaptFundingHistory(
