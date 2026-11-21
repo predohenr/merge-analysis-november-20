@@ -33,6 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for {@link StackdriverMeterRegistry}
  */
+
+/**
+ * Tests for {@link StackdriverMeterRegistry}
+ */
 class StackdriverMeterRegistryTest {
 
     MockClock clock = new MockClock();
