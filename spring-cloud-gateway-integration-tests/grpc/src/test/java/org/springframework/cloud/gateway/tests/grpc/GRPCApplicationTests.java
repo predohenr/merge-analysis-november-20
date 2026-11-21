@@ -36,13 +36,13 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.grpc.Status.FAILED_PRECONDITION;
 import static io.grpc.Status.RESOURCE_EXHAUSTED;
 import static io.grpc.netty.NegotiationType.TLS;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 /**
  * @author Alberto C. Ríos
