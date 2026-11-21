@@ -628,20 +628,20 @@ public interface RedisCommands {
     RedisStrictCommand<Boolean> MSETEX = new RedisStrictCommand<Boolean>("MSETEX", new BooleanReplayConvertor());
 
     RedisCommand<Boolean> HPEXPIRE = new RedisCommand("HPEXPIRE", new ListFirstObjectDecoder(), (Convertor<Boolean>) obj -> {
-        Long val = (Long) obj;
-        if (val == -2) {
-            return null;
-        }
+            Long val = (Long) obj;
+            if (val == -2) {
+                return null;
+            }
 
-        return val == 1;
+            return val == 1;
     });
     RedisCommand<Boolean> HPERSIST = new RedisCommand("HPERSIST", new ListFirstObjectDecoder(), (Convertor<Boolean>) obj -> {
-        Long val = (Long) obj;
-        if (val == -2) {
-            return null;
-        }
+            Long val = (Long) obj;
+            if (val == -2) {
+                return null;
+            }
 
-        return val == 1;
+            return val == 1;
     });
     RedisCommand<Long> HPTTL = new RedisCommand("HPTTL", new ListFirstObjectDecoder(), new LongReplayConvertor());
     RedisStrictCommand<Boolean> HSETNX = new RedisStrictCommand<Boolean>("HSETNX", new BooleanReplayConvertor());
