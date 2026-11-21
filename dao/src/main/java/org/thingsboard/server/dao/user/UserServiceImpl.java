@@ -105,7 +105,7 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
     private final EntityCountService countService;
     private final JpaExecutorService executor;
 
-    @Override
+        @Override
     @TransactionalEventListener
     public void handleEvictEvent(UserCacheEvictEvent event) {
         List<UserCacheKey> keys = new ArrayList<>(2);
