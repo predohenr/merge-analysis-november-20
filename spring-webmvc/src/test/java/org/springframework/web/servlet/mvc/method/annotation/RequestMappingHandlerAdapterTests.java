@@ -83,6 +83,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @see HandlerMethodAnnotationDetectionTests
  * @see RequestMappingHandlerAdapterIntegrationTests
  */
+
+/**
+ * Tests for {@link RequestMappingHandlerAdapter}.
+ *
+ * @author Rossen Stoyanchev
+ * @author Sam Brannen
+ * @see ServletAnnotationControllerHandlerMethodTests
+ * @see HandlerMethodAnnotationDetectionTests
+ * @see RequestMappingHandlerAdapterIntegrationTests
+ */
 class RequestMappingHandlerAdapterTests {
 
 	private static int RESOLVER_COUNT;
