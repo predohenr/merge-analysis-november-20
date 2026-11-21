@@ -461,7 +461,7 @@ public class PoiUIFilter implements Comparable<PoiUIFilter>, CustomSearchPoiFilt
 			limit = 1000;
 		}
 		LOG.debug("searchAmenitiesInternal: Dispatching search to dataProvider for filter=" + filterId);
-		currentSearchResult = dataProvider.searchAmenities(
+        currentSearchResult = dataProvider.searchAmenities(
 				lat, lon, topLatitude, bottomLatitude, leftLongitude, rightLongitude,
 				zoom, matcher, comparator, limit
 		);
