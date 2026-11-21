@@ -45,6 +45,10 @@ import static org.awaitility.Awaitility.await;
 /**
  * {@link ObservedAspect} tests.
  */
+
+/**
+ * {@link ObservedAspect} tests.
+ */
 class ObservedAspectTests {
 
     TestObservationRegistry registry = TestObservationRegistry.create();
