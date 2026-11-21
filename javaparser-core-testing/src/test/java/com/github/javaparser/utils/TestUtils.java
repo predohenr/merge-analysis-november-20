@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2010 Júlio Vilmar Gesser.
- * Copyright (C) 2011, 2013-2024 The JavaParser Team.
+ * Copyright (C) 2011, 2013-2019 The JavaParser Team.
  *
  * This file is part of JavaParser.
  *
@@ -78,7 +78,7 @@ public class TestUtils {
                 fail("resource not found by name: " + resourceName);
             }
             try (final InputStreamReader reader = new InputStreamReader(resourceAsStream, UTF_8);
-                    final BufferedReader br = new BufferedReader(reader)) {
+                 final BufferedReader br = new BufferedReader(reader)) {
                 final StringBuilder builder = new StringBuilder(4096);
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -296,8 +296,8 @@ public class TestUtils {
                 message
                         + String.format(
                                 " -- failed due to line separator differences -- Expected: %s, but actual: %s (system eol: %s)",
-                                LineSeparator.detect(expected).asEscapedString(),
-                                LineSeparator.detect(actual).asEscapedString(),
+                        LineSeparator.detect(expected).asEscapedString(),
+                        LineSeparator.detect(actual).asEscapedString(),
                                 LineSeparator.SYSTEM.asEscapedString()));
     }
 
@@ -359,7 +359,7 @@ public class TestUtils {
             }
             return parse.getResult()
                     .orElseThrow(() -> new IllegalArgumentException("No result when attempting to parse " + filePath));
-        } catch (IOException ex) {
+            } catch (IOException ex) {
             throw new IllegalStateException("Error while parsing " + filePath, ex);
         }
     }
