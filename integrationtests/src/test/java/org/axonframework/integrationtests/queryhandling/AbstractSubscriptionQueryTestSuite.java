@@ -19,25 +19,40 @@ package org.axonframework.integrationtests.queryhandling;
 import jakarta.annotation.Nonnull;
 import org.assertj.core.util.Strings;
 import org.awaitility.Awaitility;
+import org.axonframework.queryhandling.GenericQueryResponseMessage;
+import org.axonframework.queryhandling.QueryMessage;
 import org.axonframework.conversion.json.JacksonConverter;
+import org.axonframework.serialization.json.JacksonConverter;
+import org.axonframework.messaging.core.ClassBasedMessageTypeResolver;
 import org.axonframework.messaging.core.FluxUtils;
+import org.axonframework.messaging.core.Message;
 import org.axonframework.messaging.core.MessageStream;
 import org.axonframework.messaging.core.MessageType;
 import org.axonframework.messaging.core.QualifiedName;
+import org.axonframework.messaging.core.annotations.ClasspathParameterResolverFactory;
+import org.axonframework.messaging.core.annotations.MultiParameterResolverFactory;
+import org.axonframework.messaging.core.annotations.ParameterResolverFactory;
 import org.axonframework.messaging.core.conversion.DelegatingMessageConverter;
 import org.axonframework.messaging.core.conversion.MessageConverter;
 import org.axonframework.messaging.core.unitofwork.ProcessingContext;
 import org.axonframework.messaging.core.unitofwork.UnitOfWork;
 import org.axonframework.messaging.core.unitofwork.UnitOfWorkTestUtils;
 import org.axonframework.messaging.queryhandling.GenericQueryMessage;
-import org.axonframework.messaging.queryhandling.GenericQueryResponseMessage;
 import org.axonframework.messaging.queryhandling.GenericSubscriptionQueryUpdateMessage;
 import org.axonframework.messaging.queryhandling.QueryBus;
 import org.axonframework.messaging.queryhandling.QueryExecutionException;
-import org.axonframework.messaging.queryhandling.QueryMessage;
+import org.axonframework.messaging.queryhandling.QueryHandlingComponent;
+import org.axonframework.messaging.queryhandling.QueryPriorityCalculator;
 import org.axonframework.messaging.queryhandling.QueryResponseMessage;
 import org.axonframework.messaging.queryhandling.QueryUpdateEmitter;
+import org.axonframework.messaging.queryhandling.QueryUpdateEmitterParameterResolverFactory;
+import org.axonframework.messaging.queryhandling.SubscriptionQueryAlreadyRegisteredException;
+import org.axonframework.messaging.queryhandling.QueryMessage;
 import org.axonframework.messaging.queryhandling.SubscriptionQueryUpdateMessage;
+import org.axonframework.messaging.queryhandling.annotations.AnnotatedQueryHandlingComponent;
+import org.axonframework.messaging.queryhandling.annotations.QueryHandler;
+import org.axonframework.messaging.queryhandling.gateway.DefaultQueryGateway;
+import org.axonframework.messaging.queryhandling.gateway.QueryGateway;
 import org.junit.jupiter.api.*;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
@@ -69,7 +84,9 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Abstract test suite for the {@link QueryBus#subscriptionQuery(QueryMessage, ProcessingContext, int)} functionality.
+ * Abstract test suite for the
+ * {@link QueryBus#subscriptionQuery(QueryMessage, ProcessingContext, int)}
+ * functionality.
  *
  * @author Milan Savic
  * @author Steven van Beelen
@@ -81,10 +98,7 @@ public abstract class AbstractSubscriptionQueryTestSuite extends AbstractQueryTe
     protected static final String FOUND = "found";
 
     protected static final MessageConverter CONVERTER = new DelegatingMessageConverter(new JacksonConverter());
-
-    // Unique query name using UUID for the commonly used chat messages query
-    protected final QualifiedName CHAT_MESSAGES_QUERY_NAME = new QualifiedName(
-            "test.chatMessages." + UUID.randomUUID());
+    protected final QualifiedName CHAT_MESSAGES_QUERY_NAME = new QualifiedName("test.chatMessages." + UUID.randomUUID());
     protected final MessageType CHAT_MESSAGES_QUERY_TYPE = new MessageType(CHAT_MESSAGES_QUERY_NAME.fullName());
 
     protected static final MessageType TEST_RESPONSE_TYPE = new MessageType(String.class);
@@ -92,6 +106,8 @@ public abstract class AbstractSubscriptionQueryTestSuite extends AbstractQueryTe
 
     protected QueryBus queryBus;
     protected RuntimeException toBeThrown;
+
+    // Unique query name using UUID for the commonly used chat messages query
 
     @BeforeEach
     void setUp() {
@@ -794,11 +810,6 @@ public abstract class AbstractSubscriptionQueryTestSuite extends AbstractQueryTe
         assertEquals(FOUND, result);
     }
 
-
-    private record SomeQuery(String filter) {
-
-    }
-
     private void scheduleAfterDelay(Runnable task) {
         CountDownLatch latch = new CountDownLatch(1);
         Thread.ofVirtual().start(() -> {
@@ -817,5 +828,10 @@ public abstract class AbstractSubscriptionQueryTestSuite extends AbstractQueryTe
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
+    }
+
+
+    private record SomeQuery(String filter) {
+
     }
 }
