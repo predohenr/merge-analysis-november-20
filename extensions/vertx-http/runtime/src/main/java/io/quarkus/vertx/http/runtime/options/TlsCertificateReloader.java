@@ -163,13 +163,6 @@ public class TlsCertificateReloader {
             }
         }
     }
-
-    /**
-     * Trigger all the reload tasks.
-     * This method is <strong>NOT</strong> part of the public API, and is only used for testing purpose.
-     *
-     * @return a Uni that is completed when all the reload tasks have been executed
-     */
     public static CompletionStage<Void> reload() {
         @SuppressWarnings("rawtypes")
         CompletableFuture[] futures = new CompletableFuture[TASKS.size()];
@@ -224,6 +217,13 @@ public class TlsCertificateReloader {
 
         return copy;
     }
+
+    /**
+     * Trigger all the reload tasks.
+     * This method is <strong>NOT</strong> part of the public API, and is only used for testing purpose.
+     *
+     * @return a Uni that is completed when all the reload tasks have been executed
+     */
 
     static final class ReloadCertificateTask {
         private final long it;
