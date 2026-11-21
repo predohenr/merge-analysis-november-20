@@ -18,7 +18,6 @@ package org.axonframework.messaging.eventhandling.processing.streaming.pooled;
 
 import jakarta.annotation.Nonnull;
 import org.axonframework.common.AxonConfigurationException;
-import org.axonframework.common.ObjectUtils;
 import org.axonframework.common.annotation.Internal;
 import org.axonframework.common.configuration.Configuration;
 import org.axonframework.common.infra.ComponentDescriptor;
@@ -44,6 +43,12 @@ import org.axonframework.messaging.eventhandling.processing.streaming.token.stor
 import org.axonframework.messaging.eventstreaming.EventCriteria;
 import org.axonframework.messaging.eventstreaming.StreamableEventSource;
 import org.axonframework.messaging.eventstreaming.TrackingTokenSource;
+import org.axonframework.common.ObjectUtils;
+import org.axonframework.messaging.eventhandling.tracing.DefaultEventProcessorSpanFactory;
+import org.axonframework.messaging.eventhandling.tracing.EventProcessorSpanFactory;
+import org.axonframework.messaging.monitoring.MessageMonitor;
+import org.axonframework.messaging.monitoring.NoOpMessageMonitor;
+import org.axonframework.messaging.tracing.NoOpSpanFactory;
 
 import java.time.Clock;
 import java.util.Objects;
