@@ -46,8 +46,8 @@ import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.util.Fields;
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.StringUtil;
-import org.eclipse.jetty.util.TypeUtil;
 import org.eclipse.jetty.util.URIUtil;
+import org.eclipse.jetty.util.TypeUtil;
 import org.eclipse.jetty.util.UrlEncoded;
 
 public class Dispatcher implements RequestDispatcher
@@ -56,15 +56,7 @@ public class Dispatcher implements RequestDispatcher
      * Dispatch include attribute names
      */
     public static final String __INCLUDE_PREFIX = "jakarta.servlet.include.";
-
-    /**
-     * Dispatch include attribute names
-     */
     public static final String __FORWARD_PREFIX = "jakarta.servlet.forward.";
-
-    /**
-     * Name of original request attribute
-     */
     public static final String __ORIGINAL_REQUEST = "org.eclipse.jetty.originalRequest";
 
     public static final String JETTY_INCLUDE_HEADER_PREFIX = "org.eclipse.jetty.server.include.";
@@ -76,6 +68,14 @@ public class Dispatcher implements RequestDispatcher
     private final ServletHandler.MappedServlet _mappedServlet;
     private final ServletHandler _servletHandler;
     private final ServletPathMapping _servletPathMapping;
+
+    /**
+     * Dispatch include attribute names
+     */
+
+    /**
+     * Name of original request attribute
+     */
 
     public Dispatcher(ServletContextHandler contextHandler, HttpURI uri, String decodedPathInContext)
     {
@@ -169,6 +169,12 @@ public class Dispatcher implements RequestDispatcher
         HttpServletResponse httpResponse = (response instanceof HttpServletResponse) ? (HttpServletResponse)response : new ServletResponseHttpWrapper(response);
 
         _mappedServlet.handle(_servletHandler, _decodedPathInContext, new AsyncRequest(httpRequest), httpResponse);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Dispatcher@0x%x{%s,%s}", hashCode(), _named, _uri);
     }
 
     public class ParameterRequestWrapper extends HttpServletRequestWrapper
@@ -758,15 +764,6 @@ public class Dispatcher implements RequestDispatcher
             names.add(AsyncContextState.ASYNC_QUERY_STRING);
             return Collections.enumeration(names);
         }
-
-        /**
-         * Get the parameters merged from the request wrapped by this {@code AsyncRequest}
-         * and those in the {@code RequestDispatcher}.
-         * If the target path is the same as the request path, then
-         * we do not want to re-extract the query string, as the wrapped request will
-         * have already done the extraction.
-         * @return the request parameters
-         */
         @Override
         protected Fields getParameters()
         {
@@ -789,6 +786,15 @@ public class Dispatcher implements RequestDispatcher
             }
             return super.getParameters();
         }
+
+        /**
+         * Get the parameters merged from the request wrapped by this {@code AsyncRequest}
+         * and those in the {@code RequestDispatcher}.
+         * If the target path is the same as the request path, then
+         * we do not want to re-extract the query string, as the wrapped request will
+         * have already done the extraction.
+         * @return the request parameters
+         */
     }
 
     private class ErrorRequest extends ParameterRequestWrapper
@@ -868,11 +874,5 @@ public class Dispatcher implements RequestDispatcher
             names.addAll(Collections.list(super.getAttributeNames()));
             return Collections.enumeration(names);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return String.format("Dispatcher@0x%x{%s,%s}", hashCode(), _named, _uri);
     }
 }
