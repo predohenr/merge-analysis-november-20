@@ -99,7 +99,7 @@ public class GatewayMvcRuntimeHintsProcessor implements BeanFactoryInitializatio
 			addGenericsForClass(genericsToAdd, resolvableType);
 			addSuperTypesForClass(resolvableType, superTypes, genericsToAdd);
 			addEnclosingClassesForClass(enclosingClasses, resolvableType.getRawClass());
-		}
+				}
 		classesToAdd.addAll(genericsToAdd);
 		classesToAdd.addAll(superTypes);
 		classesToAdd.addAll(enclosingClasses);
