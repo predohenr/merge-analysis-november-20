@@ -275,7 +275,7 @@ class SchemaTypeExtensionsChecker {
         }
     }
 
-    private void checkForFieldRedefinition(List<GraphQLError> errors, TypeDefinition<?> typeDefinition, List<FieldDefinition> fieldDefinitions, List<FieldDefinition> referenceFieldDefinitions) {
+        private void checkForFieldRedefinition(List<GraphQLError> errors, TypeDefinition<?> typeDefinition, List<FieldDefinition> fieldDefinitions, List<FieldDefinition> referenceFieldDefinitions) {
 
         Map<String, FieldDefinition> referenceMap = FpKit.getByName(referenceFieldDefinitions, FieldDefinition::getName, mergeFirst());
 
