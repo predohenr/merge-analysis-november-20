@@ -24,7 +24,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.hc.core5.net.URIBuilder;
 import org.apache.commons.lang3.concurrent.LazyInitializer;
-import org.apache.hc.core5.net.URIBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -161,11 +160,11 @@ import org.thingsboard.server.common.data.oauth2.PlatformType;
 import org.thingsboard.server.common.data.ota.ChecksumAlgorithm;
 import org.thingsboard.server.common.data.ota.OtaPackageType;
 import org.thingsboard.server.common.data.page.PageData;
+import org.thingsboard.server.common.data.pat.ApiKey;
+import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.page.SortOrder;
 import org.thingsboard.server.common.data.page.TimePageLink;
-import org.thingsboard.server.common.data.pat.ApiKey;
-import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 import org.thingsboard.server.common.data.plugin.ComponentDescriptor;
 import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.data.query.AlarmCountQuery;
@@ -210,7 +209,6 @@ import org.thingsboard.server.common.data.widget.WidgetType;
 import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
 import org.thingsboard.server.common.data.widget.WidgetTypeInfo;
 import org.thingsboard.server.common.data.widget.WidgetsBundle;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
@@ -219,7 +217,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -227,9 +224,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.joining;
 import static org.thingsboard.server.common.data.StringUtils.isEmpty;
+import java.util.Objects;
+import static java.util.stream.Collectors.joining;
 
 public class RestClient implements Closeable {
 
