@@ -220,9 +220,6 @@ public final class Api {
     private static List<Integer> listOfUids = new ArrayList<>();
 
 
-    private static Map<Integer, ApplicationInfo> uidToApplicationInfoMap = null;
-
-
     private static final Pattern dual_pattern = Pattern.compile("package:(.*) uid:(.*)", Pattern.MULTILINE);
 
     /**
@@ -274,8 +271,8 @@ public final class Api {
     private static final Object RULES_LOCK = new Object();
     public static void setRulesUpToDate(boolean rulesUpToDate) {
         synchronized (RULES_LOCK) {
-            Api.rulesUpToDate = rulesUpToDate;
-        }
+        Api.rulesUpToDate = rulesUpToDate;
+    }
     }
     public static boolean getRulesUpToDate() {
         synchronized (RULES_LOCK) {
@@ -957,15 +954,15 @@ public final class Api {
 
     public static void applySavedIptablesRules(Context ctx, boolean showErrors, RootCommand callback) {
         synchronized (GLOBAL_STATUS_LOCK) {
-            if(!globalStatus) {
-                Log.i(TAG, "Using applySavedIptablesRules");
-                globalStatus = true;
-                
+        if(!globalStatus) {
+            Log.i(TAG, "Using applySavedIptablesRules");
+            globalStatus = true;
+
                 try {
                     RuleDataSet dataSet = getDataSet();
-                    List<String> ipv4cmds = new ArrayList<>();
-                    List<String> ipv6cmds = new ArrayList<>();
-                    
+            List<String> ipv4cmds = new ArrayList<>();
+            List<String> ipv6cmds = new ArrayList<>();
+
                     // Create thread-safe chain name for this execution
                     final String chainName = getThreadSafeChainName();
                     
@@ -973,12 +970,12 @@ public final class Api {
                     try {
                         Log.i(TAG, "Applying IPv4 rules");
                         applyIptablesRulesImpl(ctx, dataSet, showErrors, ipv4cmds, false, chainName);
-                        applySavedIp4tablesRules(ctx, ipv4cmds, callback);
+                applySavedIp4tablesRules(ctx, ipv4cmds, callback);
                         Log.i(TAG, "Successfully applied IPv4 rules");
                     } catch (Exception e) {
                         Log.e(TAG, "Error applying IPv4 rules", e);
                         throw new RuntimeException(e);
-                    }
+            }
 
                     // Apply IPv6 rules second (sequentially after IPv4)
                     if (G.enableIPv6()) {
@@ -1001,9 +998,9 @@ public final class Api {
                     globalStatus = false;
                     setRulesUpToDate(true);
                 }
-            } else {
-                Log.i(TAG, "ignore applySavedIptablesRules as existing thread running");
-            }
+        } else {
+            Log.i(TAG, "ignore applySavedIptablesRules as existing thread running");
+        }
         }
     }
 
@@ -2290,6 +2287,9 @@ public final class Api {
             return null;
         }
     }
+
+
+    private static Map<Integer, ApplicationInfo> uidToApplicationInfoMap = null;
 
 
     public static Drawable getApplicationIcon(Context context, int appUid) {
