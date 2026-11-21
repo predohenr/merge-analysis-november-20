@@ -1032,4 +1032,3 @@ public class ClusterConnectionManager extends MasterSlaveConnectionManager {
     }
     
 }
-
