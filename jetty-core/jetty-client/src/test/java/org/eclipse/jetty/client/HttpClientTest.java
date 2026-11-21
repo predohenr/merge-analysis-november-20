@@ -187,13 +187,13 @@ public class HttpClientTest extends AbstractHttpClientServerTest
 
         for (int i = 0; i < 2; ++i)
         {
-            ContentResponse response = client.GET(scenario.getScheme() + "://localhost:" + connector.getLocalPort());
+        ContentResponse response = client.GET(scenario.getScheme() + "://localhost:" + connector.getLocalPort());
 
-            assertNotNull(response);
-            assertEquals(200, response.getStatus());
-            byte[] content = response.getContent();
-            assertArrayEquals(data, content);
-        }
+        assertNotNull(response);
+        assertEquals(200, response.getStatus());
+        byte[] content = response.getContent();
+        assertArrayEquals(data, content);
+    }
     }
 
     @ParameterizedTest

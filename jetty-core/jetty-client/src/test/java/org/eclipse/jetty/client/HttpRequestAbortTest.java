@@ -507,10 +507,10 @@ public class HttpRequestAbortTest extends AbstractHttpClientServerTest
         });
 
         ContentResponse response = client.newRequest("localhost", connector.getLocalPort())
-            .scheme(scenario.getScheme())
-            .path("/redirect")
-            .timeout(5, TimeUnit.SECONDS)
-            .send();
+                    .scheme(scenario.getScheme())
+                    .path("/redirect")
+                    .timeout(5, TimeUnit.SECONDS)
+                    .send();
 
         assertEquals(HttpStatus.OK_200, response.getStatus());
     }
