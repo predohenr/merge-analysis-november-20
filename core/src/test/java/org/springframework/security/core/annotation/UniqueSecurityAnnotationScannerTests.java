@@ -327,14 +327,6 @@ public class UniqueSecurityAnnotationScannerTests {
 			.isThrownBy(() -> this.parameterScanner.scan(parameter));
 	}
 
-	// gh-17898
-	@Test
-	void scanWhenAnnotationOnParameterizedUndeclaredMethodAndThenLocates() throws Exception {
-		Method method = ClassUtils.getMethod(GenericInterfaceImpl.class, "processOneAndTwo", Long.class, Object.class);
-		PreAuthorize pre = this.scanner.scan(method, method.getDeclaringClass());
-		assertThat(pre).isNotNull();
-	}
-
 	interface UserService {
 
 		void add(@CustomParameterAnnotation("one") String user);
@@ -409,6 +401,14 @@ public class UniqueSecurityAnnotationScannerTests {
 
 		String value();
 
+	}
+
+	// gh-17898
+	@Test
+	void scanWhenAnnotationOnParameterizedUndeclaredMethodAndThenLocates() throws Exception {
+		Method method = ClassUtils.getMethod(GenericInterfaceImpl.class, "processOneAndTwo", Long.class, Object.class);
+		PreAuthorize pre = this.scanner.scan(method, method.getDeclaringClass());
+		assertThat(pre).isNotNull();
 	}
 
 	@PreAuthorize("one")
