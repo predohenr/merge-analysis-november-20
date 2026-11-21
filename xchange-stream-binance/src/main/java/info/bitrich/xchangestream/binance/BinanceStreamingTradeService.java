@@ -156,7 +156,7 @@ public class BinanceStreamingTradeService implements StreamingTradeService {
   }
 
   @Override
-  public Observable<OpenPosition> getPositionChanges(Instrument instrument) {
+public Observable<OpenPosition> getPositionChanges(Instrument instrument) {
     if (exchange.isFuturesEnabled() || exchange.isPortfolioMarginEnabled()) {
       boolean isFutures = instrument instanceof FuturesContract;
       return getRawPositionChanges(isFutures)
@@ -173,7 +173,7 @@ public class BinanceStreamingTradeService implements StreamingTradeService {
     } else {
       throw new UnsupportedOperationException("spot not supported");
     }
-  }
+    }
 
   public Single<Integer> placeMarketOrder(MarketOrder marketOrder) {
     return placeOrder(marketOrder);
@@ -256,81 +256,81 @@ public class BinanceStreamingTradeService implements StreamingTradeService {
   /**
    * Registers subsriptions with the streaming service for the given products.
    */
-  public void openSubscriptions() {
-    if (binanceUserDataStreamingService != null) {
-      executionReports =
-          binanceUserDataStreamingService
-              .subscribeChannel(
-                  EXECUTION_REPORT)
-              .map(this::executionReport)
-              .subscribe(executionReportsPublisher::onNext);
-      orderTradeUpdate = binanceUserDataStreamingService
-          .subscribeChannel(ORDER_TRADE_UPDATE)
-          .map(this::orderTradeUpdate)
-          .subscribe(orderTradeUpdatePublisher::onNext);
-      tradeLite = binanceUserDataStreamingService.subscribeChannel(TRADE_LITE)
-          .map(this::tradeLite)
-          .subscribe(tradeLitePublisher::onNext);
-      positionChanges = binanceUserDataStreamingService
-          .subscribeChannel(BinanceWebSocketTypes.ACCOUNT_UPDATE)
-          .map(this::positionChanges)
-          .subscribe(positionChangesPublisher::onNext);
+  public void openSubscriptions () {
+      if (binanceUserDataStreamingService != null) {
+        executionReports =
+            binanceUserDataStreamingService
+                .subscribeChannel(
+                    EXECUTION_REPORT)
+                .map(this::executionReport)
+                .subscribe(executionReportsPublisher::onNext);
+        orderTradeUpdate = binanceUserDataStreamingService
+            .subscribeChannel(ORDER_TRADE_UPDATE)
+            .map(this::orderTradeUpdate)
+            .subscribe(orderTradeUpdatePublisher::onNext);
+        tradeLite = binanceUserDataStreamingService.subscribeChannel(TRADE_LITE)
+            .map(this::tradeLite)
+            .subscribe(tradeLitePublisher::onNext);
+        positionChanges = binanceUserDataStreamingService
+            .subscribeChannel(BinanceWebSocketTypes.ACCOUNT_UPDATE)
+            .map(this::positionChanges)
+            .subscribe(positionChangesPublisher::onNext);
 
-      binanceUserDataStreamingService.setEnableLoggingHandler(true);
+        binanceUserDataStreamingService.setEnableLoggingHandler(true);
+      }
     }
-  }
 
   /**
    * User data subscriptions may have to persist across multiple socket connections to different URLs and therefore must act in a publisher fashion so that subscribers get an uninterrupted stream.
    */
-  void setUserDataStreamingService(
-      BinanceUserDataStreamingService binanceUserDataStreamingService) {
-    if (executionReports != null && !executionReports.isDisposed()) {
-      executionReports.dispose();
+  void setUserDataStreamingService (
+        BinanceUserDataStreamingService binanceUserDataStreamingService){
+      if (executionReports != null && !executionReports.isDisposed()) {
+        executionReports.dispose();
+      }
+      if (orderTradeUpdate != null && !orderTradeUpdate.isDisposed()) {
+        orderTradeUpdate.dispose();
+      }
+      if (tradeLite != null && !tradeLite.isDisposed()) {
+        tradeLite.dispose();
+      }
+      if (positionChanges != null && !positionChanges.isDisposed()) {
+        positionChanges.dispose();
+      }
+      this.binanceUserDataStreamingService = binanceUserDataStreamingService;
+      openSubscriptions();
     }
-    if (orderTradeUpdate != null && !orderTradeUpdate.isDisposed()) {
-      orderTradeUpdate.dispose();
-    }
-    if (tradeLite != null && !tradeLite.isDisposed()) {
-      tradeLite.dispose();
-    }
-    if (positionChanges != null && !positionChanges.isDisposed()) {
-      positionChanges.dispose();
-    }
-    this.binanceUserDataStreamingService = binanceUserDataStreamingService;
-    openSubscriptions();
-  }
 
-  private OrderTradeUpdateBinanceWebSocketTransaction orderTradeUpdate(JsonNode json) {
-    try {
-      return mapper.treeToValue(json, OrderTradeUpdateBinanceWebSocketTransaction.class);
-    } catch (IOException e) {
-      throw new ExchangeException("Unable to parse order trade update", e);
+  private OrderTradeUpdateBinanceWebSocketTransaction orderTradeUpdate (JsonNode json){
+      try {
+        return mapper.treeToValue(json, OrderTradeUpdateBinanceWebSocketTransaction.class);
+      } catch (IOException e) {
+        throw new ExchangeException("Unable to parse order trade update", e);
+      }
     }
-  }
 
-  private TradeLiteBinanceWebsocketTransaction tradeLite(JsonNode json) {
-    try {
-      return mapper.treeToValue(json, TradeLiteBinanceWebsocketTransaction.class);
-    } catch (IOException e) {
-      throw new ExchangeException("Unable to parse order trade update", e);
+  private TradeLiteBinanceWebsocketTransaction tradeLite (JsonNode json){
+      try {
+        return mapper.treeToValue(json, TradeLiteBinanceWebsocketTransaction.class);
+      } catch (IOException e) {
+        throw new ExchangeException("Unable to parse order trade update", e);
+      }
     }
-  }
 
-  private AccountUpdateBinanceWebSocketTransaction positionChanges(JsonNode json) {
-    try {
-      return mapper.treeToValue(json, AccountUpdateBinanceWebSocketTransaction.class);
-    } catch (IOException e) {
-      throw new ExchangeException("Unable to parse order trade update", e);
+  private AccountUpdateBinanceWebSocketTransaction positionChanges (JsonNode json){
+      try {
+        return mapper.treeToValue(json, AccountUpdateBinanceWebSocketTransaction.class);
+      } catch (IOException e) {
+        throw new ExchangeException("Unable to parse order trade update", e);
+      }
     }
-  }
 
-  private ExecutionReportBinanceUserTransaction executionReport(JsonNode json) {
-    try {
-      return mapper.treeToValue(json, ExecutionReportBinanceUserTransaction.class);
-    } catch (IOException e) {
-      throw new ExchangeException("Unable to parse execution report", e);
+  private ExecutionReportBinanceUserTransaction executionReport (JsonNode json){
+      try {
+        return mapper.treeToValue(json, ExecutionReportBinanceUserTransaction.class);
+      } catch (IOException e) {
+        throw new ExchangeException("Unable to parse execution report", e);
+      }
     }
-  }
 
 }
