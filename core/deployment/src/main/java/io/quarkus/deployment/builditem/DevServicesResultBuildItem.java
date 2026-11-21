@@ -272,7 +272,7 @@ public final class DevServicesResultBuildItem extends MultiBuildItem {
          * @return the builder, for chaining
          */
         @Deprecated()
-        public OwnedServiceBuilder<T> name(String name) {
+public OwnedServiceBuilder<T> name(String name) {
             this.name = name;
             return this;
         }
