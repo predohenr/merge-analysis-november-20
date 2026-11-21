@@ -229,6 +229,7 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 			super(ENVIRONMENT_PROPERTIES_PROPERTY_SOURCE_NAME, environment);
 		}
 
+
 		@Override
 		public boolean containsProperty(String name) {
 			for (PropertySource<?> propertySource : super.source.getPropertySources()) {
@@ -256,7 +257,6 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 		}
 	}
 
-
 	/**
 	 * Fallback {@link PropertySource} that delegates to a raw {@link Environment}.
 	 * <p>Should never apply in a regular scenario, since the {@code Environment}
@@ -268,6 +268,7 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 		FallbackEnvironmentPropertySource(Environment environment) {
 			super(ENVIRONMENT_PROPERTIES_PROPERTY_SOURCE_NAME, environment);
 		}
+
 
 		@Override
 		public boolean containsProperty(String name) {
