@@ -42,6 +42,10 @@ import static org.awaitility.Awaitility.await;
 /**
  * Tests for {@link PushMeterRegistry}.
  */
+
+/**
+ * Tests for {@link PushMeterRegistry}.
+ */
 class PushMeterRegistryTest {
 
     static final Duration STEP_DURATION = Duration.ofMillis(10);
