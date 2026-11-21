@@ -60,6 +60,13 @@ import static org.mockito.Mockito.*;
  * @author Marc Gathier
  * @author Steven van Beelen
  */
+
+/**
+ * Test class validating the {@link AnnotatedQueryHandlingComponent}.
+ *
+ * @author Marc Gathier
+ * @author Steven van Beelen
+ */
 class AnnotatedQueryHandlingComponentTest {
 
     private final AtomicInteger callCount = new AtomicInteger();
@@ -811,26 +818,6 @@ class AnnotatedQueryHandlingComponentTest {
         }
 
         @Test
-        void beforeInterceptorIsInvokedBeforeQueryHandler() {
-            // given
-            var log = new ArrayList<String>();
-            var handler = new Object() {
-                @QueryHandlerInterceptor
-                void intercept() { log.add("interceptor"); }
-                @QueryHandler
-                String handle(String payload) { log.add("handler"); return payload; }
-            };
-            var component = annotatedComponent(handler);
-            var query = queryMessage("hello");
-
-            // when
-            drainAndGetPayload(component.handle(query, StubProcessingContext.forMessage(query)));
-
-            // then
-            assertThat(log).containsExactly("interceptor", "handler");
-        }
-
-        @Test
         void beforeInterceptorExceptionBreaksChain() {
             // given
             var log = new ArrayList<String>();
@@ -931,6 +918,26 @@ class AnnotatedQueryHandlingComponentTest {
 
             // then
             assertThat(log).containsExactly("first", "second", "handler");
+        }
+
+        @Test
+        void beforeInterceptorIsInvokedBeforeQueryHandler() {
+            // given
+            var log = new ArrayList<String>();
+            var handler = new Object() {
+                @QueryHandlerInterceptor
+                void intercept() { log.add("interceptor"); }
+                @QueryHandler
+                String handle(String payload) { log.add("handler"); return payload; }
+            };
+            var component = annotatedComponent(handler);
+            var query = queryMessage("hello");
+
+            // when
+            drainAndGetPayload(component.handle(query, StubProcessingContext.forMessage(query)));
+
+            // then
+            assertThat(log).containsExactly("interceptor", "handler");
         }
 
         @Test

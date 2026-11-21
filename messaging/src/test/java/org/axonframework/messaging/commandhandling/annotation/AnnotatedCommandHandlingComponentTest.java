@@ -62,6 +62,12 @@ import org.junit.jupiter.api.*;
  *
  * @author Allard Buijze
  */
+
+/**
+ * Test to validate the {@link AnnotatedCommandHandlingComponent}.
+ *
+ * @author Allard Buijze
+ */
 class AnnotatedCommandHandlingComponentTest {
 
     private static final MessageType TEST_TYPE = new MessageType("command");
@@ -624,27 +630,6 @@ class AnnotatedCommandHandlingComponentTest {
         }
 
         @Test
-        void beforeInterceptorIsInvokedBeforeCommandHandler() {
-            // given
-            var log = new ArrayList<String>();
-            var handler = new Object() {
-                @CommandHandlerInterceptor
-                void intercept() { log.add("interceptor"); }
-                @CommandHandler
-                void handle(Integer payload) { log.add("handler"); }
-            };
-            var component = annotatedComponent(handler);
-            var command = commandMessage(42);
-
-            // when
-            component.handle(command, StubProcessingContext.forMessage(command))
-                     .first().asCompletableFuture().join();
-
-            // then
-            assertThat(log).containsExactly("interceptor", "handler");
-        }
-
-        @Test
         void beforeInterceptorExceptionBreaksChain() {
             // given
             var log = new ArrayList<String>();
@@ -743,6 +728,27 @@ class AnnotatedCommandHandlingComponentTest {
 
             // then
             assertThat(log).containsExactly("first", "second", "handler");
+        }
+
+        @Test
+        void beforeInterceptorIsInvokedBeforeCommandHandler() {
+            // given
+            var log = new ArrayList<String>();
+            var handler = new Object() {
+                @CommandHandlerInterceptor
+                void intercept() { log.add("interceptor"); }
+                @CommandHandler
+                void handle(Integer payload) { log.add("handler"); }
+            };
+            var component = annotatedComponent(handler);
+            var command = commandMessage(42);
+
+            // when
+            component.handle(command, StubProcessingContext.forMessage(command))
+                     .first().asCompletableFuture().join();
+
+            // then
+            assertThat(log).containsExactly("interceptor", "handler");
         }
 
         @Nested

@@ -79,7 +79,7 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
             );
             boolean declaredInterceptorChain =
                     Arrays.stream(method.getParameters())
-                          .anyMatch(p -> p.getType().equals(MessageHandlerInterceptorChain.class));
+                                                     .anyMatch(p -> p.getType().equals(MessageHandlerInterceptorChain.class));
             if (declaredInterceptorChain) {
                 throw new AxonConfigurationException(
                         "A MessageHandlerInterceptor acting on the invocation result must not "
@@ -119,8 +119,8 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
                 ProcessingContext contextWithException = ResultParameterResolverFactory.withResult(e, context);
                 if (super.canHandle(message, contextWithException)) {
                     return super.handleSync(message, contextWithException, target);
-                }
-                throw e;
+                    }
+                    throw e;
             }
         }
 
@@ -177,7 +177,7 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
             );
             shouldInvokeInterceptorChain =
                     Arrays.stream(method.getParameters())
-                          .noneMatch(p -> p.getType().equals(MessageHandlerInterceptorChain.class));
+                                                 .noneMatch(p -> p.getType().equals(MessageHandlerInterceptorChain.class));
             if (shouldInvokeInterceptorChain && !Void.TYPE.equals(method.getReturnType())
                     && !CompletableFuture.class.isAssignableFrom(method.getReturnType())) {
                 throw new AxonConfigurationException(
@@ -211,8 +211,8 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
                 ));
             }
             return super.handle(message, context, target)
-                        .ignoreEntries()
-                        .concatWith(() -> chain.proceed(message, context).cast());
+                    .ignoreEntries()
+                    .concatWith(() -> chain.proceed(message, context).cast());
         }
 
         @Override
