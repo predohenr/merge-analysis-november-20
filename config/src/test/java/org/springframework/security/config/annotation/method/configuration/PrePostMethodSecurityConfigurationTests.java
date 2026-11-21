@@ -57,8 +57,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Role;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.AnnotationConfigurationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
@@ -394,9 +394,6 @@ public class PrePostMethodSecurityConfigurationTests {
 		assertThat(filtered).hasSize(2);
 		assertThat(filtered).containsExactly("harold", "jonathan");
 	}
-
-	// gh-4003
-	// gh-4103
 	@WithMockUser
 	@Test
 	public void manyAnnotationsWhenUserThenFails() {
@@ -423,24 +420,18 @@ public class PrePostMethodSecurityConfigurationTests {
 		assertThatExceptionOfType(AccessDeniedException.class)
 			.isThrownBy(() -> this.methodSecurityService.manyAnnotations(new ArrayList<>(names)));
 	}
-
-	// gh-3183
 	@Test
 	public void repeatedAnnotationsWhenPresentThenFails() {
 		this.spring.register(MethodSecurityServiceConfig.class).autowire();
 		assertThatExceptionOfType(AnnotationConfigurationException.class)
 			.isThrownBy(() -> this.methodSecurityService.repeatedAnnotations());
 	}
-
-	// gh-3183
 	@Test
 	public void repeatedJsr250AnnotationsWhenPresentThenFails() {
 		this.spring.register(Jsr250Config.class).autowire();
 		assertThatExceptionOfType(AnnotationConfigurationException.class)
 			.isThrownBy(() -> this.businessService.repeatedAnnotations());
 	}
-
-	// gh-3183
 	@Test
 	public void repeatedSecuredAnnotationsWhenPresentThenFails() {
 		this.spring.register(SecuredConfig.class).autowire();
@@ -468,8 +459,6 @@ public class PrePostMethodSecurityConfigurationTests {
 		verify(publisher).publishAuthorizationEvent(any(Supplier.class), any(MethodInvocationResult.class),
 				any(AuthorizationDecision.class));
 	}
-
-	// gh-10305
 	@WithMockUser
 	@Test
 	public void beanInSpelWhenEvaluatedThenLooksUpBean() {
@@ -979,15 +968,11 @@ public class PrePostMethodSecurityConfigurationTests {
 		verify(handler).handleDeniedInvocationResult(any(), any(Authz.AuthzResult.class));
 		verify(handler, never()).handleDeniedInvocation(any(), any(Authz.AuthzResult.class));
 	}
-
-	// gh-15352
 	@Test
 	void annotationsInChildClassesDoNotAffectSuperclasses() {
 		this.spring.register(AbstractClassConfig.class).autowire();
 		this.spring.getContext().getBean(ClassInheritingAbstractClassWithNoAnnotations.class).method();
 	}
-
-	// gh-15592
 	@Test
 	void autowireWhenDefaultsThenCreatesExactlyOneAdvisorPerAnnotation() {
 		this.spring.register(MethodSecurityServiceConfig.class).autowire();
@@ -999,8 +984,6 @@ public class PrePostMethodSecurityConfigurationTests {
 					"preAuthorizeAuthorizationMethodInterceptor", "postAuthorizeAuthorizationMethodInterceptor",
 					"postFilterAuthorizationMethodInterceptor", "authorizeReturnObjectMethodInterceptor");
 	}
-
-	// gh-15592
 	@Test
 	void autowireWhenAspectJAutoProxyAndFactoryBeanThenExactlyOneAdvisorPerAnnotation() {
 		this.spring.register(AspectJAwareAutoProxyAndFactoryBeansConfig.class).autowire();
@@ -1012,8 +995,6 @@ public class PrePostMethodSecurityConfigurationTests {
 					"preAuthorizeAuthorizationMethodInterceptor", "postAuthorizeAuthorizationMethodInterceptor",
 					"postFilterAuthorizationMethodInterceptor", "authorizeReturnObjectMethodInterceptor");
 	}
-
-	// gh-15651
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	public void adviseWhenPrePostEnabledThenEachInterceptorRunsExactlyOnce() {
@@ -1024,8 +1005,6 @@ public class PrePostMethodSecurityConfigurationTests {
 		this.methodSecurityService.manyAnnotations(new ArrayList<>(Arrays.asList("harold", "jonathan", "tim", "bo")));
 		verify(expressionHandler, times(4)).createEvaluationContext(any(Supplier.class), any());
 	}
-
-	// gh-15721
 	@Test
 	@WithMockUser(roles = "uid")
 	public void methodWhenMetaAnnotationPropertiesHasClassProperties() {
@@ -1107,19 +1086,6 @@ public class PrePostMethodSecurityConfigurationTests {
 		ObservationHandler<?> handler = this.spring.getContext().getBean(ObservationHandler.class);
 		verifyNoInteractions(handler);
 	}
-
-	@Test
-	@WithMockUser
-	public void preAuthorizeWhenDenyAllThenPublishesParameterizedAuthorizationDeniedEvent() {
-		this.spring
-			.register(MethodSecurityServiceConfig.class, EventPublisherConfig.class, AuthorizationDeniedListener.class)
-			.autowire();
-		assertThatExceptionOfType(AccessDeniedException.class)
-			.isThrownBy(() -> this.methodSecurityService.preAuthorize());
-		assertThat(this.spring.getContext().getBean(AuthorizationDeniedListener.class).invocations).isEqualTo(1);
-	}
-
-	// gh-16819
 	@Test
 	void autowireWhenDefaultsThenAdvisorAnnotationsAreSorted() {
 		this.spring.register(MethodSecurityServiceConfig.class).autowire();
@@ -1134,6 +1100,17 @@ public class PrePostMethodSecurityConfigurationTests {
 		}
 	}
 
+	@Test
+	@WithMockUser
+	public void preAuthorizeWhenDenyAllThenPublishesParameterizedAuthorizationDeniedEvent() {
+		this.spring
+			.register(MethodSecurityServiceConfig.class, EventPublisherConfig.class, AuthorizationDeniedListener.class)
+			.autowire();
+		assertThatExceptionOfType(AccessDeniedException.class)
+			.isThrownBy(() -> this.methodSecurityService.preAuthorize());
+		assertThat(this.spring.getContext().getBean(AuthorizationDeniedListener.class).invocations).isEqualTo(1);
+	}
+
 	private static Consumer<ConfigurableWebApplicationContext> disallowBeanOverriding() {
 		return (context) -> ((AnnotationConfigWebApplicationContext) context).setAllowBeanDefinitionOverriding(false);
 	}
@@ -1146,6 +1123,29 @@ public class PrePostMethodSecurityConfigurationTests {
 		advisor.setOrder(order);
 		return advisor;
 	}
+
+	// gh-4003
+	// gh-4103
+
+	// gh-3183
+
+	// gh-3183
+
+	// gh-3183
+
+	// gh-10305
+
+	// gh-15352
+
+	// gh-15592
+
+	// gh-15592
+
+	// gh-15651
+
+	// gh-15721
+
+	// gh-16819
 
 	@Configuration
 	static class AuthzConfig {
