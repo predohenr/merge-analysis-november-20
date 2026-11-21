@@ -493,8 +493,8 @@ public class OfflineForecastHelper implements ResetTotalWeatherCacheSizeListener
 			if (weatherResourcesManager == null) {
 				LOG.error("[Clear] Can't remove local forecast tiles. WeatherResourcesManager isn't available.");
 			} else {
-				weatherResourcesManager.clearDbCache(qTileIds, new TileIdList(), zoom);
-			}
+			weatherResourcesManager.clearDbCache(qTileIds, new TileIdList(), zoom);
+		}
 		}
 		if (notifyUserOnFinish) {
 			for (String regionId : regionIds) {
