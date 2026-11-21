@@ -44,6 +44,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Christoph Dreis
  */
+
+/**
+ * Integration tests for {@link ConventionsPlugin}.
+ *
+ * @author Christoph Dreis
+ */
 class ConventionsPluginTests {
 
 	private File projectDir;
