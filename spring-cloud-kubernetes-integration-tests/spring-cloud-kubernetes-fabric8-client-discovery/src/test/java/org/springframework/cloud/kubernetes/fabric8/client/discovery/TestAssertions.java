@@ -127,15 +127,6 @@ final class TestAssertions {
 		assertThat(externalNameInstance.getUri().toASCIIString()).isEqualTo("spring.io");
 		assertThat(externalNameInstance.getScheme()).isNull();
 	}
-
-	/**
-	 * Reactive is disabled, only blocking is active. As such,
-	 * KubernetesInformerDiscoveryClientAutoConfiguration::indicatorInitializer will post
-	 * an InstanceRegisteredEvent.
-	 *
-	 * We assert for logs and call '/health' endpoint to see that blocking discovery
-	 * client was initialized.
-	 */
 	static void assertBlockingConfiguration(CapturedOutput output, int port) {
 
 		waitForLogStatement(output, "Will publish InstanceRegisteredEvent from blocking implementation");
@@ -163,15 +154,6 @@ final class TestAssertions {
 		assertThat(BASIC_JSON_TESTER.from(healthResult)).doesNotHaveJsonPath(REACTIVE_STATUS);
 
 	}
-
-	/**
-	 * Reactive is enabled, blocking is disabled. As such,
-	 * KubernetesInformerDiscoveryClientAutoConfiguration::indicatorInitializer will post
-	 * an InstanceRegisteredEvent.
-	 *
-	 * We assert for logs and call '/health' endpoint to see that reactive discovery
-	 * client was initialized.
-	 */
 	static void testReactiveConfiguration(ReactiveDiscoveryClient discoveryClient, CapturedOutput output, int port) {
 
 		waitForLogStatement(output, "Will publish InstanceRegisteredEvent from reactive implementation");
@@ -204,17 +186,6 @@ final class TestAssertions {
 		assertThat(services).contains("kubernetes");
 
 	}
-
-	/**
-	 * <pre>
-	 *     - service "wiremock" is present in namespace "a-uat"
-	 *     - service "wiremock" is present in namespace "b-uat"
-	 *
-	 *     - we search with a predicate : "#root.metadata.namespace matches '^uat.*$'"
-	 *
-	 *     As such, both services are found via 'getInstances' call.
-	 * </pre>
-	 */
 	static void filterMatchesBothNamespacesViaThePredicate(DiscoveryClient discoveryClient) {
 
 		List<String> services = discoveryClient.getServices();
@@ -253,5 +224,34 @@ final class TestAssertions {
 	private static void waitForLogStatement(CapturedOutput output, String message) {
 		Awaitilities.awaitUntil(30, 1000, () -> output.getOut().contains(message));
 	}
+
+	/**
+	 * Reactive is disabled, only blocking is active. As such,
+	 * KubernetesInformerDiscoveryClientAutoConfiguration::indicatorInitializer will post
+	 * an InstanceRegisteredEvent.
+	 *
+	 * We assert for logs and call '/health' endpoint to see that blocking discovery
+	 * client was initialized.
+	 */
+
+	/**
+	 * Reactive is enabled, blocking is disabled. As such,
+	 * KubernetesInformerDiscoveryClientAutoConfiguration::indicatorInitializer will post
+	 * an InstanceRegisteredEvent.
+	 *
+	 * We assert for logs and call '/health' endpoint to see that reactive discovery
+	 * client was initialized.
+	 */
+
+	/**
+	 * <pre>
+	 *     - service "wiremock" is present in namespace "a-uat"
+	 *     - service "wiremock" is present in namespace "b-uat"
+	 *
+	 *     - we search with a predicate : "#root.metadata.namespace matches '^uat.*$'"
+	 *
+	 *     As such, both services are found via 'getInstances' call.
+	 * </pre>
+	 */
 
 }
