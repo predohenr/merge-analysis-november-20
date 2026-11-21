@@ -52,6 +52,13 @@ import static org.assertj.core.api.Assertions.*;
  * @author Jon Schneider
  * @author Johnny Lim
  */
+
+/**
+ * Tests for {@link StatsdMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ */
 class StatsdMeterRegistryTest {
 
     private final MockClock clock = new MockClock();
@@ -129,11 +136,11 @@ class StatsdMeterRegistryTest {
                 fail("Unexpected flavor");
         }
 
-        final Processor<String, String> lines = lineProcessor();
-        StatsdMeterRegistry registry = StatsdMeterRegistry.builder(config)
-            .clock(clock)
-            .lineSink(toLineSink(lines))
-            .build();
+            final Processor<String, String> lines = lineProcessor();
+            StatsdMeterRegistry registry = StatsdMeterRegistry.builder(config)
+                .clock(clock)
+                .lineSink(toLineSink(lines))
+                .build();
         StepVerifier.withVirtualTime(() -> {
             registry.gauge("my.gauge", Tags.of("my.tag", "val"), n);
             return lines;
@@ -242,11 +249,11 @@ class StatsdMeterRegistryTest {
         }
 
         AtomicReference<LongTaskTimer> ltt = new AtomicReference<>();
-        final Processor<String, String> lines = lineProcessor();
-        StatsdMeterRegistry registry = StatsdMeterRegistry.builder(config)
-            .clock(clock)
-            .lineSink(toLineSink(lines, 2))
-            .build();
+            final Processor<String, String> lines = lineProcessor();
+            StatsdMeterRegistry registry = StatsdMeterRegistry.builder(config)
+                .clock(clock)
+                .lineSink(toLineSink(lines, 2))
+                .build();
         StepVerifier.withVirtualTime(() -> {
             ltt.set(registry.more().longTaskTimer("my.long.task", "my.tag", "val"));
             return lines;
