@@ -122,15 +122,6 @@ public class ServletChannel
     {
         return _callback;
     }
-
-    /**
-     * Associate this channel with a specific request.
-     * This method is called by the {@link ServletContextHandler} when a core {@link Request} is accepted and associated with
-     * a servlet mapping. The association remains functional until {@link #recycle(Throwable)} is called,
-     * and it remains readable until a call to {@link #recycle(Throwable)} or a subsequent call to {@code associate}.
-     * @param servletContextRequest The servlet context request to associate
-     * @see #recycle(Throwable)
-     */
     public void associate(ServletContextRequest servletContextRequest)
     {
         _httpInput.reopen();
@@ -143,20 +134,6 @@ public class ServletChannel
                 _servletContextRequest,
                 _state);
     }
-
-    /**
-     * Associate this channel with possibly wrapped values for
-     * {@link #getRequest()}, {@link #getResponse()} and {@link #getCallback()}.
-     * This is called by the {@link ServletHandler} immediately before calling {@link #handle()} on the
-     * initial dispatch.  This allows for handlers between the {@link ServletContextHandler} and the
-     * {@link ServletHandler} to wrap the instances.
-     * @param request The request, which may have been wrapped
-     *                after #{@link ServletContextHandler#wrapRequest(Request, Response)}
-     * @param response The response, which may have been wrapped
-     *                 after #{@link ServletContextHandler#wrapResponse(ContextRequest, Response)}
-     * @param callback The context, which may have been wrapped
-     *                 after {@link ServletContextHandler#handle(Request, Response, Callback)}
-     */
     public void associate(Request request, Response response, Callback callback)
     {
         if (_callback != null)
@@ -211,13 +188,6 @@ public class ServletChannel
     {
         return _state.isSendError();
     }
-
-    /**
-     * Format the address or host returned from Request methods
-     *
-     * @param addr The address or host
-     * @return Default implementation returns {@link HostPort#normalizeHost(String)}
-     */
     protected String formatAddrOrHost(String addr)
     {
         return HostPort.normalizeHost(addr);
@@ -235,26 +205,10 @@ public class ServletChannel
         // application as they might have been compressed.
         return Response.getContentBytesWritten(getServletContextResponse());
     }
-
-    /**
-     * Get the idle timeout.
-     * <p>This is implemented as a call to {@link EndPoint#getIdleTimeout()}, but may be
-     * overridden by channels that have timeouts different from their connections.
-     *
-     * @return the idle timeout (in milliseconds)
-     */
     public long getIdleTimeout()
     {
         return _connectionMetaData.getConnection().getEndPoint().getIdleTimeout();
     }
-
-    /**
-     * Set the idle timeout.
-     * <p>This is implemented as a call to {@link EndPoint#setIdleTimeout(long)}, but may be
-     * overridden by channels that have timeouts different from their connections.
-     *
-     * @param timeoutMs the idle timeout in milliseconds
-     */
     public void setIdleTimeout(long timeoutMs)
     {
         _connectionMetaData.getConnection().getEndPoint().setIdleTimeout(timeoutMs);
@@ -269,32 +223,14 @@ public class ServletChannel
     {
         return _context.getContextHandler().getServer();
     }
-
-    /**
-     * @return The {@link ServletContextRequest} as wrapped by the {@link ServletContextHandler}.
-     * @see #getRequest()
-     */
     public ServletContextRequest getServletContextRequest()
     {
         return _servletContextRequest;
     }
-
-    /**
-     * @return The core {@link Request} associated with the request. This may differ from {@link #getServletContextRequest()}
-     *         if the request was wrapped by another handler after the {@link ServletContextHandler} and passed
-     *         to {@link ServletChannel#associate(Request, Response, Callback)}.
-     * @see #getServletContextRequest()
-     * @see #associate(Request, Response, Callback)
-     */
     public Request getRequest()
     {
         return _request;
     }
-
-    /**
-     * @return The ServetContextResponse as wrapped by the {@link ServletContextHandler}.
-     * @see #getResponse()
-     */
     public ServletContextResponse getServletContextResponse()
     {
         ServletContextRequest request = _servletContextRequest;
@@ -302,14 +238,6 @@ public class ServletChannel
             throw new IllegalStateException("Request/Response does not exist (likely recycled)");
         return request.getServletContextResponse();
     }
-
-    /**
-     * @return The core {@link Response} associated with the API response.
-     *         This may differ from {@link #getServletContextResponse()} if the response was wrapped by another handler
-     *         after the {@link ServletContextHandler} and passed to {@link ServletChannel#associate(Request, Response, Callback)}.
-     * @see #getServletContextResponse()
-     * @see #associate(Request, Response, Callback)
-     */
     public Response getResponse()
     {
         if (_response == null)
@@ -326,24 +254,6 @@ public class ServletChannel
     {
         return getConnection().getEndPoint();
     }
-
-    /**
-     * <p>Return the local name of the connected channel.</p>
-     *
-     * <p>
-     * This is the host name after the connector is bound and the connection is accepted.
-     * </p>
-     * <p>
-     * Value can be overridden by {@link HttpConfiguration#setLocalAddress(SocketAddress)}.
-     * </p>
-     * <p>
-     * Note: some connectors are not based on IP networking, and default behavior here will
-     * result in a null return.  Use {@link HttpConfiguration#setLocalAddress(SocketAddress)}
-     * to set the value to an acceptable host name.
-     * </p>
-     *
-     * @return the local name, or null
-     */
     public String getLocalName()
     {
         InetSocketAddress local = getLocalAddress();
@@ -351,24 +261,6 @@ public class ServletChannel
             return Request.getHostName(local);
         return null;
     }
-
-    /**
-     * <p>Return the Local Port of the connected channel.</p>
-     *
-     * <p>
-     * This is the port the connector is bound to and is accepting connections on.
-     * </p>
-     * <p>
-     * Value can be overridden by {@link HttpConfiguration#setLocalAddress(SocketAddress)}.
-     * </p>
-     * <p>
-     * Note: some connectors are not based on IP networking, and default behavior here will
-     * result in a value of 0 returned.  Use {@link HttpConfiguration#setLocalAddress(SocketAddress)}
-     * to set the value to an acceptable port.
-     * </p>
-     *
-     * @return the local port, or 0 if unspecified
-     */
     public int getLocalPort()
     {
         InetSocketAddress local = getLocalAddress();
@@ -386,11 +278,6 @@ public class ServletChannel
         return getRequest().getConnectionMetaData().getRemoteSocketAddress() instanceof InetSocketAddress inetSocketAddress
             ? inetSocketAddress : null;
     }
-
-    /**
-     * Get return the HttpConfiguration server authority override.
-     * @return return the HttpConfiguration server authority override
-     */
     public HostPort getServerAuthority()
     {
         HttpConfiguration httpConfiguration = getHttpConfiguration();
@@ -399,12 +286,6 @@ public class ServletChannel
 
         return null;
     }
-
-    /**
-     * Prepare to be reused.
-     * @param x Any completion exception, or null for successful completion.
-     * @see #associate(ServletContextRequest)
-     */
     void recycle(Throwable x)
     {
         // _httpInput must be recycled before _state.
@@ -417,10 +298,6 @@ public class ServletChannel
         _callback = null;
         _completeAttempted = false;
     }
-
-    /**
-     * Handle the servlet request. This is called on the initial dispatch and then again on any asynchronous events.
-     */
     public void handle()
     {
         if (LOG.isDebugEnabled())
@@ -901,16 +778,6 @@ public class ServletChannel
         _servletContextRequest.getServletContextResponse().getHttpOutput().reopen();
         getHttpOutput().reopen();
     }
-
-    /**
-     * <p>Sends an error 500, performing a special logic to detect whether the request is suspended,
-     * to avoid concurrent writes from the application.</p>
-     * <p>It may happen that the application suspends, and then throws an exception, while an application
-     * spawned thread writes the response content; in such case, we attempt to commit the error directly
-     * bypassing the {@link ErrorHandler} mechanisms and the response OutputStream.</p>
-     *
-     * @param failure the Throwable that caused the problem
-     */
     protected void handleException(Throwable failure)
     {
         // Unwrap wrapping Jetty and Servlet exceptions.
@@ -947,14 +814,6 @@ public class ServletChannel
             abort(failure);
         }
     }
-
-    /**
-     * Unwrap failure causes to find target class
-     *
-     * @param failure The throwable to have its causes unwrapped
-     * @param targets Exception classes that we should not unwrap
-     * @return A target throwable or null
-     */
     protected Throwable unwrap(Throwable failure, Class<?>... targets)
     {
         while (failure != null)
@@ -1012,10 +871,6 @@ public class ServletChannel
     {
         _servletContextRequest.setTrailers(trailers);
     }
-
-    /**
-     * @see #abort(Throwable)
-     */
     public void onCompleted()
     {
         ServletApiRequest apiRequest = _servletContextRequest.getServletApiRequest();
@@ -1043,18 +898,10 @@ public class ServletChannel
     {
         return _state.isResponseCommitted();
     }
-
-    /**
-     * @return True if the request lifecycle is completed
-     */
     public boolean isRequestCompleted()
     {
         return _state.isCompleted();
     }
-
-    /**
-     * @return True if the response is completely written.
-     */
     public boolean isResponseCompleted()
     {
         return _state.isResponseCompleted();
@@ -1069,14 +916,6 @@ public class ServletChannel
     {
         _context.execute(task, request);
     }
-
-    /**
-     * If a write or similar operation to this channel fails,
-     * then this method should be called.
-     *
-     * @param failure the failure that caused the abort.
-     * @see #onCompleted()
-     */
     public void abort(Throwable failure)
     {
         // Callback will be failed in onCompleted().
@@ -1100,12 +939,6 @@ public class ServletChannel
             servletContextHandler.requestDestroyed(servletContextRequest, servletApiRequest);
         }
     }
-
-    /**
-     * An AsyncContext dispatch method was called. We may need to dispatch to
-     * a different context.
-     * @throws Exception
-     */
     public void dispatchAsync() throws Exception
     {
         ServletContextHandler targetContextHandler = getServletContextHandler();
@@ -1174,16 +1007,6 @@ public class ServletChannel
             targetContextHandler.requestDestroyed(servletContextRequest, servletApiRequest);
         }
     }
-
-    /**
-     * Async has been started, but dispatched to a different context. This can happen
-     * either via application code calling {@link jakarta.servlet.AsyncContext#dispatch(ServletContext, String)}
-     * or the container dispatching after application code returns without having performed a dispatch or otherwise
-     * completed async.
-     * @param crossContextServletContext the special context containing both the origin context and the destination context
-     * @throws ServletException
-     * @throws IOException
-     */
     private void dispatchCrossContextAsync(CrossContextServletContext crossContextServletContext) throws ServletException, IOException
     {
         HttpURI uri;
@@ -1251,4 +1074,181 @@ public class ServletChannel
         CrossContextDispatcher dispatcher = new CrossContextDispatcher(crossContextServletContext, uri, dispatchPathInContext);
         dispatcher.async(asyncContextEvent.getSuppliedRequest(), asyncContextEvent.getSuppliedResponse());
     }
+
+    /**
+     * Associate this channel with a specific request.
+     * This method is called by the {@link ServletContextHandler} when a core {@link Request} is accepted and associated with
+     * a servlet mapping. The association remains functional until {@link #recycle(Throwable)} is called,
+     * and it remains readable until a call to {@link #recycle(Throwable)} or a subsequent call to {@code associate}.
+     * @param servletContextRequest The servlet context request to associate
+     * @see #recycle(Throwable)
+     */
+
+    /**
+     * Associate this channel with possibly wrapped values for
+     * {@link #getRequest()}, {@link #getResponse()} and {@link #getCallback()}.
+     * This is called by the {@link ServletHandler} immediately before calling {@link #handle()} on the
+     * initial dispatch.  This allows for handlers between the {@link ServletContextHandler} and the
+     * {@link ServletHandler} to wrap the instances.
+     * @param request The request, which may have been wrapped
+     *                after #{@link ServletContextHandler#wrapRequest(Request, Response)}
+     * @param response The response, which may have been wrapped
+     *                 after #{@link ServletContextHandler#wrapResponse(ContextRequest, Response)}
+     * @param callback The context, which may have been wrapped
+     *                 after {@link ServletContextHandler#handle(Request, Response, Callback)}
+     */
+
+    /**
+     * Format the address or host returned from Request methods
+     *
+     * @param addr The address or host
+     * @return Default implementation returns {@link HostPort#normalizeHost(String)}
+     */
+
+    /**
+     * Get the idle timeout.
+     * <p>This is implemented as a call to {@link EndPoint#getIdleTimeout()}, but may be
+     * overridden by channels that have timeouts different from their connections.
+     *
+     * @return the idle timeout (in milliseconds)
+     */
+
+    /**
+     * Set the idle timeout.
+     * <p>This is implemented as a call to {@link EndPoint#setIdleTimeout(long)}, but may be
+     * overridden by channels that have timeouts different from their connections.
+     *
+     * @param timeoutMs the idle timeout in milliseconds
+     */
+
+    /**
+     * @return The {@link ServletContextRequest} as wrapped by the {@link ServletContextHandler}.
+     * @see #getRequest()
+     */
+
+    /**
+     * @return The core {@link Request} associated with the request. This may differ from {@link #getServletContextRequest()}
+     *         if the request was wrapped by another handler after the {@link ServletContextHandler} and passed
+     *         to {@link ServletChannel#associate(Request, Response, Callback)}.
+     * @see #getServletContextRequest()
+     * @see #associate(Request, Response, Callback)
+     */
+
+    /**
+     * @return The ServetContextResponse as wrapped by the {@link ServletContextHandler}.
+     * @see #getResponse()
+     */
+
+    /**
+     * @return The core {@link Response} associated with the API response.
+     *         This may differ from {@link #getServletContextResponse()} if the response was wrapped by another handler
+     *         after the {@link ServletContextHandler} and passed to {@link ServletChannel#associate(Request, Response, Callback)}.
+     * @see #getServletContextResponse()
+     * @see #associate(Request, Response, Callback)
+     */
+
+    /**
+     * <p>Return the local name of the connected channel.</p>
+     *
+     * <p>
+     * This is the host name after the connector is bound and the connection is accepted.
+     * </p>
+     * <p>
+     * Value can be overridden by {@link HttpConfiguration#setLocalAddress(SocketAddress)}.
+     * </p>
+     * <p>
+     * Note: some connectors are not based on IP networking, and default behavior here will
+     * result in a null return.  Use {@link HttpConfiguration#setLocalAddress(SocketAddress)}
+     * to set the value to an acceptable host name.
+     * </p>
+     *
+     * @return the local name, or null
+     */
+
+    /**
+     * <p>Return the Local Port of the connected channel.</p>
+     *
+     * <p>
+     * This is the port the connector is bound to and is accepting connections on.
+     * </p>
+     * <p>
+     * Value can be overridden by {@link HttpConfiguration#setLocalAddress(SocketAddress)}.
+     * </p>
+     * <p>
+     * Note: some connectors are not based on IP networking, and default behavior here will
+     * result in a value of 0 returned.  Use {@link HttpConfiguration#setLocalAddress(SocketAddress)}
+     * to set the value to an acceptable port.
+     * </p>
+     *
+     * @return the local port, or 0 if unspecified
+     */
+
+    /**
+     * Get return the HttpConfiguration server authority override.
+     * @return return the HttpConfiguration server authority override
+     */
+
+    /**
+     * Prepare to be reused.
+     * @param x Any completion exception, or null for successful completion.
+     * @see #associate(ServletContextRequest)
+     */
+
+    /**
+     * Handle the servlet request. This is called on the initial dispatch and then again on any asynchronous events.
+     */
+
+    /**
+     * <p>Sends an error 500, performing a special logic to detect whether the request is suspended,
+     * to avoid concurrent writes from the application.</p>
+     * <p>It may happen that the application suspends, and then throws an exception, while an application
+     * spawned thread writes the response content; in such case, we attempt to commit the error directly
+     * bypassing the {@link ErrorHandler} mechanisms and the response OutputStream.</p>
+     *
+     * @param failure the Throwable that caused the problem
+     */
+
+    /**
+     * Unwrap failure causes to find target class
+     *
+     * @param failure The throwable to have its causes unwrapped
+     * @param targets Exception classes that we should not unwrap
+     * @return A target throwable or null
+     */
+
+    /**
+     * @see #abort(Throwable)
+     */
+
+    /**
+     * @return True if the request lifecycle is completed
+     */
+
+    /**
+     * @return True if the response is completely written.
+     */
+
+    /**
+     * If a write or similar operation to this channel fails,
+     * then this method should be called.
+     *
+     * @param failure the failure that caused the abort.
+     * @see #onCompleted()
+     */
+
+    /**
+     * An AsyncContext dispatch method was called. We may need to dispatch to
+     * a different context.
+     * @throws Exception
+     */
+
+    /**
+     * Async has been started, but dispatched to a different context. This can happen
+     * either via application code calling {@link jakarta.servlet.AsyncContext#dispatch(ServletContext, String)}
+     * or the container dispatching after application code returns without having performed a dispatch or otherwise
+     * completed async.
+     * @param crossContextServletContext the special context containing both the origin context and the destination context
+     * @throws ServletException
+     * @throws IOException
+     */
 }
