@@ -93,6 +93,10 @@ import static org.xnio.IoUtils.safeClose;
 /**
  * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
  */
+
+/**
+ * @author <a href="mailto:david.lloyd@redhat.com">David M. Lloyd</a>
+ */
 class HttpClientConnection extends AbstractAttachable implements Closeable, ClientConnection {
 
     public final ConduitListener<StreamSinkConduit> requestFinishListener = new ConduitListener<StreamSinkConduit>() {
