@@ -39,7 +39,6 @@ import static com.oracle.svm.core.code.RuntimeMetadataDecoderImpl.ALL_RECORD_COM
 import static com.oracle.svm.core.code.RuntimeMetadataDecoderImpl.ALL_SIGNERS_FLAG;
 import static com.oracle.svm.core.configure.ConfigurationFiles.Options.TreatAllTypeReachableConditionsAsTypeReached;
 import static org.graalvm.nativeimage.dynamicaccess.AccessCondition.unconditional;
-
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
@@ -71,18 +70,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.nativeimage.dynamicaccess.AccessCondition;
 import org.graalvm.nativeimage.hosted.RuntimeProxyCreation;
 import org.graalvm.nativeimage.hosted.RuntimeReflection;
 import org.graalvm.nativeimage.impl.RuntimeReflectionSupport;
 import org.graalvm.nativeimage.impl.TypeReachabilityCondition;
-
 import com.oracle.graal.pointsto.ObjectScanner.OtherReason;
 import com.oracle.graal.pointsto.ObjectScanner.ScanReason;
 import com.oracle.graal.pointsto.constraints.UnsupportedFeatureException;
-import com.oracle.svm.util.OriginalClassProvider;
+import com.oracle.graal.pointsto.infrastructure.OriginalClassProvider;
 import com.oracle.graal.pointsto.meta.AnalysisElement;
 import com.oracle.graal.pointsto.meta.AnalysisField;
 import com.oracle.graal.pointsto.meta.AnalysisMetaAccess;
@@ -100,7 +97,7 @@ import com.oracle.svm.core.imagelayer.BuildingImageLayerPredicate;
 import com.oracle.svm.core.imagelayer.ImageLayerBuildingSupport;
 import com.oracle.svm.core.layeredimagesingleton.ImageSingletonLoader;
 import com.oracle.svm.core.layeredimagesingleton.ImageSingletonWriter;
-import com.oracle.svm.core.layeredimagesingleton.LayeredPersistFlags;
+import com.oracle.svm.core.layeredimagesingleton.LayeredImageSingleton;
 import com.oracle.svm.core.reflect.SubstrateAccessor;
 import com.oracle.svm.core.reflect.target.ReflectionSubstitutionSupport;
 import com.oracle.svm.core.traits.BuiltinTraits.BuildtimeAccessOnly;
@@ -120,7 +117,6 @@ import com.oracle.svm.hosted.annotation.SubstrateAnnotationExtractor;
 import com.oracle.svm.hosted.substitute.SubstitutionReflectivityFilter;
 import com.oracle.svm.util.LogUtils;
 import com.oracle.svm.util.ReflectionUtil;
-
 import jdk.graal.compiler.annotation.AnnotationValue;
 import jdk.graal.compiler.annotation.ElementTypeMismatch;
 import jdk.graal.compiler.annotation.EnumElement;
@@ -132,6 +128,9 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import sun.reflect.annotation.ExceptionProxy;
 import sun.reflect.annotation.TypeNotPresentExceptionProxy;
+import com.oracle.svm.util.OriginalClassProvider;
+import com.oracle.svm.core.configure.RuntimeConditionSet;
+import com.oracle.svm.core.layeredimagesingleton.LayeredPersistFlags;
 
 public class ReflectionDataBuilder extends ConditionalConfigurationRegistry implements RuntimeReflectionSupport, ReflectionHostedSupport {
     private AnalysisMetaAccess metaAccess;
