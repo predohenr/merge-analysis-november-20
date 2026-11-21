@@ -226,9 +226,9 @@ public class StartupChecksTest
         Path legacySSTableRoot = Paths.get(TEST_INVALID_LEGACY_SSTABLE_ROOT.getString(),
                                            "Keyspace1",
                                            "Standard1");
-        for (String filename : new String[]{ "Keyspace1-Standard1-ic-0-TOC.txt",
-                                             "Keyspace1-Standard1-ic-0-Digest.sha1",
-                                             "legacyleveled.json" })
+        for (String filename : new String[]{"Keyspace1-Standard1-ic-0-TOC.txt",
+                                            "Keyspace1-Standard1-ic-0-Digest.sha1",
+                                            "legacyleveled.json"})
             Files.copy(Paths.get(legacySSTableRoot.toString(), filename), targetDir.resolve(filename));
     }
 
@@ -654,7 +654,7 @@ public class StartupChecksTest
     {
         // Non-existent directories should be skipped, not added to unsupported list
         List<String> unsupported = StartupChecks.findDirectIOUnsupportedLocations(
-        new String[]{ "/this/path/does/not/exist/for/testing" });
+            new String[] { "/this/path/does/not/exist/for/testing" });
         assertThat(unsupported).isEmpty();
     }
 

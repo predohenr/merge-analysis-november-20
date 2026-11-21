@@ -1226,5 +1226,5 @@ public class StartupChecks
                         Joiner.on(", ").join(existing), SchemaConstants.AUTH_KEYSPACE_NAME));
         else
             return Optional.empty();
-    };
+    };;
 }
