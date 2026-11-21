@@ -210,13 +210,13 @@ public class NettyConnection extends AbstractConnection
                 // and there is no point in attempting a write, as it would only produce noisy ClosedChannelException
                 // log entries. The cleanup listeners must still run either way. OF-3195
                 if (channelHandlerContext.channel().isActive()) {
-                    String rawEndStream = "";
-                    if (error != null) {
-                        rawEndStream = error.toXML();
-                    }
-                    rawEndStream += "</stream:stream>";
-                    f = channelHandlerContext.writeAndFlush(rawEndStream);
-                } else {
+                String rawEndStream = "";
+                if (error != null) {
+                    rawEndStream = error.toXML();
+                }
+                rawEndStream += "</stream:stream>";
+                f = channelHandlerContext.writeAndFlush(rawEndStream);
+            } else {
                     Log.trace("Channel is no longer active; skipping stream close stanza for {}", this);
                     f = channelHandlerContext.newSucceededFuture();
                 }
