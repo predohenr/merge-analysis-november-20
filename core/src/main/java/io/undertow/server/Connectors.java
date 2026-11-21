@@ -669,16 +669,16 @@ public class Connectors {
         if (c < 0 || c > ALLOWED_TOKEN_CHARACTERS.length - 1) {
             return false;
         } else {
-            return ALLOWED_TOKEN_CHARACTERS[c];
-        }
+        return ALLOWED_TOKEN_CHARACTERS[c];
+    }
     }
 
     public static boolean isValidSchemeCharacter(byte c) {
         if (c < 0 || c > ALLOWED_SCHEME_CHARACTERS.length - 1) {
             return false;
         } else {
-            return ALLOWED_SCHEME_CHARACTERS[c];
-        }
+        return ALLOWED_SCHEME_CHARACTERS[c];
+    }
     }
 
 
