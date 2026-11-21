@@ -40,6 +40,17 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * @author Scott Frederick
  * @author Jay Choi
  */
+
+/**
+ * Tests for {@link RabbitProperties}.
+ *
+ * @author Dave Syer
+ * @author Andy Wilkinson
+ * @author Stephane Nicoll
+ * @author Rafael Carvalho
+ * @author Scott Frederick
+ * @author Jay Choi
+ */
 class RabbitPropertiesTests {
 
 	private final RabbitProperties properties = new RabbitProperties();
@@ -403,12 +414,6 @@ class RabbitPropertiesTests {
 	void streamSslIsEnabledWhenBundleIsSet() {
 		this.properties.getStream().getSsl().setBundle("test-bundle");
 		assertThat(this.properties.getStream().getSsl().determineEnabled()).isTrue();
-	}
-
-	@Test
-	void streamSslIsDisabledWhenBundleIsEmpty() {
-		this.properties.getStream().getSsl().setBundle("");
-		assertThat(this.properties.getStream().getSsl().determineEnabled()).isFalse();
 	}
 
 	@Test

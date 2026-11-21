@@ -1387,7 +1387,7 @@ public class RabbitProperties {
 			}
 
 			public boolean determineEnabled() {
-				return Boolean.TRUE.equals(getEnabled()) || StringUtils.hasText(this.bundle);
+				return Boolean.TRUE.equals(getEnabled()) || this.bundle != null;
 			}
 
 			public void setEnabled(@Nullable Boolean enabled) {
