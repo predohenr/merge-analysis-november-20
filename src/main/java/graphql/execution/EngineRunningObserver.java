@@ -30,13 +30,13 @@ public interface EngineRunningObserver {
          */
         NOT_RUNNING,
         /**
-         * Represents that the engine is finished
-         */
-        NOT_RUNNING_FINISH,
-        /**
          * Represents that the engine code has been cancelled via {@link ExecutionInput#cancel()}
          */
-        CANCELLED
+        CANCELLED,
+        /**
+         * Represents that the engine is finished
+         */
+        NOT_RUNNING_FINISH
     }
 
 

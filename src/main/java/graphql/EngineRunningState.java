@@ -28,8 +28,8 @@ public class EngineRunningState {
     @Nullable
     private final EngineRunningObserver engineRunningObserver;
     private volatile ExecutionInput executionInput;
-    private final GraphQLContext graphQLContext;
-    private volatile ExecutionId executionId;
+        private final GraphQLContext graphQLContext;
+        private volatile ExecutionId executionId;
 
     // if true the last decrementRunning() call will be ignored
     private volatile boolean finished;
@@ -38,8 +38,8 @@ public class EngineRunningState {
 
     public EngineRunningState(ExecutionInput executionInput) {
         this.executionInput = executionInput;
-        this.graphQLContext = executionInput.getGraphQLContext();
-        this.executionId = executionInput.getExecutionId();
+            this.graphQLContext = executionInput.getGraphQLContext();
+            this.executionId = executionInput.getExecutionId();
         this.engineRunningObserver = executionInput.getGraphQLContext().get(EngineRunningObserver.ENGINE_RUNNING_OBSERVER_KEY);
     }
 
@@ -169,8 +169,8 @@ public class EngineRunningState {
 
     private void changeOfState(EngineRunningObserver.RunningState runningState) {
         if (engineRunningObserver != null) {
-            engineRunningObserver.runningStateChanged(executionId, graphQLContext, runningState);
-        }
+        engineRunningObserver.runningStateChanged(executionId, graphQLContext, runningState);
+    }
     }
 
     private void run(Runnable runnable) {
@@ -184,25 +184,6 @@ public class EngineRunningState {
         } finally {
             decrementRunning();
         }
-    }
-
-    /**
-     * Only used once outside of this class: when the execution starts
-     */
-    public CompletableFuture<ExecutionResult> engineRun(Supplier<CompletableFuture<ExecutionResult>> engineRun) {
-        if (engineRunningObserver == null) {
-            return engineRun.get();
-        }
-        isRunning.incrementAndGet();
-        changeOfState(RUNNING_START);
-
-        CompletableFuture<ExecutionResult> erCF = engineRun.get();
-        erCF = erCF.whenComplete((result, throwable) -> {
-            finished = true;
-            changeOfState(NOT_RUNNING_FINISH);
-        });
-        decrementRunning();
-        return erCF;
     }
 
 
@@ -246,6 +227,25 @@ public class EngineRunningState {
             return new AbortExecutionException("Execution has been asked to be cancelled");
         }
         return null;
+    }
+
+    /**
+     * Only used once outside of this class: when the execution starts
+     */
+    public CompletableFuture<ExecutionResult> engineRun(Supplier<CompletableFuture<ExecutionResult>> engineRun) {
+        if (engineRunningObserver == null) {
+            return engineRun.get();
+        }
+        isRunning.incrementAndGet();
+        changeOfState(RUNNING_START);
+
+        CompletableFuture<ExecutionResult> erCF = engineRun.get();
+        erCF = erCF.whenComplete((result, throwable) -> {
+            finished = true;
+            changeOfState(NOT_RUNNING_FINISH);
+        });
+        decrementRunning();
+        return erCF;
     }
 
 }
