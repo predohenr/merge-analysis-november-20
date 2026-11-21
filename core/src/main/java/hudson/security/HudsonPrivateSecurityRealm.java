@@ -924,7 +924,7 @@ public class HudsonPrivateSecurityRealm extends AbstractPasswordBasedSecurityRea
     static class JBCryptEncoder implements PasswordHashEncoder {
         // in jBCrypt the maximum is 30, which takes ~22h with laptop late-2017
         // and for 18, it's "only" 20s
-        @Restricted(NoExternalUse.class)
+                @Restricted(NoExternalUse.class)
         private static int MAXIMUM_BCRYPT_LOG_ROUND = SystemProperties.getInteger(HudsonPrivateSecurityRealm.class.getName() + ".maximumBCryptLogRound", 18);
 
         private static final Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2a\\$([0-9]{2})\\$.{53}$");

@@ -181,7 +181,7 @@ public class BasicAuthenticationFilter implements CompatibleFilter {
         d.include(req, rsp);
     }
 
-    private void prepareRedirect(HttpServletResponse rsp, String path) {
+        private void prepareRedirect(HttpServletResponse rsp, String path) {
         rsp.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
         rsp.setHeader("Location", path);
     }
