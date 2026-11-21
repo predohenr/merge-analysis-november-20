@@ -70,28 +70,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 final class MqttClientImpl implements MqttClient {
 
     @Getter(AccessLevel.PACKAGE)
-    private final Set<String> serverSubscriptions = new HashSet<>();
+private final Set<String> serverSubscriptions = new HashSet<>();
     @Getter(AccessLevel.PACKAGE)
-    private final ConcurrentMap<Integer, MqttPendingUnsubscription> pendingServerUnsubscribes = new ConcurrentHashMap<>();
+private final ConcurrentMap<Integer, MqttPendingUnsubscription> pendingServerUnsubscribes = new ConcurrentHashMap<>();
     @Getter(AccessLevel.PACKAGE)
-    private final ConcurrentMap<Integer, MqttIncomingQos2Publish> qos2PendingIncomingPublishes = new ConcurrentHashMap<>();
+private final ConcurrentMap<Integer, MqttIncomingQos2Publish> qos2PendingIncomingPublishes = new ConcurrentHashMap<>();
     @Getter(AccessLevel.PACKAGE)
-    private final ConcurrentMap<Integer, MqttPendingPublish> pendingPublishes = new ConcurrentHashMap<>();
+private final ConcurrentMap<Integer, MqttPendingPublish> pendingPublishes = new ConcurrentHashMap<>();
     @Getter(AccessLevel.PACKAGE)
-    private final HashMultimap<String, MqttSubscription> subscriptions = HashMultimap.create();
+private final HashMultimap<String, MqttSubscription> subscriptions = HashMultimap.create();
     @Getter(AccessLevel.PACKAGE)
-    private final ConcurrentMap<Integer, MqttPendingSubscription> pendingSubscriptions = new ConcurrentHashMap<>();
+private final ConcurrentMap<Integer, MqttPendingSubscription> pendingSubscriptions = new ConcurrentHashMap<>();
     @Getter(AccessLevel.PACKAGE)
-    private final Set<String> pendingSubscribeTopics = new HashSet<>();
+private final Set<String> pendingSubscribeTopics = new HashSet<>();
     @Getter(AccessLevel.PACKAGE)
-    private final HashMultimap<MqttHandler, MqttSubscription> handlerToSubscription = HashMultimap.create();
+private final HashMultimap<MqttHandler, MqttSubscription> handlerToSubscription = HashMultimap.create();
     private final AtomicInteger nextMessageId = new AtomicInteger(1);
 
     @Getter
-    private final MqttClientConfig clientConfig;
+private final MqttClientConfig clientConfig;
 
     @Getter(AccessLevel.PACKAGE)
-    private final MqttHandler defaultHandler;
+private final MqttHandler defaultHandler;
 
     private final ReconnectStrategy reconnectStrategy;
 
@@ -101,7 +101,7 @@ final class MqttClientImpl implements MqttClient {
 
     private volatile boolean disconnected = false;
     @Getter
-    private volatile boolean reconnect = false;
+private volatile boolean reconnect = false;
     private String host;
     private int port;
     @Getter
@@ -109,7 +109,7 @@ final class MqttClientImpl implements MqttClient {
     private MqttClientCallback callback;
 
     @Getter
-    private final ListeningExecutor handlerExecutor;
+private final ListeningExecutor handlerExecutor;
 
     private final static int DISCONNECT_FALLBACK_DELAY_SECS = 1;
 
