@@ -234,7 +234,7 @@ public class CountedAspect {
     }
 
     @Nullable
-    private Object perform(ProceedingJoinPoint pjp, Counted counted) throws Throwable {
+private Object perform(ProceedingJoinPoint pjp, Counted counted) throws Throwable {
         final Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         final boolean stopWhenCompleted = CompletionStage.class.isAssignableFrom(method.getReturnType());
 
@@ -289,18 +289,18 @@ public class CountedAspect {
     private void record(ProceedingJoinPoint pjp, @Nullable Object methodResult, Counted counted, String exception,
             String result) {
         try {
-            Counter.Builder builder = Counter.builder(counted.value())
-                .description(counted.description().isEmpty() ? null : counted.description())
-                .tags(counted.extraTags())
-                .tag(EXCEPTION_TAG, exception)
-                .tag(RESULT_TAG, result)
-                .tags(tagsBasedOnJoinPoint.apply(pjp));
-            if (meterTagAnnotationHandler != null) {
-                meterTagAnnotationHandler.addAnnotatedParameters(builder, pjp);
+        Counter.Builder builder = Counter.builder(counted.value())
+            .description(counted.description().isEmpty() ? null : counted.description())
+            .tags(counted.extraTags())
+            .tag(EXCEPTION_TAG, exception)
+            .tag(RESULT_TAG, result)
+            .tags(tagsBasedOnJoinPoint.apply(pjp));
+        if (meterTagAnnotationHandler != null) {
+            meterTagAnnotationHandler.addAnnotatedParameters(builder, pjp);
                 meterTagAnnotationHandler.addAnnotatedMethodResult(builder, pjp, methodResult);
-            }
-            builder.register(registry).increment();
         }
+        builder.register(registry).increment();
+    }
         catch (Throwable ex) {
             WARN_THEN_DEBUG_LOGGER.log("Failed to record.", ex);
         }
