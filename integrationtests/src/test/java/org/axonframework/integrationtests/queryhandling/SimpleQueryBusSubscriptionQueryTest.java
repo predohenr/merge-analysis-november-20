@@ -17,10 +17,10 @@
 package org.axonframework.integrationtests.queryhandling;
 
 import org.axonframework.axonserver.connector.AxonServerConfigurationEnhancer;
-import org.axonframework.common.configuration.Configuration;
-import org.axonframework.common.configuration.MessagingConfigurer;
 import org.axonframework.messaging.MessageStream;
 import org.axonframework.queryhandling.GenericQueryMessage;
+import org.axonframework.common.configuration.Configuration;
+import org.axonframework.common.configuration.MessagingConfigurer;
 import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryMessage;
 import org.axonframework.queryhandling.QueryResponseMessage;
@@ -29,6 +29,7 @@ import org.axonframework.queryhandling.SubscriptionQueryAlreadyRegisteredExcepti
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 /**
  * An {@link AbstractSubscriptionQueryTestSuite} implementation validating the {@link SimpleQueryBus}.
@@ -51,8 +52,6 @@ public class SimpleQueryBusSubscriptionQueryTest extends AbstractSubscriptionQue
                                   .componentRegistry(cr -> cr.disableEnhancer(
                                           AxonServerConfigurationEnhancer.class));
     }
-
-    //fixme: SimpleQueryBus throws for duplicated subscriptions, how it should work with AxonServer?
     @Test
     void doubleSubscriptionMessage() {
         // given
@@ -68,4 +67,6 @@ public class SimpleQueryBusSubscriptionQueryTest extends AbstractSubscriptionQue
         assertTrue(secondSubscription.error().isPresent());
         assertInstanceOf(SubscriptionQueryAlreadyRegisteredException.class, secondSubscription.error().get());
     }
+
+    //fixme: SimpleQueryBus throws for duplicated subscriptions, how it should work with AxonServer?
 }
