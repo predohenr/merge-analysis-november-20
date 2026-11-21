@@ -30,6 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author raccoonback
  * @author Jens Mallien
  */
+
+/**
+ * @author raccoonback
+ * @author Jens Mallien
+ */
 class BeforeFilterFunctionsTests {
 
 	@Test
