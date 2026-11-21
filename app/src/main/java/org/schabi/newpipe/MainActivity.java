@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                 changeService(item);
                 break;
             case R.id.menu_tabs_group:
-                tabSelected(item);
+                    tabSelected(item);
                 break;
             case R.id.menu_kiosks_group:
                 try {
