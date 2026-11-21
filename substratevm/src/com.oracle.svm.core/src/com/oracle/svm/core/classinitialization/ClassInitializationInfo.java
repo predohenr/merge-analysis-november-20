@@ -897,7 +897,7 @@ public final class ClassInitializationInfo {
     public enum TypeReached {
         NOT_REACHED,
         REACHED,
-        UNTRACKED,
+        UNTRACKED
     }
 
     interface ClassInitializerFunctionPointer extends CFunctionPointer {
