@@ -61,7 +61,7 @@ final class HtmlTemplates {
 		 */
 		Builder withValue(String key, @Nullable String value) {
 			if (value != null) {
-				this.values.put(key, HtmlUtils.htmlEscape(value));
+			this.values.put(key, HtmlUtils.htmlEscape(value));
 			}
 			return this;
 		}
