@@ -34,6 +34,11 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  * @author Arjen Poutsma
  * @author Sam Brannen
  */
+
+/**
+ * @author Arjen Poutsma
+ * @author Sam Brannen
+ */
 class DataBufferTests extends AbstractDataBufferAllocatingTests {
 
 	@ParameterizedDataBufferAllocatingTest
@@ -858,7 +863,7 @@ class DataBufferTests extends AbstractDataBufferAllocatingTests {
 		result = new byte[2];
 		slice.read(result);
 
-		assertThat(result).isEqualTo(new byte[]{'b', 'c'});
+			assertThat(result).isEqualTo(new byte[]{'b', 'c'});
 		release(buffer);
 	}
 
@@ -907,7 +912,7 @@ class DataBufferTests extends AbstractDataBufferAllocatingTests {
 
 		assertThat(result).isEqualTo(bytes);
 
-		release(slice);
+			release(slice);
 		release(buffer);
 	}
 

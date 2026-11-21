@@ -76,6 +76,22 @@ import static org.assertj.core.api.Assertions.entry;
  * @see MergedAnnotationsRepeatableAnnotationTests
  * @see MergedAnnotationClassLoaderTests
  */
+
+/**
+ * Tests for {@link MergedAnnotations} and {@link MergedAnnotation}. These tests
+ * cover common usage scenarios and were mainly ported from the original tests in
+ * {@link AnnotationUtilsTests} and {@link AnnotatedElementUtilsTests}.
+ *
+ * @author Phillip Webb
+ * @author Rod Johnson
+ * @author Juergen Hoeller
+ * @author Sam Brannen
+ * @author Chris Beams
+ * @author Oleg Zhurakousky
+ * @author Rossen Stoyanchev
+ * @see MergedAnnotationsRepeatableAnnotationTests
+ * @see MergedAnnotationClassLoaderTests
+ */
 class MergedAnnotationsTests {
 
 	/**
@@ -2216,15 +2232,34 @@ class MergedAnnotationsTests {
 		boolean readOnly() default false;
 	}
 
-	@Transactional
-	@Component
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransactionalComponent {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@TransactionalComponent
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ComposedTransactionalComponent {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	static class NonAnnotatedClass {
@@ -2258,308 +2293,507 @@ class MergedAnnotationsTests {
 	static class AliasedTransactionalComponentClass {
 	}
 
+
+	// @formatter:off
+
 	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@interface AliasedTransactional {
+	@interface Transactional {
 
-		@AliasFor(attribute = "qualifier")
 		String value() default "";
 
-		@AliasFor(attribute = "value")
-		String qualifier() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Transactional(qualifier = "composed1")
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	@interface InheritedComposed {
-	}
 
-	@Transactional(qualifier = "composed2", readOnly = true)
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@interface Composed {
-	}
+	// @formatter:off
 
-	@Transactional
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface TxComposedWithOverride {
-
-		String qualifier() default "txMgr";
-	}
-
-	@Transactional("TxInheritedComposed")
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface TxInheritedComposed {
-	}
-
-	@Transactional("TxComposed")
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface TxComposed {
-	}
-
-	@AliasedTransactional(value = "aliasForQualifier")
-	@Component
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedTransactionalComponent {
-	}
-
-	@AliasedTransactional
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface MyAliasedTransactional {
-
-		@AliasFor(annotation = AliasedTransactional.class, attribute = "value")
-		String value() default "defaultTransactionManager";
-	}
-
-	@MyAliasedTransactional("anotherTransactionManager")
-	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.TYPE, ElementType.METHOD})
-	@interface ComposedMyAliasedTransactional {
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ComposedMyAliasedTransactional
 	static class ComposedTransactionalClass {
 	}
 
-	@AliasedTransactional("meta")
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaAliasedTransactional {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@MetaAliasedTransactional
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaMetaAliasedTransactional {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@MetaMetaAliasedTransactional
 	static class MetaMetaAliasedTransactionalClass {
 	}
 
-	@TxComposedWithOverride
-	// Override default "txMgr" from @TxComposedWithOverride with "localTxMgr"
-	@Transactional(qualifier = "localTxMgr")
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@interface MetaAndLocalTxConfig {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TestPropertySource {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("locations")
-		String[] value() default {};
+		String value() default "";
 
-		@AliasFor("value")
-		String[] locations() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(attribute = "locations")
-		String[] value() default {};
+		String value() default "";
 
-		@AliasFor(attribute = "value")
-		String[] locations() default {};
+		String qualifier() default "transactionManager";
 
-		Class<?>[] classes() default {};
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ConventionBasedComposedContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		// Do NOT use @AliasFor here
-		String[] locations() default {};
+		String value() default "";
 
-		// Do NOT use @AliasFor here
-		Class<?>[] classes() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	/**
-	 * This hybrid approach for annotation attribute overrides with transitive implicit
-	 * aliases is unsupported. See SPR-13554 for details.
-	 */
-	@ContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface HalfConventionBasedAndHalfAliasedComposedContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		// Do NOT use @AliasFor here
-		String[] locations() default {};
+		String value() default "";
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xmlConfigFiles() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedComposedContextConfiguration {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xmlConfigFiles();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedValueComposedContextConfiguration {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "value")
-		String[] locations();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] groovyScripts() default {};
+		String value() default "";
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xmlFiles() default {};
+		String qualifier() default "transactionManager";
 
-		// intentionally omitted: attribute = "locations"
-		@AliasFor(annotation = ContextConfiguration.class)
-		String[] locations() default {};
-
-		// intentionally omitted: attribute = "locations" (SPR-14069)
-		@AliasFor(annotation = ContextConfiguration.class)
-		String[] value() default {};
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesContextConfiguration(xmlFiles = { "A.xml", "B.xml" })
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ComposedImplicitAliasesContextConfiguration {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransitiveImplicitAliasesContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "xmlFiles")
-		String[] xml() default {};
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "groovyScripts")
-		String[] groovy() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface SingleLocationTransitiveImplicitAliasesContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "xmlFiles")
-		String xml() default "";
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "groovyScripts")
-		String groovy() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransitiveImplicitAliasesWithSkippedLevelContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xml() default {};
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "groovyScripts")
-		String[] groovy() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface SingleLocationTransitiveImplicitAliasesWithSkippedLevelContextConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String xml() default "";
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesContextConfiguration.class, attribute = "groovyScripts")
-		String groovy() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	/**
-	 * Although the configuration declares an explicit value for 'value' and requires a
-	 * value for the aliased 'locations', this does not result in an error since
-	 * 'locations' effectively shadows the 'value' attribute (which cannot be set via the
-	 * composed annotation anyway). If 'value' were not shadowed, such a declaration would
-	 * not make sense.
-	 */
-	@ContextConfiguration(value = "duplicateDeclaration")
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface ShadowedAliasComposedContextConfiguration {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xmlConfigFiles();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration(locations = "shadowed.xml")
-	@TestPropertySource(locations = "test.properties")
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedComposedContextConfigurationAndTestPropertySource {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] xmlConfigFiles() default "default.xml";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ContextConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface SpringApplicationConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ContextConfiguration.class, attribute = "locations")
-		String[] locations() default {};
+		String value() default "";
 
-		// Do NOT use @AliasFor(annotation = ...)
-		@AliasFor("value")
-		Class<?>[] classes() default {};
+		String qualifier() default "transactionManager";
 
-		// Do NOT use @AliasFor(annotation = ...)
-		@AliasFor("classes")
-		Class<?>[] value() default {};
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ComponentScan {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("basePackages")
-		String[] value() default {};
+		String value() default "";
 
-		@AliasFor("value")
-		String[] basePackages() default {};
+		String qualifier() default "transactionManager";
 
-		Filter[] excludeFilters() default {};
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({})
-	@interface Filter {
 
-		String pattern();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ComponentScan(excludeFilters = { @Filter(pattern = "*Test"),
-		@Filter(pattern = "*Tests") })
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface TestComponentScan {
 
-		@AliasFor(attribute = "basePackages", annotation = ComponentScan.class)
-		String[] packages();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ComponentScan
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface ConventionBasedSinglePackageComponentScan {
 
-		// Do NOT use @AliasFor here
-		String basePackages();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@ComponentScan
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForBasedSinglePackageComponentScan {
 
-		@AliasFor(attribute = "basePackages", annotation = ComponentScan.class)
-		String pkg();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@Transactional
@@ -2778,42 +3012,109 @@ class MergedAnnotationsTests {
 		}
 	}
 
-	@Component("meta1")
-	@Order
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@interface Meta1 {
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Component("meta2")
-	@Transactional(readOnly = true)
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface Meta2 {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Meta2
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaMeta {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@MetaMeta
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaMetaMeta {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@MetaCycle3
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaCycle1 {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@MetaCycle1
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaCycle2 {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@MetaCycle2
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface MetaCycle3 {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@Meta1
@@ -3014,31 +3315,64 @@ class MergedAnnotationsTests {
 		}
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@interface MyRepeatableContainer {
+	@interface Transactional {
 
-		MyRepeatable[] value();
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@Repeatable(MyRepeatableContainer.class)
-	@interface MyRepeatable {
+	@interface Transactional {
 
-		String value();
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@MyRepeatable("meta1")
-	@interface MyRepeatableMeta1 {
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	@MyRepeatable("meta2")
-	@interface MyRepeatableMeta2 {
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	interface InterfaceWithRepeated {
@@ -3083,61 +3417,49 @@ class MergedAnnotationsTests {
 		}
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface RequestMapping {
+	@Inherited
+	@interface Transactional {
 
-		String name();
-
-		@AliasFor("path")
-		String[] value() default "";
-
-		@AliasFor(attribute = "value")
-		String[] path() default "";
-
-		RequestMethod[] method() default {};
-
-		// ---------------------------------------------------------------------
-		// All remaining attributes declare default values that are used solely
-		// for the purpose of testing the toString() implementations for annotations.
-		Class<?> clazz() default RequestMethod.class;
-		Class<?>[] classes() default {int[][].class, RequestMethod[].class};
-
-		char ch() default 'X';
-		char[] chars() default {'X'};
-
-		byte byteValue() default (byte) 0xFF;
-		byte[] bytes() default {(byte) 0xFF};
-
-		short shortValue() default 9876;
-		short[] shorts() default {9876};
-
-		long longValue() default 42L;
-		long[] longs() default {42L};
-
-		float floatValue() default 3.14F;
-		float[] floats() default {3.14F};
-
-		double doubleValue() default 99.999D;
-		double[] doubles() default {99.999D};
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@RequestMapping(method = RequestMethod.GET, name = "")
-	@interface GetMapping {
-
-		@AliasFor(annotation = RequestMapping.class)
 		String value() default "";
 
-		@AliasFor(annotation = RequestMapping.class)
-		String path() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@RequestMapping(method = RequestMethod.POST, name = "")
-	@interface PostMapping {
 
-		// Do NOT use @AliasFor here
-		String path() default "";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
+	}
+
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@Component("webController")
@@ -3174,19 +3496,34 @@ class MergedAnnotationsTests {
 		}
 	}
 
-	/**
-	 * Mimics jakarta.persistence.Id
-	 */
-	@Retention(RUNTIME)
-	@interface Id {
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	/**
-	 * Mimics jakarta.persistence.GeneratedValue
-	 */
-	@Retention(RUNTIME)
-	@interface GeneratedValue {
-		String strategy();
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@Id
@@ -3195,45 +3532,83 @@ class MergedAnnotationsTests {
 		return 42L;
 	}
 
-	/**
-	 * Mimics org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication
-	 */
-	@Retention(RUNTIME)
-	@interface EnableGlobalAuthentication {
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	/**
-	 * Mimics org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-	 */
-	@Retention(RUNTIME)
-	@EnableGlobalAuthentication
-	@interface EnableWebSecurity {
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@EnableWebSecurity
 	static class SecurityConfig {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD, ElementType.ANNOTATION_TYPE })
-	@interface RootAnnotation {
+	@Inherited
+	@interface Transactional {
+
 		String value() default "";
-		boolean flag() default false;
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@RootAnnotation
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.FIELD, ElementType.ANNOTATION_TYPE })
-	@interface ComposedRootAnnotation {
 
-		@AliasFor(annotation = RootAnnotation.class, attribute = "flag")
-		boolean enabled() default true;
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	@ComposedRootAnnotation
-	@interface DoublyComposedRootAnnotation {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	class DomainType {
@@ -3248,22 +3623,34 @@ class MergedAnnotationsTests {
 		Object metaMetaAnnotated;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface TestConfiguration {
 
-		@AliasFor("location")
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
 		String value() default "";
 
-		@AliasFor("value")
-		String location() default "";
+		String qualifier() default "transactionManager";
 
-		Class<?> configClass() default Object.class;
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface Hierarchy {
 
-		TestConfiguration[] value();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@Hierarchy({ @TestConfiguration("A"), @TestConfiguration(location = "B") })
@@ -3274,167 +3661,224 @@ class MergedAnnotationsTests {
 	static class TestConfigurationClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface CharsContainer {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(attribute = "chars")
-		char[] value() default {};
+		String value() default "";
 
-		@AliasFor(attribute = "value")
-		char[] chars() default {};
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@CharsContainer(chars = { 'x', 'y', 'z' })
 	static class GroupOfCharsClass {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForWithMissingAttributeDeclaration {
 
-		@AliasFor
-		String foo() default "";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForWithMissingAttributeDeclaration
 	static class AliasForWithMissingAttributeDeclarationClass {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForWithDuplicateAttributeDeclaration {
 
-		@AliasFor(value = "bar", attribute = "baz")
-		String foo() default "";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForWithDuplicateAttributeDeclaration
 	static class AliasForWithDuplicateAttributeDeclarationClass {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForNonexistentAttribute {
 
-		@AliasFor("bar")
-		String foo() default "";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForNonexistentAttribute
 	static class AliasForNonexistentAttributeClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForWithoutMirroredAliasFor {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("bar")
-		String foo() default "";
+		String value() default "";
 
-		String bar() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForWithoutMirroredAliasFor
 	static class AliasForWithoutMirroredAliasForClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForWithMirroredAliasForWrongAttribute {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(attribute = "bar")
-		String[] foo() default "";
+		String value() default "";
 
-		@AliasFor(attribute = "quux")
-		String[] bar() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForWithMirroredAliasForWrongAttribute
 	static class AliasForWithMirroredAliasForWrongAttributeClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForAttributeOfDifferentType {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("bar")
-		String[] foo() default "";
+		String value() default "";
 
-		@AliasFor("foo")
-		boolean bar() default true;
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForAttributeOfDifferentType
 	static class AliasForAttributeOfDifferentTypeClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForWithMissingDefaultValues {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(attribute = "bar")
-		String foo();
+		String value() default "";
 
-		@AliasFor(attribute = "foo")
-		String bar();
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForWithMissingDefaultValues(foo = "foo", bar = "bar")
 	static class AliasForWithMissingDefaultValuesClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasForAttributeWithDifferentDefaultValue {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("bar")
-		String foo() default "X";
+		String value() default "";
 
-		@AliasFor("foo")
-		String bar() default "Z";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasForAttributeWithDifferentDefaultValue
 	static class AliasForAttributeWithDifferentDefaultValueClass {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedComposedTestConfigurationNotMetaPresent {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String xmlConfigFile();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@AliasedComposedTestConfigurationNotMetaPresent(xmlConfigFile = "test.xml")
 	static class AliasedComposedTestConfigurationNotMetaPresentClass {
 	}
 
-	@TestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AliasedComposedTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String xmlConfigFile();
-	}
-
-	@TestConfiguration
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface ImplicitAliasesTestConfiguration {
-
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String xmlFile() default "";
-
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String groovyScript() default "";
-
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
 		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location1() default "";
+		String qualifier() default "transactionManager";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location2() default "";
+		boolean readOnly() default false;
+	}
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location3() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "configClass")
-		Class<?> configClass() default Object.class;
+	// @formatter:off
 
-		String nonAliasedAttribute() default "";
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesTestConfiguration(groovyScript = "groovyScript")
@@ -3461,29 +3905,34 @@ class MergedAnnotationsTests {
 	static class Location3ImplicitAliasesTestConfigurationClass {
 	}
 
-	@TestConfiguration
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration {
 
-		@AliasFor(annotation = TestConfiguration.class)
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
 		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class)
-		String location() default "";
+		String qualifier() default "transactionManager";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String xmlFile() default "";
+		boolean readOnly() default false;
 	}
 
-	@ImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransitiveImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration.class, attribute = "xmlFile")
-		String xml() default "";
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration.class, attribute = "location")
-		String groovy() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesWithImpliedAliasNamesOmittedTestConfiguration("value")
@@ -3498,90 +3947,114 @@ class MergedAnnotationsTests {
 	static class XmlFilesImplicitAliasesWithImpliedAliasNamesOmittedTestConfigurationClass {
 	}
 
-	@TestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesWithMissingDefaultValuesTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location1();
+		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location2();
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesWithMissingDefaultValuesTestConfiguration(location1 = "1", location2 = "2")
 	static class ImplicitAliasesWithMissingDefaultValuesTestConfigurationClass {
 	}
 
-	@TestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesWithDifferentDefaultValuesTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location1() default "foo";
+		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location2() default "bar";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesWithDifferentDefaultValuesTestConfiguration(location1 = "1", location2 = "2")
 	static class ImplicitAliasesWithDifferentDefaultValuesTestConfigurationClass {
 	}
 
-	@TestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesWithDuplicateValuesTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location1() default "";
+		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String location2() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesWithDuplicateValuesTestConfiguration(location1 = "1", location2 = "2")
 	static class ImplicitAliasesWithDuplicateValuesTestConfigurationClass {
 	}
 
-	@TestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ImplicitAliasesForAliasPairTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = TestConfiguration.class, attribute = "location")
-		String xmlFile() default "";
+		String value() default "";
 
-		@AliasFor(annotation = TestConfiguration.class, value = "value")
-		String groovyScript() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ImplicitAliasesForAliasPairTestConfiguration(xmlFile = "test.xml")
 	static class ImplicitAliasesForAliasPairTestConfigurationClass {
 	}
 
-	@ImplicitAliasesTestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransitiveImplicitAliasesTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ImplicitAliasesTestConfiguration.class, attribute = "xmlFile")
-		String xml() default "";
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesTestConfiguration.class, attribute = "groovyScript")
-		String groovy() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@TransitiveImplicitAliasesTestConfiguration(xml = "test.xml")
 	static class TransitiveImplicitAliasesTestConfigurationClass {
 	}
 
-	@ImplicitAliasesForAliasPairTestConfiguration
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface TransitiveImplicitAliasesForAliasPairTestConfiguration {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation = ImplicitAliasesForAliasPairTestConfiguration.class, attribute = "xmlFile")
-		String xml() default "";
+		String value() default "";
 
-		@AliasFor(annotation = ImplicitAliasesForAliasPairTestConfiguration.class, attribute = "groovyScript")
-		String groovy() default "";
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@TransitiveImplicitAliasesForAliasPairTestConfiguration(xml = "test.xml")
@@ -3593,85 +4066,166 @@ class MergedAnnotationsTests {
 	static class ComponentScanClass {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface ComponentScanSingleFilter {
 
-		Filter value();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ComponentScanSingleFilter(@Filter(pattern = "*Foo"))
 	static class ComponentScanSingleFilterClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface AnnotationWithDefaults {
+	@Inherited
+	@interface Transactional {
 
-		String text() default "enigma";
+		String value() default "";
 
-		boolean predicate() default true;
+		String qualifier() default "transactionManager";
 
-		char[] characters() default { 'a', 'b', 'c' };
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface AnnotationWithoutDefaults {
 
-		String text();
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@TestConfiguration(value = "foo", location = "bar")
 	interface TestConfigurationMismatch {
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface DefaultOverrideRoot {
 
-		String text() default "root";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideRoot
-	@interface DefaultOverrideMeta {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideMeta
-	@interface DefaultOverrideMetaMeta {
 
-		String text() default "metameta";
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideMetaMeta
-	@interface DefaultOverrideMetaMetaMeta {
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@DefaultOverrideMetaMetaMeta
 	static class DefaultOverrideClass {
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideRoot
-	@interface DefaultOverrideImplicitAlias {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor(annotation=DefaultOverrideRoot.class, attribute="text")
-		String text1() default "alias";
+		String value() default "";
 
-		@AliasFor(annotation=DefaultOverrideRoot.class, attribute="text")
-		String text2() default "alias";
+		String qualifier() default "transactionManager";
 
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideImplicitAlias(text1="alias-meta-1")
-	@interface DefaultOverrideAliasImplicitMeta1 {
 
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideImplicitAlias(text2="alias-meta-2")
-	@interface DefaultOverrideImplicitAliasMeta2 {
 
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@DefaultOverrideAliasImplicitMeta1
@@ -3684,27 +4238,49 @@ class MergedAnnotationsTests {
 
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface DefaultOverrideExplicitAliasRoot {
+	@Inherited
+	@interface Transactional {
 
-		@AliasFor("value")
-		String text() default "";
-
-		@AliasFor("text")
 		String value() default "";
 
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideExplicitAliasRoot("meta")
-	@interface DefaultOverrideExplicitAliasRootMeta {
 
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@DefaultOverrideExplicitAliasRootMeta
-	@interface DefaultOverrideExplicitAliasRootMetaMeta {
 
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@DefaultOverrideExplicitAliasRootMetaMeta
@@ -3712,25 +4288,49 @@ class MergedAnnotationsTests {
 
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface ValueAttribute {
+	@Inherited
+	@interface Transactional {
 
-		String[] value();
+		String value() default "";
 
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
+
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@ValueAttribute("FromValueAttributeMeta")
-	@interface ValueAttributeMeta {
+	@Inherited
+	@interface Transactional {
 
-		String[] value() default {};
+		String value() default "";
 
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@ValueAttributeMeta("FromValueAttributeMetaMeta")
-	@interface ValueAttributeMetaMeta {
 
+	// @formatter:off
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface Transactional {
+
+		String value() default "";
+
+		String qualifier() default "transactionManager";
+
+		boolean readOnly() default false;
 	}
 
 	@ValueAttributeMetaMeta
