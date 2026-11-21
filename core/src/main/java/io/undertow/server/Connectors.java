@@ -401,8 +401,8 @@ public class Connectors {
                 if (t instanceof RequestTooBigException) {
                     exchange.setStatusCode(StatusCodes.REQUEST_ENTITY_TOO_LARGE);
                 } else {
-                    exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
-                }
+                exchange.setStatusCode(StatusCodes.INTERNAL_SERVER_ERROR);
+            }
             }
             if(t instanceof IOException) {
                 UndertowLogger.REQUEST_IO_LOGGER.ioException((IOException) t);
