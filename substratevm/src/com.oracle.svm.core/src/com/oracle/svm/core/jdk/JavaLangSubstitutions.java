@@ -81,12 +81,6 @@ import jdk.graal.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperati
 final class Target_java_lang_Object {
 
     @Substitute
-    @TargetElement(name = "getClass")
-    private DynamicHub getClassSubst() {
-        return readHub(this);
-    }
-
-    @Substitute
     @TargetElement(name = "hashCode")
     private int hashCodeSubst() {
         throw VMError.shouldNotReachHere("Intrinsified in SubstrateGraphBuilderPlugins");
@@ -435,13 +429,6 @@ final class Target_java_lang_System {
     public static String setProperty(String key, String value) {
         checkKey(key);
         return SystemPropertiesSupport.singleton().setCurrentProperty(key, value);
-    }
-
-    @Substitute
-    @NeverInlineTrivial(reason = "Used in 'java.home' access analysis: AnalyzeJavaHomeAccessPhase", onlyWith = AnalyzeJavaHomeAccessEnabled.class)
-    private static String getProperty(String key) {
-        checkKey(key);
-        return SystemPropertiesSupport.singleton().getCurrentProperty(key);
     }
 
     @Substitute
