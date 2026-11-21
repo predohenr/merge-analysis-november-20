@@ -183,9 +183,9 @@ public class JDKInitializationFeature implements InternalFeature {
             rci.initializeAtBuildTime("jdk.internal.jrtfs.SystemImage", FutureDefaultsOptions.RUN_TIME_INITIALIZE_FILE_SYSTEM_PROVIDERS_REASON);
         }
 
-        rci.initializeAtBuildTime("com.sun.xml", JDK_CLASS_REASON);
-        rci.initializeAtBuildTime("com.sun.org.apache", JDK_CLASS_REASON);
-        rci.initializeAtBuildTime("com.sun.org.slf4j.internal", JDK_CLASS_REASON);
+            rci.initializeAtBuildTime("com.sun.xml", JDK_CLASS_REASON);
+            rci.initializeAtBuildTime("com.sun.org.apache", JDK_CLASS_REASON);
+            rci.initializeAtBuildTime("com.sun.org.slf4j.internal", JDK_CLASS_REASON);
 
         /* Security services */
         rci.initializeAtBuildTime("com.sun.crypto.provider", JDK_CLASS_REASON);
