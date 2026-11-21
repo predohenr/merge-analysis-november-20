@@ -32,12 +32,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import org.jspecify.annotations.Nullable;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.core.StreamReadConstraints;
 import tools.jackson.core.StreamWriteConstraints;
 import tools.jackson.core.base.DecorableTSFactory.DecorableTSFBuilder;
 import tools.jackson.core.json.JsonFactory;
 import tools.jackson.core.json.JsonFactoryBuilder;
-import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.JacksonModule;
 import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
@@ -445,12 +445,6 @@ public final class JacksonAutoConfiguration {
 				registerPropertyNamingStrategyHints(hints.reflection());
 			}
 		}
-
-		/**
-		 * Register hints for the {@code configurePropertyNamingStrategyField} method to
-		 * use.
-		 * @param hints reflection hints
-		 */
 		private void registerPropertyNamingStrategyHints(ReflectionHints hints) {
 			registerPropertyNamingStrategyHints(hints, PropertyNamingStrategies.class);
 		}
@@ -465,6 +459,12 @@ public final class JacksonAutoConfiguration {
 			return ReflectionUtils.isPublicStaticFinal(candidate)
 					&& candidate.getType().isAssignableFrom(PropertyNamingStrategy.class);
 		}
+
+		/**
+		 * Register hints for the {@code configurePropertyNamingStrategyField} method to
+		 * use.
+		 * @param hints reflection hints
+		 */
 
 	}
 
