@@ -186,7 +186,6 @@ class SingleValueMessageStreamTest extends MessageStreamTest<Message> {
 
     @Nested
     class WhenAllElementsConsumed {
-
         SingleValueMessageStream<Message> ms = new SingleValueMessageStream<>(new SimpleEntry<>(createRandomMessage()));
 
         @BeforeEach

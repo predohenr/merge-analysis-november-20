@@ -35,6 +35,16 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author John Hendrikx
  * @since 5.0.0
  */
+
+/**
+ * A {@link MessageStream} implementation using a {@link Flux} as the source for {@link Entry entries}.
+ *
+ * @param <M> The type of {@link Message} contained in the {@link Entry entries} of this stream.
+ * @author Allard Buijze
+ * @author Steven van Beelen
+ * @author John Hendrikx
+ * @since 5.0.0
+ */
 class FluxMessageStream<M extends Message> extends AbstractMessageStream<M> {
 
     private final Flux<Entry<M>> source;
