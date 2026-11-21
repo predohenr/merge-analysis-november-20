@@ -92,6 +92,12 @@ import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackageP
  *
  * @since 1.0
  */
+
+/**
+ * Unit tests for {@link ReflectionUtils}.
+ *
+ * @since 1.0
+ */
 class ReflectionUtilsTests {
 
 	private static final Predicate<Method> isFooMethod = method -> method.getName().equals("foo");
@@ -2118,6 +2124,8 @@ class ReflectionUtilsTests {
 
 	// -------------------------------------------------------------------------
 
+	// -------------------------------------------------------------------------
+
 	interface Generic<X, Y, Z extends X> {
 
 		X foo();
@@ -2332,6 +2340,8 @@ class ReflectionUtilsTests {
 		// sibling of OuterClass due to common super type
 		static class StaticNestedSiblingClass extends AbstractOuterClass {
 		}
+
+		// sibling of OuterClass due to common super type
 
 		// sibling of OuterClass due to common super type
 		class InnerSiblingClass extends AbstractOuterClass {
