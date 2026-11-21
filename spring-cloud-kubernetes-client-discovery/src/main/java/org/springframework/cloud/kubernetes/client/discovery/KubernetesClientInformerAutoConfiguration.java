@@ -66,7 +66,7 @@ import static org.springframework.cloud.kubernetes.client.KubernetesClientUtils.
 final class KubernetesClientInformerAutoConfiguration {
 
 	private static final LogAccessor LOG = new LogAccessor(
-		LogFactory.getLog(KubernetesClientInformerAutoConfiguration.class));
+			LogFactory.getLog(KubernetesClientInformerAutoConfiguration.class));
 
 	// we rely on the order of namespaces to enable listers, as such provide a bean of
 	// namespaces as a list, instead of the incoming Set.
