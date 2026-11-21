@@ -103,7 +103,7 @@ public class SmackIntegrationTestFramework {
     public enum TestType {
         Normal,
         LowLevel,
-        SpecificLowLevel,
+        SpecificLowLevel
     }
 
     public static void main(String[] args) throws IOException, KeyManagementException,
@@ -134,7 +134,7 @@ public class SmackIntegrationTestFramework {
                     + testNotPossible.testNotPossibleException.getMessage());
             }
             for (SuccessfulTest successfulTest : testRunResult.successfulIntegrationTests) {
-                LOGGER.info(successfulTest.concreteTest + " ✔");
+                LOGGER.info(successfulTest.concreteTest + " Ã¢Å“â€�");
             }
             final int successfulTests = testRunResult.successfulIntegrationTests.size();
             final int failedTests = testRunResult.failedIntegrationTests.size();
@@ -151,7 +151,7 @@ public class SmackIntegrationTestFramework {
                 return;
             }
 
-            StringBuilder sb = new StringBuilder("💀 The following " + failedTests + " tests failed! 💀\n- ");
+            StringBuilder sb = new StringBuilder("Ã°Å¸â€™â‚¬ The following " + failedTests + " tests failed! Ã°Å¸â€™â‚¬\n- ");
             StringUtils.appendTo(testRunResult.failedIntegrationTests, "\n- ", sb, t -> sb.append(t.concreteTest));
             LOGGER.warning(sb.toString());
 
@@ -703,7 +703,7 @@ public class SmackIntegrationTestFramework {
     enum AccountNum {
         One,
         Two,
-        Three,
+        Three
     }
 
     private static Exception throwFatalException(Throwable e) throws Error, NoResponseException,
@@ -1075,8 +1075,8 @@ public class SmackIntegrationTestFramework {
         /**
          * A no-parameter method of a {@link AbstractSmackSpecificLowLevelIntegrationTest}.
          */
-        noParamSpecificLowLevel,
-    };
+        noParamSpecificLowLevel
+    };;
 
     static TestMethodParameterType determineTestMethodParameterType(Method testMethod) {
         return determineTestMethodParameterType(testMethod, AbstractXMPPConnection.class);
