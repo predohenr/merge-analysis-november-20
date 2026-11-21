@@ -91,14 +91,14 @@ class JvmGcMetricsTest {
         // notification triggers it).
         await().atMost(5, TimeUnit.SECONDS).alias("NotificationListener takes time after GC").untilAsserted(() -> {
             assertThat(registry.get("jvm.gc.live.data.size").gauge().value()).isPositive();
-            assertThat(registry.get("jvm.gc.memory.allocated").counter().count()).isPositive();
-            assertThat(registry.get("jvm.gc.max.data.size").gauge().value()).isPositive();
-            Timer gcTimer = registry.get("jvm.gc.pause").tag("cause", "System.gc()").timer();
-            assertThat(gcTimer).isNotNull();
-            assertThat(gcTimer.count()).isPositive();
-            assertThat(gcTimer.getId().getTag("gc")).isNotBlank();
-            assertThat(gcTimer.getId().getTag("key")).isEqualTo("value");
-            assertThat(gcTimer.getId().getTag("action")).isNotBlank();
+        assertThat(registry.get("jvm.gc.memory.allocated").counter().count()).isPositive();
+        assertThat(registry.get("jvm.gc.max.data.size").gauge().value()).isPositive();
+        Timer gcTimer = registry.get("jvm.gc.pause").tag("cause", "System.gc()").timer();
+        assertThat(gcTimer).isNotNull();
+        assertThat(gcTimer.count()).isPositive();
+        assertThat(gcTimer.getId().getTag("gc")).isNotBlank();
+        assertThat(gcTimer.getId().getTag("key")).isEqualTo("value");
+        assertThat(gcTimer.getId().getTag("action")).isNotBlank();
         });
 
         if (!binder.isGenerationalGc) {
