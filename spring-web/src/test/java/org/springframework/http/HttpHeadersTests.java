@@ -52,6 +52,16 @@ import static org.assertj.core.api.Assertions.entry;
  * @author Juergen Hoeller
  * @author Sam Brannen
  */
+
+/**
+ * Tests for {@link org.springframework.http.HttpHeaders}.
+ *
+ * @author Arjen Poutsma
+ * @author Sebastien Deleuze
+ * @author Brian Clozel
+ * @author Juergen Hoeller
+ * @author Sam Brannen
+ */
 class HttpHeadersTests {
 
 	final HttpHeaders headers = new HttpHeaders();

@@ -57,6 +57,18 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Jakub Narloch
  * @author Av Pinzur
  */
+
+/**
+ * Tests for {@link MockHttpServletRequest}.
+ *
+ * @author Rick Evans
+ * @author Mark Fisher
+ * @author Rossen Stoyanchev
+ * @author Sam Brannen
+ * @author Brian Clozel
+ * @author Jakub Narloch
+ * @author Av Pinzur
+ */
 class MockHttpServletRequestTests {
 
 	private static final String HOST = "Host";
