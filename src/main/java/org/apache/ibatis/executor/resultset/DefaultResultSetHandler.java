@@ -262,16 +262,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     try {
-      while (rs == null) {
-        // move forward to get the first resultset in case the driver
-        // doesn't return the resultset as the first result (HSQLDB)
-        if (stmt.getMoreResults()) {
-          rs = stmt.getResultSet();
-        } else if (stmt.getUpdateCount() == -1) {
-          // no more results. Must be no resultset
-          break;
-        }
+    while (rs == null) {
+      // move forward to get the first resultset in case the driver
+      // doesn't return the resultset as the first result (HSQLDB)
+      if (stmt.getMoreResults()) {
+        rs = stmt.getResultSet();
+      } else if (stmt.getUpdateCount() == -1) {
+        // no more results. Must be no resultset
+        break;
       }
+    }
     } catch (SQLException e) {
       throw e1 != null ? e1 : e;
     }
@@ -285,17 +285,17 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       // We stopped checking DatabaseMetaData#supportsMultipleResultSets()
       // because Oracle driver (incorrectly) returns false
 
-      // Crazy Standard JDBC way of determining if there are more results
-      // DO NOT try to 'improve' the condition even if IDE tells you to!
-      // It's important that getUpdateCount() is called here.
-      if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
-        ResultSet rs = stmt.getResultSet();
-        if (rs == null) {
-          return getNextResultSet(stmt);
-        } else {
-          return new ResultSetWrapper(rs, configuration);
+        // Crazy Standard JDBC way of determining if there are more results
+        // DO NOT try to 'improve' the condition even if IDE tells you to!
+        // It's important that getUpdateCount() is called here.
+        if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
+          ResultSet rs = stmt.getResultSet();
+          if (rs == null) {
+            return getNextResultSet(stmt);
+          } else {
+            return new ResultSetWrapper(rs, configuration);
+          }
         }
-      }
     } catch (Exception e) {
       // Intentionally ignored.
     }

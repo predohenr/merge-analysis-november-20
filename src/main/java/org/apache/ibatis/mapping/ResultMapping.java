@@ -253,7 +253,7 @@ public class ResultMapping {
   }
 
   @Deprecated
-  public void setForeignColumn(String foreignColumn) {
+public void setForeignColumn(String foreignColumn) {
     this.foreignColumn = foreignColumn;
   }
 
@@ -262,7 +262,7 @@ public class ResultMapping {
   }
 
   @Deprecated
-  public void setLazy(boolean lazy) {
+public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }
 

@@ -378,7 +378,7 @@ public class MapperAnnotationBuilder {
       Class<?> paramType = param.getType();
       if (RowBounds.class.isAssignableFrom(paramType) || ResultHandler.class.isAssignableFrom(paramType)) {
         continue;
-      }
+        }
       if (parameterType == null && param.getAnnotation(Param.class) == null) {
         parameterType = paramType;
       } else {

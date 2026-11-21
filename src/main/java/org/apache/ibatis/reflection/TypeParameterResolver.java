@@ -122,8 +122,8 @@ public class TypeParameterResolver {
     if (resolvedComponentType instanceof Class) {
       return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
     } else {
-      return new GenericArrayTypeImpl(resolvedComponentType);
-    }
+    return new GenericArrayTypeImpl(resolvedComponentType);
+  }
   }
 
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType,
