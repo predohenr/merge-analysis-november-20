@@ -148,10 +148,10 @@ public class VectorMemoryIndex extends MemoryIndex
         return bytesUsed;
     }
 
-    private synchronized void updateKeyBounds(PrimaryKey key)
+    private synchronized void updateKeyBounds(PrimaryKey primaryKey)
     {
         KeyBounds current = keyBounds;
-        keyBounds = current == null ? new KeyBounds(key, key) : current.withUpdated(key);
+        keyBounds = current == null ? new KeyBounds(primaryKey, primaryKey) : current.withUpdated(primaryKey);
     }
 
     @Override
