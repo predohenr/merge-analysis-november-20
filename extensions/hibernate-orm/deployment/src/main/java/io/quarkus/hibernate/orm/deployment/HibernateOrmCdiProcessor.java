@@ -394,8 +394,8 @@ public class HibernateOrmCdiProcessor {
             configurator.addQualifier(Default.class);
         }
 
-        configurator.addQualifier().annotation(DotNames.NAMED).addValue("value", puRef.persistenceUnitName).done();
-        configurator.addQualifier().annotation(PersistenceUnit.class).addValue("value", puRef.persistenceUnitName).done();
+            configurator.addQualifier().annotation(DotNames.NAMED).addValue("value", puRef.persistenceUnitName).done();
+            configurator.addQualifier().annotation(PersistenceUnit.class).addValue("value", puRef.persistenceUnitName).done();
 
         return configurator;
     }
