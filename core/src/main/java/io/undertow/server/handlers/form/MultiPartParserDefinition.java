@@ -21,7 +21,6 @@ package io.undertow.server.handlers.form;
 import io.undertow.UndertowLogger;
 import io.undertow.UndertowMessages;
 import io.undertow.UndertowOptions;
-import io.undertow.connector.PooledByteBuffer;
 import io.undertow.server.ExchangeCompletionListener;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -33,6 +32,7 @@ import io.undertow.util.SameThreadExecutor;
 import io.undertow.util.StatusCodes;
 import org.xnio.ChannelListener;
 import org.xnio.IoUtils;
+import io.undertow.connector.PooledByteBuffer;
 import org.xnio.channels.StreamSourceChannel;
 
 import java.io.ByteArrayOutputStream;
@@ -115,9 +115,9 @@ public class MultiPartParserDefinition implements FormParserFactory.ParserDefini
             });
             if (exchange.getMaxEntitySize() <= 0) {
                 Long sizeLimit = exchange.getConnection().getUndertowOptions().get(UndertowOptions.MULTIPART_MAX_ENTITY_SIZE, UndertowOptions.DEFAULT_MULTIPART_MAX_ENTITY_SIZE );
-                if(sizeLimit != null && sizeLimit > 0) { // do not overwrite the entity size with sizeLimit that is <= 0
-                    exchange.setMaxEntitySize(sizeLimit);
-                }
+            if(sizeLimit != null && sizeLimit > 0) { // do not overwrite the entity size with sizeLimit that is <= 0
+                exchange.setMaxEntitySize(sizeLimit);
+            }
             }
             UndertowLogger.REQUEST_LOGGER.tracef("Created multipart parser for %s", exchange);
 
@@ -331,9 +331,9 @@ public class MultiPartParserDefinition implements FormParserFactory.ParserDefini
                 throw UndertowMessages.MESSAGES.maxFileSizeExceeded(this.maxIndividualFileSize);
             }
             if (file == null && fileSizeThreshold < this.currentFileSize && (fileName != null || this.currentFileSize > fieldSizeThreshold)) {
-                createdFiles.add(createFile());
+                    createdFiles.add(createFile());
 
-                FileOutputStream fileOutputStream = new FileOutputStream(file.toFile());
+                    FileOutputStream fileOutputStream = new FileOutputStream(file.toFile());
                 try {
                     contentBytes.writeTo(fileOutputStream);
 
