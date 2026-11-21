@@ -70,19 +70,6 @@ public interface Instrumentation {
     }
 
     /**
-     * This is called right at the start of query execution, and it's the first step in the instrumentation chain.
-     *
-     * @param parameters the parameters to this step
-     * @param state      the state created during the call to {@link #createStateAsync(InstrumentationCreateStateParameters)}
-     *
-     * @return a nullable {@link InstrumentationContext} object that will be called back when the step ends (assuming it's not null)
-     */
-    @Nullable
-    default InstrumentationContext<ExecutionResult> beginExecution(InstrumentationExecutionParameters parameters, InstrumentationState state) {
-        return noOp();
-    }
-
-    /**
      * This is called just before a query is parsed.
      *
      * @param parameters the parameters to this step
@@ -162,6 +149,19 @@ public interface Instrumentation {
     @Nullable
     default ExecuteObjectInstrumentationContext beginExecuteObject(InstrumentationExecutionStrategyParameters parameters, InstrumentationState state) {
         return ExecuteObjectInstrumentationContext.NOOP;
+    }
+
+    /**
+     * This is called right at the start of query execution, and it's the first step in the instrumentation chain.
+     *
+     * @param parameters the parameters to this step
+     * @param state      the state created during the call to {@link #createStateAsync(InstrumentationCreateStateParameters)}
+     *
+     * @return a nullable {@link InstrumentationContext} object that will be called back when the step ends (assuming it's not null)
+     */
+    @Nullable
+    default InstrumentationContext<ExecutionResult> beginExecution(InstrumentationExecutionParameters parameters, InstrumentationState state) {
+        return noOp();
     }
 
     /**
