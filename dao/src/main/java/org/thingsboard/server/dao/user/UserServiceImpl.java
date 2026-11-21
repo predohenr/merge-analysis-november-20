@@ -114,6 +114,43 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
     private final EntityCountService countService;
     private final JpaExecutorService executor;
 
+    private final PaginatedRemover<TenantId, User> tenantAdminsRemover = new PaginatedRemover<>() {
+        @Override
+        protected PageData<User> findEntities(TenantId tenantId, TenantId id, PageLink pageLink) {
+            return userDao.findTenantAdmins(id.getId(), pageLink);
+        }
+
+        @Override
+        protected void removeEntity(TenantId tenantId, User user) {
+            deleteUser(tenantId, user);
+        }
+    };
+
+    private final PaginatedRemover<CustomerId, User> customerUsersRemover = new PaginatedRemover<>() {
+        @Override
+        protected PageData<User> findEntities(TenantId tenantId, CustomerId id, PageLink pageLink) {
+            return userDao.findCustomerUsers(tenantId.getId(), id.getId(), pageLink);
+
+        }
+
+        @Override
+        protected void removeEntity(TenantId tenantId, User entity) {
+            deleteUser(tenantId, entity);
+        }
+    };
+
+    private final PaginatedRemover<TenantId, User> usersRemover = new PaginatedRemover<>() {
+        @Override
+        protected PageData<User> findEntities(TenantId tenantId, TenantId id, PageLink pageLink) {
+            return findUsersByTenantId(tenantId, pageLink);
+        }
+
+        @Override
+        protected void removeEntity(TenantId tenantId, User user) {
+            deleteUser(tenantId, user, ActionCause.TENANT_DELETION);
+        }
+    };
+
     @Override
     @TransactionalEventListener
     public void handleEvictEvent(UserCacheEvictEvent event) {
@@ -610,43 +647,6 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         userCredentials.setAdditionalInfo(additionalInfo);
     }
-
-    private final PaginatedRemover<TenantId, User> tenantAdminsRemover = new PaginatedRemover<>() {
-        @Override
-        protected PageData<User> findEntities(TenantId tenantId, TenantId id, PageLink pageLink) {
-            return userDao.findTenantAdmins(id.getId(), pageLink);
-        }
-
-        @Override
-        protected void removeEntity(TenantId tenantId, User user) {
-            deleteUser(tenantId, user);
-        }
-    };
-
-    private final PaginatedRemover<CustomerId, User> customerUsersRemover = new PaginatedRemover<>() {
-        @Override
-        protected PageData<User> findEntities(TenantId tenantId, CustomerId id, PageLink pageLink) {
-            return userDao.findCustomerUsers(tenantId.getId(), id.getId(), pageLink);
-
-        }
-
-        @Override
-        protected void removeEntity(TenantId tenantId, User entity) {
-            deleteUser(tenantId, entity);
-        }
-    };
-
-    private final PaginatedRemover<TenantId, User> usersRemover = new PaginatedRemover<>() {
-        @Override
-        protected PageData<User> findEntities(TenantId tenantId, TenantId id, PageLink pageLink) {
-            return findUsersByTenantId(tenantId, pageLink);
-        }
-
-        @Override
-        protected void removeEntity(TenantId tenantId, User user) {
-            deleteUser(tenantId, user, ActionCause.TENANT_DELETION);
-        }
-    };
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
