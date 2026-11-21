@@ -223,17 +223,17 @@ public abstract class OptimizedOSRLoopNode extends AbstractOptimizedLoopNode imp
             Object status;
             do {
                 if (pollCompilation) {
-                    OptimizedCallTarget target = compiledOSRLoop;
-                    if (target == null) {
-                        return loopBody.initialLoopStatus();
+                OptimizedCallTarget target = compiledOSRLoop;
+                if (target == null) {
+                    return loopBody.initialLoopStatus();
+                }
+                if (!target.isSubmittedForCompilation()) {
+                    if (target.isValid()) {
+                        return callOSR(target, frame);
                     }
-                    if (!target.isSubmittedForCompilation()) {
-                        if (target.isValid()) {
-                            return callOSR(target, frame);
-                        }
-                        invalidateOSRTarget("OSR compilation failed or cancelled");
-                        return loopBody.initialLoopStatus();
-                    }
+                    invalidateOSRTarget("OSR compilation failed or cancelled");
+                    return loopBody.initialLoopStatus();
+                }
                 }
                 iterations++;
                 pollCompilation = (iterations & (OSR_POLL_INTERVAL - 1)) == 0;
