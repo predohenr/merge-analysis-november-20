@@ -16,9 +16,9 @@
 
 package org.springframework.security.oauth2.server.authorization.authentication;
 
-import java.io.Serial;
+import org.jspecify.annotations.Nullable;
 
-import org.springframework.lang.Nullable;
+import java.io.Serial;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
