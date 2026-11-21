@@ -196,7 +196,7 @@ public interface RestClientsConfig {
      * Can be overwritten by client-specific settings.
      */
     @ConfigDocDefault("60000")
-    OptionalInt connectionTTL();
+OptionalInt connectionTTL();
 
     /**
      * The size of the connection pool for this client.
@@ -662,7 +662,7 @@ public interface RestClientsConfig {
          * A timeout of {@code 0} means there is no timeout.
          */
         @ConfigDocDefault("60000")
-        OptionalInt connectionTTL();
+OptionalInt connectionTTL();
 
         /**
          * The size of the connection pool for this client.
