@@ -403,13 +403,13 @@ public class ResourceTest
     {
         URI a = new URI("file:///c:/foo/bar");
         URI b = new URI("file:///C:/foo/bar");
-
+        
         Resource ra = resourceFactory.newResource(a);
         Resource rb = resourceFactory.newResource(b);
 
         // only PathResource supports Object.equals()
         if (ra instanceof PathResource && rb instanceof PathResource)
-            assertEquals(rb, ra);
+        assertEquals(rb, ra);
     }
 
     @Test
