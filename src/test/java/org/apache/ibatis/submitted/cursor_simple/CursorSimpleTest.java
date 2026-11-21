@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
