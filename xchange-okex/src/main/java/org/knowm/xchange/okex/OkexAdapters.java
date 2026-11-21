@@ -603,24 +603,24 @@ public class OkexAdapters {
     List<OpenPosition> openPositions = new ArrayList<>();
 
     positions.forEach(
-        okexPosition ->
-            openPositions.add(
-                new OpenPosition.Builder()
-                    .instrument(adaptOkexInstrumentId(okexPosition.getInstrumentId()))
-                    .liquidationPrice(okexPosition.getLiquidationPrice())
-                    .price(okexPosition.getAverageOpenPrice())
-                    .type(adaptOpenPositionType(okexPosition))
-                    .size(
-                        okexPosition
-                            .getPosition()
-                            .abs()
-                            .multiply(
-                                exchangeMetaData
-                                    .getInstruments()
-                                    .get(adaptOkexInstrumentId(okexPosition.getInstrumentId()))
-                                    .getContractValue()))
-                    .unRealisedPnl(okexPosition.getUnrealizedPnL())
-                    .build()));
+            okexPosition ->
+                openPositions.add(
+                    new OpenPosition.Builder()
+                        .instrument(adaptOkexInstrumentId(okexPosition.getInstrumentId()))
+                        .liquidationPrice(okexPosition.getLiquidationPrice())
+                        .price(okexPosition.getAverageOpenPrice())
+                        .type(adaptOpenPositionType(okexPosition))
+                        .size(
+                            okexPosition
+                                .getPosition()
+                                .abs()
+                                .multiply(
+                                    exchangeMetaData
+                                        .getInstruments()
+                                        .get(adaptOkexInstrumentId(okexPosition.getInstrumentId()))
+                                        .getContractValue()))
+                        .unRealisedPnl(okexPosition.getUnrealizedPnL())
+                        .build()));
     return new OpenPositions(openPositions);
   }
 
