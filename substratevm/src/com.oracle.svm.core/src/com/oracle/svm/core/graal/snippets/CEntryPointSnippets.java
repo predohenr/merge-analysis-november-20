@@ -473,8 +473,8 @@ public final class CEntryPointSnippets extends SubstrateTemplates implements Sni
             try {
                 String[] remainingArgs = RuntimeOptionParser.parseAndConsumeAllOptions(initialArgs, ignoreUnrecognized);
                 if (forJavaMainCall) {
-                    if (ImageSingletons.contains(JavaMainSupport.class)) {
-                        ImageSingletons.lookup(JavaMainSupport.class).mainArgs = remainingArgs;
+                if (ImageSingletons.contains(JavaMainSupport.class)) {
+                    ImageSingletons.lookup(JavaMainSupport.class).mainArgs = remainingArgs;
                     } else {
                         throw VMError.shouldNotReachHereAtRuntime();
                     }
