@@ -41,6 +41,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *
  * @author Steven van Beelen
  */
+
+/**
+ * Test suite implementation validating the {@link SpringAxonApplication}.
+ * <p>
+ * Overrides {@link #supportsOverriding()} to return {@code false}, since Spring does not allow bean overriding.
+ * <p>
+ * Overrides {@link #doesOwnLifecycleManagement()} to return {@code false}, since all lifecycle management is given to
+ * Spring instead of done manually.
+ *
+ * @author Steven van Beelen
+ */
 class SpringAxonApplicationTest extends ApplicationConfigurerTestSuite<SpringAxonApplication> {
 
     private SpringComponentRegistry componentRegistry;
@@ -86,6 +97,41 @@ class SpringAxonApplicationTest extends ApplicationConfigurerTestSuite<SpringAxo
     }
 
     @Test
+    void getComponentAndGetOptionalComponentMustBeConsistentWhenMultipleBeansExistForType() {
+        // given
+        componentRegistry.registerComponent(DummySpanFactory.class, c -> new DummySpanFactory());
+        beanFactory.registerSingleton("anotherSpanFactory", new DummySpanFactory());
+
+        componentRegistry.postProcessAfterInitialization(new Object(), "something");
+        AxonConfiguration config = testSubject.build();
+
+        // when
+        Optional<DummySpanFactory> optional = config.getOptionalComponent(DummySpanFactory.class);
+        DummySpanFactory mandatory = config.getComponent(DummySpanFactory.class);
+
+        // then
+        assertThat(optional)
+                .as("getOptionalComponent and getComponent must behave consistently when bean is present")
+                .containsSame(mandatory);
+    }
+
+    @Test
+    void getOptionalComponentShouldReturnEmptyWhenComponentIsNotPresent() {
+        // given
+        componentRegistry.postProcessAfterInitialization(new Object(), "something");
+
+        // when
+        AxonConfiguration config = testSubject.build();
+
+        // then
+        assertThat(config.getOptionalComponent(DummySpanFactory.class))
+                .isEmpty();
+    }
+
+    static class DummySpanFactory {
+    }
+
+    @Test
     void getComponentThrowsComponentNotFoundExceptionWhenSpringBeanIsMissing() {
         AxonConfiguration config = testSubject.build();
 
@@ -123,40 +169,5 @@ class SpringAxonApplicationTest extends ApplicationConfigurerTestSuite<SpringAxo
                 .isInstanceOf(ComponentNotFoundException.class)
                 .hasMessageContaining("testComponent")
                 .hasCauseInstanceOf(BeanNotOfRequiredTypeException.class);
-    }
-
-    @Test
-    void getComponentAndGetOptionalComponentMustBeConsistentWhenMultipleBeansExistForType() {
-        // given
-        componentRegistry.registerComponent(DummySpanFactory.class, c -> new DummySpanFactory());
-        beanFactory.registerSingleton("anotherSpanFactory", new DummySpanFactory());
-
-        componentRegistry.postProcessAfterInitialization(new Object(), "something");
-        AxonConfiguration config = testSubject.build();
-
-        // when
-        Optional<DummySpanFactory> optional = config.getOptionalComponent(DummySpanFactory.class);
-        DummySpanFactory mandatory = config.getComponent(DummySpanFactory.class);
-
-        // then
-        assertThat(optional)
-                .as("getOptionalComponent and getComponent must behave consistently when bean is present")
-                .containsSame(mandatory);
-    }
-
-    @Test
-    void getOptionalComponentShouldReturnEmptyWhenComponentIsNotPresent() {
-        // given
-        componentRegistry.postProcessAfterInitialization(new Object(), "something");
-
-        // when
-        AxonConfiguration config = testSubject.build();
-
-        // then
-        assertThat(config.getOptionalComponent(DummySpanFactory.class))
-                .isEmpty();
-    }
-
-    static class DummySpanFactory {
     }
 }

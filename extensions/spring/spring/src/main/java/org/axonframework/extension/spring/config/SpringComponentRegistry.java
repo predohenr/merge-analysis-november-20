@@ -668,7 +668,7 @@ public class SpringComponentRegistry implements
         public <C> Optional<C> getOptionalComponent(Class<C> type) {
             try {
                 return Optional.of(getComponent(type));
-            } catch (ComponentNotFoundException e) {
+            } catch(NoSuchBeanDefinitionException e){
                 return Optional.empty();
             }
         }
