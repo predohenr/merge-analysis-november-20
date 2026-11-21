@@ -55,7 +55,7 @@ public class OverrideBothEqualsAndHashCodeOnComparableRule extends OverrideBothE
 
         if (equalsMethod == null && hashCodeMethod == null) {
             if (!node.isRecord()) {
-                ctx.addViolationWithMessage(compareToMethod, MISSING_EQUALS_AND_HASH_CODE);
+            ctx.addViolationWithMessage(compareToMethod, MISSING_EQUALS_AND_HASH_CODE);
             }
         } else if (equalsMethod == null) {
             ctx.addViolationWithMessage(hashCodeMethod, MISSING_EQUALS);
