@@ -308,4 +308,3 @@ public class SearchResultViewHolder extends RecyclerView.ViewHolder {
 		}
 	}
 }
-
