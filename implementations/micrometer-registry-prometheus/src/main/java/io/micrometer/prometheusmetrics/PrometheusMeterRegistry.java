@@ -20,8 +20,8 @@ import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.cumulative.CumulativeFunctionCounter;
 import io.micrometer.core.instrument.cumulative.CumulativeFunctionTimer;
-import io.micrometer.core.instrument.distribution.*;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
+import io.micrometer.core.instrument.distribution.*;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 import io.micrometer.core.instrument.internal.DefaultGauge;
 import io.micrometer.core.instrument.internal.DefaultLongTaskTimer;
@@ -215,7 +215,7 @@ public class PrometheusMeterRegistry extends MeterRegistry {
             List<String> tagValues = tagValues(id);
             collector
                 .add(tagValues, (conventionName, tagKeys) -> Stream.of(new MicrometerCollector.Family<>(conventionName,
-                        family -> new CounterSnapshot(family.metadata, family.dataPointSnapshots),
+                                    family -> new CounterSnapshot(family.metadata, family.dataPointSnapshots),
                         getMetadata(conventionName, id.getDescription()), new CounterDataPointSnapshot(counter.count(),
                                 Labels.of(tagKeys, tagValues), counter.exemplar(), createdTimestampMillis))));
         });
@@ -378,7 +378,7 @@ public class PrometheusMeterRegistry extends MeterRegistry {
             List<String> tagValues = tagValues(id);
             collector.add(tagValues, (conventionName,
                     tagKeys) -> Stream.of(new MicrometerCollector.Family<>(conventionName,
-                            family -> new CounterSnapshot(family.metadata, family.dataPointSnapshots),
+                                family -> new CounterSnapshot(family.metadata, family.dataPointSnapshots),
                             getMetadata(conventionName, id.getDescription()), new CounterDataPointSnapshot(fc.count(),
                                     Labels.of(tagKeys, tagValues), null, createdTimestampMillis))));
         });
