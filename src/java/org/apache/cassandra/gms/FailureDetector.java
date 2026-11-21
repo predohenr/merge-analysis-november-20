@@ -376,7 +376,7 @@ public class FailureDetector implements IFailureDetector, FailureDetectorMBean
             return;
         }
         double phi = hbWnd.phi(now);
-        logger.trace("PHI for {} : {}", ep, phi);
+            logger.trace("PHI for {} : {}", ep, phi);
 
         if (PHI_FACTOR * phi > getPhiConvictThreshold())
         {
@@ -445,6 +445,7 @@ public class FailureDetector implements IFailureDetector, FailureDetectorMBean
         {
             super("Unknown endpoint: " + ep);
         }
+    }
 
     /**
      * Only for testing. In production code, ArrivalWindow instances call getMaxInterval() during
@@ -457,6 +458,10 @@ public class FailureDetector implements IFailureDetector, FailureDetectorMBean
         return ArrivalWindow.getMaxInterval();
     }
 }
+
+/*
+ This class is not thread safe.
+ */
 
 /*
  This class is not thread safe.
@@ -584,4 +589,3 @@ class ArrivalWindow
         return Arrays.toString(arrivalIntervals.getArrivalIntervals());
     }
 }
-
