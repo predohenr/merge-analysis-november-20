@@ -9,20 +9,17 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+import net.sourceforge.pmd.lang.ast.LexException;
+import net.sourceforge.pmd.lang.ast.ParseException;
+import net.sourceforge.pmd.lang.document.FileId;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-
-import org.junit.jupiter.api.Test;
-
-import net.sourceforge.pmd.lang.ast.LexException;
-import net.sourceforge.pmd.lang.ast.ParseException;
-import net.sourceforge.pmd.lang.document.FileId;
 import net.sourceforge.pmd.lang.kotlin.ast.KotlinParser.KtClassDeclaration;
 import net.sourceforge.pmd.lang.kotlin.ast.KotlinParser.KtFunctionDeclaration;
 import net.sourceforge.pmd.lang.kotlin.ast.KotlinParser.KtImportHeader;
@@ -72,9 +69,6 @@ class KotlinParserTests extends BaseKotlinTreeDumpTest {
         assertInstanceOf(ParseException.class, suppressed[3]);
     }
 
-    // Regression tests for https://github.com/pmd/pmd/issues/6648
-    // Multi-dollar string interpolation (Kotlin 2.2, KEEP-375) in function and annotation args.
-
     @Test
     void multiDollarLineStringInFunctionArg() {
         assertDoesNotThrow(() -> KotlinParsingHelper.DEFAULT.parse(
@@ -91,8 +85,6 @@ class KotlinParserTests extends BaseKotlinTreeDumpTest {
             + "fun execute() { }"
         ));
     }
-
-    // KEEP-375 spec examples: https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0375-dollar-escape.md
 
     @Test
     void specExampleLiteralDollarsInFormatString() {
@@ -205,5 +197,10 @@ class KotlinParserTests extends BaseKotlinTreeDumpTest {
                     "Duplicate XPath attributes on " + node.getXPathNodeName() + ": " + names);
         });
     }
+
+    // Regression tests for https://github.com/pmd/pmd/issues/6648
+    // Multi-dollar string interpolation (Kotlin 2.2, KEEP-375) in function and annotation args.
+
+    // KEEP-375 spec examples: https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0375-dollar-escape.md
 
 }
