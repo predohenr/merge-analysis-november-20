@@ -23,9 +23,9 @@ public class OkexStreamingExchange extends OkexExchange implements StreamingExch
 
   // Demo(Sandbox) URIs
   public static final String SANDBOX_WS_PUBLIC_CHANNEL_URI =
-      "wss://wspap.okx.com:8443/ws/v5/public?brokerId=9999";
+          "wss://wspap.okx.com:8443/ws/v5/public?brokerId=9999";
   public static final String SANDBOX_WS_PRIVATE_CHANNEL_URI =
-      "wss://wspap.okx.com:8443/ws/v5/private?brokerId=9999";
+          "wss://wspap.okx.com:8443/ws/v5/private?brokerId=9999";
   public static final String SANDBOX_WS_BUSINESS_CHANNEL_URI =
       "wss://wspap.okx.com:8443/ws/v5/business?brokerId=9999";
 
@@ -57,8 +57,8 @@ public class OkexStreamingExchange extends OkexExchange implements StreamingExch
         new OkexStreamingMarketDataService(
             streamingService, businessStreamingService, exchangeMetaData);
     streamingTradeService =
-        new OkexStreamingTradeService(
-            privateStreamingService, exchangeMetaData, getResilienceRegistries());
+            new OkexStreamingTradeService(
+                    privateStreamingService, exchangeMetaData, getResilienceRegistries());
     List<Completable> completableList = new ArrayList<>();
     completableList.add(streamingService.connect());
     completableList.add(businessStreamingService.connect());
@@ -70,9 +70,9 @@ public class OkexStreamingExchange extends OkexExchange implements StreamingExch
 
   private boolean isApiKeyValid() {
     return exchangeSpecification.getApiKey() != null
-        && !exchangeSpecification.getApiKey().isEmpty()
-        && exchangeSpecification.getSecretKey() != null
-        && !exchangeSpecification.getSecretKey().isEmpty();
+            && !exchangeSpecification.getApiKey().isEmpty()
+            && exchangeSpecification.getSecretKey() != null
+            && !exchangeSpecification.getSecretKey().isEmpty();
   }
 
   private String getPublicApiUrl() {
@@ -132,8 +132,8 @@ public class OkexStreamingExchange extends OkexExchange implements StreamingExch
     if (streamingService != null) {
       if (privateStreamingService != null) {
         return streamingService.isSocketOpen()
-            && privateStreamingService.isSocketOpen()
-            && privateStreamingService.isLoginDone();
+                && privateStreamingService.isSocketOpen()
+                && privateStreamingService.isLoginDone();
       } else {
         return streamingService.isSocketOpen();
       }
@@ -162,7 +162,7 @@ public class OkexStreamingExchange extends OkexExchange implements StreamingExch
    * @param channelInactiveHandler a WebSocketMessageHandler instance.
    */
   public void setChannelInactiveHandler(
-      WebSocketClientHandler.WebSocketMessageHandler channelInactiveHandler) {
+          WebSocketClientHandler.WebSocketMessageHandler channelInactiveHandler) {
     streamingService.setChannelInactiveHandler(channelInactiveHandler);
   }
 
