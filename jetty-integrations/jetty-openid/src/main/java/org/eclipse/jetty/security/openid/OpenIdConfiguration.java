@@ -225,7 +225,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated Use {@link Builder} instead.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public OpenIdConfiguration(String provider, String clientId, String clientSecret)
+public OpenIdConfiguration(String provider, String clientId, String clientSecret)
     {
         this(provider, null, null, clientId, clientSecret, null);
     }
@@ -241,7 +241,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated Use {@link Builder} instead.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public OpenIdConfiguration(String issuer, String authorizationEndpoint, String tokenEndpoint,
+public OpenIdConfiguration(String issuer, String authorizationEndpoint, String tokenEndpoint,
                                String clientId, String clientSecret, HttpClient httpClient)
     {
         this(issuer, authorizationEndpoint, tokenEndpoint, clientId, clientSecret, "client_secret_post", httpClient);
@@ -259,7 +259,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated Use {@link Builder} instead.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public OpenIdConfiguration(@Name("issuer") String issuer,
+public OpenIdConfiguration(@Name("issuer") String issuer,
                                @Name("authorizationEndpoint") String authorizationEndpoint,
                                @Name("tokenEndpoint") String tokenEndpoint,
                                @Name("clientId") String clientId,
@@ -283,7 +283,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated Use {@link Builder} instead.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public OpenIdConfiguration(@Name("issuer") String issuer,
+public OpenIdConfiguration(@Name("issuer") String issuer,
                                @Name("authorizationEndpoint") String authorizationEndpoint,
                                @Name("tokenEndpoint") String tokenEndpoint,
                                @Name("endSessionEndpoint") String endSessionEndpoint,
@@ -474,7 +474,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated use {@link #getAuthorizationEndpoint()} instead.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public String getAuthEndpoint()
+public String getAuthEndpoint()
     {
         return authorizationEndpoint;
     }
@@ -483,7 +483,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated use {@link Builder} to configure the OpenID Configuration.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public void setAuthenticateNewUsers(boolean authenticateNewUsers)
+public void setAuthenticateNewUsers(boolean authenticateNewUsers)
     {
         this.authenticateNewUsers = authenticateNewUsers;
     }
@@ -492,7 +492,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated use {@link Builder} to configure the OpenID Configuration.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public void addScopes(String... scopes)
+public void addScopes(String... scopes)
     {
         if (scopes != null)
             Collections.addAll(this.scopes, scopes);
@@ -502,7 +502,7 @@ public class OpenIdConfiguration extends ContainerLifeCycle
      * @deprecated use {@link Builder} to configure the OpenID Configuration.
      */
     @Deprecated(since = "12.1.0", forRemoval = true)
-    public void setLogoutWhenIdTokenIsExpired(boolean logoutWhenIdTokenIsExpired)
+public void setLogoutWhenIdTokenIsExpired(boolean logoutWhenIdTokenIsExpired)
     {
         this.logoutWhenIdTokenIsExpired = logoutWhenIdTokenIsExpired;
     }
