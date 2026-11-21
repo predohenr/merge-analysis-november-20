@@ -672,8 +672,8 @@ public class BinanceTradeServiceRaw extends BinanceBaseService {
     if (exchange.getExchangeSpecification().getExchangeSpecificParametersItem(EXCHANGE_TYPE).equals("SPOT"))
         return pair != null ? 6 : 80;
     else // FUTURES,INVERSE and MARGIN
-        return pair != null ? 1 : 40;
-    }
+    return pair != null ? 1 : 40;
+  }
 
 //  protected int myTradesPermits(Integer limit) {
 //    if (limit != null && limit > 500) {

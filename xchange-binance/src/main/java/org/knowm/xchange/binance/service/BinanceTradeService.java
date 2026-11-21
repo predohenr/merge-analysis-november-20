@@ -456,7 +456,7 @@ public class BinanceTradeService extends BinanceTradeServiceRaw implements Trade
   @Override
   public String changeOrder(LimitOrder limitOrder) throws IOException {
     if (exchange.isFuturesEnabled()) {
-      if ((limitOrder.getId() != null && !limitOrder.getId().isEmpty()) || (limitOrder.getUserReference() != null && !limitOrder.getUserReference().isEmpty())) {
+      if((limitOrder.getId()!= null && !limitOrder.getId().isEmpty()) || (limitOrder.getUserReference() != null && !limitOrder.getUserReference().isEmpty() )) {
         Long orderIdLong = BinanceAdapters.id(limitOrder.getId());
         return modifyOrder(orderIdLong, limitOrder.getUserReference(),
             limitOrder.getInstrument(), BinanceAdapters.convert(limitOrder.getType()), limitOrder.getOriginalAmount(),

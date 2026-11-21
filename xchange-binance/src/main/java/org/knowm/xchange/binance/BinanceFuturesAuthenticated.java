@@ -19,14 +19,6 @@ import org.knowm.xchange.binance.dto.account.futures.BinanceFutureCommissionRate
 import org.knowm.xchange.binance.dto.account.futures.BinancePosition;
 import org.knowm.xchange.binance.dto.trade.*;
 import org.knowm.xchange.binance.dto.trade.futures.BinanceChangeStatus;
-import org.knowm.xchange.binance.dto.trade.BinanceCancelledOrder;
-import org.knowm.xchange.binance.dto.trade.BinanceNewOrder;
-import org.knowm.xchange.binance.dto.trade.BinanceOrder;
-import org.knowm.xchange.binance.dto.trade.BinanceTrade;
-import org.knowm.xchange.binance.dto.trade.OrderSide;
-import org.knowm.xchange.binance.dto.trade.OrderType;
-import org.knowm.xchange.binance.dto.trade.TimeInForce;
-import org.knowm.xchange.binance.dto.trade.futures.BinanceChangeStatus;
 import org.knowm.xchange.binance.dto.trade.futures.BinanceFutureNewOrder;
 import org.knowm.xchange.binance.dto.trade.futures.BinanceSetLeverage;
 import si.mazi.rescu.ParamsDigest;
@@ -56,24 +48,6 @@ public interface BinanceFuturesAuthenticated extends BinanceFutures {
       @HeaderParam(X_MBX_APIKEY) String apiKey,
       @QueryParam(SIGNATURE) ParamsDigest signature)
       throws IOException, BinanceException;
-
-  /**
-   * Account Information V3(USER_DATA)
-   *
-   * @param recvWindow optional
-   * @param timestamp
-   * @return
-   * @throws IOException
-   * @throws BinanceException
-   */
-  @GET
-  @Path("fapi/v3/account")
-  BinanceFutureAccountInformation futuresV3Account(
-          @QueryParam("recvWindow") Long recvWindow,
-          @QueryParam("timestamp") SynchronizedValueFactory<Long> timestamp,
-          @HeaderParam(X_MBX_APIKEY) String apiKey,
-          @QueryParam(SIGNATURE) ParamsDigest signature)
-          throws IOException, BinanceException;
 
   /**
    * Send in a new futures order
@@ -118,6 +92,24 @@ public interface BinanceFuturesAuthenticated extends BinanceFutures {
       @HeaderParam(X_MBX_APIKEY) String apiKey,
       @QueryParam(SIGNATURE) ParamsDigest signature)
       throws IOException, BinanceException;
+
+  /**
+   * Account Information V3(USER_DATA)
+   *
+   * @param recvWindow optional
+   * @param timestamp
+   * @return
+   * @throws IOException
+   * @throws BinanceException
+   */
+  @GET
+  @Path("fapi/v3/account")
+  BinanceFutureAccountInformation futuresV3Account(
+          @QueryParam("recvWindow") Long recvWindow,
+          @QueryParam("timestamp") SynchronizedValueFactory<Long> timestamp,
+          @HeaderParam(X_MBX_APIKEY) String apiKey,
+          @QueryParam(SIGNATURE) ParamsDigest signature)
+          throws IOException, BinanceException;
 
   /**
    * Send in a new inverse futures order
@@ -577,7 +569,7 @@ public interface BinanceFuturesAuthenticated extends BinanceFutures {
    */
   @DELETE
   @Path("fapi/v1/allOpenOrders")
-  List<BinanceCancelledOrder> cancelAllFutureOpenOrders(
+  BinanceChangeStatus cancelAllFutureOpenOrders(
       @QueryParam("symbol") String symbol,
       @QueryParam("recvWindow") Long recvWindow,
       @QueryParam("timestamp") SynchronizedValueFactory<Long> timestamp,
@@ -587,7 +579,6 @@ public interface BinanceFuturesAuthenticated extends BinanceFutures {
 
   /**
    * Get User Commission Rate for a Future symbol.
-   *
    * @param symbol
    * @param recvWindow optional
    * @param timestamp
