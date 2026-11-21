@@ -362,7 +362,7 @@ final class ClassStub implements JClassSymbol, AsmStub, AnnotationOwner {
     @Override
     public PSet<String> getAnnotationAttributeNames() {
         if (annotAttributes == null) {
-            parseLock.ensureParsed();
+        parseLock.ensureParsed();
             annotAttributes = isAnnotation()
                               ? getDeclaredMethods().stream().filter(JMethodSymbol::isAnnotationAttribute)
                                                     .map(JElementSymbol::getSimpleName)
