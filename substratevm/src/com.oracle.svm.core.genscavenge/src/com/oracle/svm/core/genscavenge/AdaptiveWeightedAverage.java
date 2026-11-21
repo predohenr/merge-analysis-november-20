@@ -28,9 +28,10 @@ import static com.oracle.svm.guest.staging.Uninterruptible.CALLED_FROM_UNINTERRU
 
 import org.graalvm.word.UnsignedWord;
 
+import com.oracle.svm.guest.staging.Uninterruptible;
+import com.oracle.svm.core.Uninterruptible;
 import com.oracle.svm.core.util.BasedOnJDKFile;
 import com.oracle.svm.core.util.UnsignedUtils;
-import com.oracle.svm.guest.staging.Uninterruptible;
 
 /**
  * A weighted average maintains a running, weighted average of some floating-point value.
@@ -119,12 +120,6 @@ class AdaptivePaddedAverage extends AdaptiveWeightedAverage {
     AdaptivePaddedAverage(double weight, int padding) {
         this(weight, padding, false);
     }
-
-    /**
-     * @param noZeroDeviations do not update deviations when a sample is zero. The average is
-     *            allowed to change. This is to prevent zero samples from drastically changing the
-     *            padded average.
-     */
     AdaptivePaddedAverage(double weight, int padding, boolean noZeroDeviations) {
         super(weight);
         this.padding = padding;
@@ -144,4 +139,10 @@ class AdaptivePaddedAverage extends AdaptiveWeightedAverage {
     public double getPaddedAverage() {
         return paddedAverage;
     }
+
+    /**
+     * @param noZeroDeviations do not update deviations when a sample is zero. The average is
+     *            allowed to change. This is to prevent zero samples from drastically changing the
+     *            padded average.
+     */
 }
