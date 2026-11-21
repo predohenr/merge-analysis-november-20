@@ -66,6 +66,12 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * transitioning to native code and back to Java, and if required, for boxing object arguments in
  * handles and for unboxing an object return value.
  */
+
+/**
+ * Generated code for calling a specific native method from Java code. The wrapper takes care of
+ * transitioning to native code and back to Java, and if required, for boxing object arguments in
+ * handles and for unboxing an object return value.
+ */
 class JNINativeCallWrapperMethod extends CustomSubstitutionMethod {
     /** Line number that indicates a native method to {@link StackTraceElement}. */
     private static final int NATIVE_LINE_NUMBER = -2;
