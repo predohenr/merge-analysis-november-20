@@ -64,7 +64,7 @@ public interface VisitorContext extends MutableConvertibleValues<Object>, ClassW
      * @return The element factory
      * @since 2.3.0
      */
-    ElementFactory<?, ?, ?, ?> getElementFactory();
+        ElementFactory<?, ?, ?, ?> getElementFactory();
 
     /**
      * Gets the element annotation metadata factory.
@@ -72,7 +72,7 @@ public interface VisitorContext extends MutableConvertibleValues<Object>, ClassW
      * @return The element annotation metadata factory
      * @since 4.0.0
      */
-    ElementAnnotationMetadataFactory getElementAnnotationMetadataFactory();
+        ElementAnnotationMetadataFactory getElementAnnotationMetadataFactory();
 
     /**
      * @return The expression compilation context factory.
@@ -336,11 +336,18 @@ public interface VisitorContext extends MutableConvertibleValues<Object>, ClassW
      *
      * @since 4.2.0
      */
+
+    /**
+     * The languages that are supported in source code generation.
+     * Not all visitors may support all languages.
+     *
+     * @since 4.2.0
+     */
     enum Language {
         JAVA("Java"),
         GROOVY("Groovy"),
         KOTLIN("Kotlin"),
-        PYTHON("Python"),;
+        PYTHON("Python");
 
         private final String displayName;
 

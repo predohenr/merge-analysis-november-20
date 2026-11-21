@@ -27,7 +27,7 @@ import io.micronaut.inject.ast.Element;
 public final class ProcessingException extends RuntimeException {
 
     @Nullable
-    private final transient Element originatingElement;
+private final transient Element originatingElement;
 
     public ProcessingException(@Nullable Element element, @Nullable String message) {
         super(message);
