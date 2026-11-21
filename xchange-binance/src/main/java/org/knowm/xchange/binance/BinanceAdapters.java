@@ -537,9 +537,9 @@ public class BinanceAdapters {
             }
           }
 
-          if (counterMaxQty == null) {
-            counterMaxQty = counterMaxQtyFallback;
-          }
+        if (counterMaxQty == null) {
+          counterMaxQty = counterMaxQtyFallback;
+        }
 
           exchangeMetaData
               .getInstruments()
