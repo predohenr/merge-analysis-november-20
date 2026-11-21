@@ -39,6 +39,10 @@ import java.util.stream.Collectors;
 /**
  * A bridge for converting Micrometer meters to OTLP metrics.
  */
+
+/**
+ * A bridge for converting Micrometer meters to OTLP metrics.
+ */
 class OtlpMetricConverter {
 
     private final Clock clock;
@@ -57,7 +61,7 @@ class OtlpMetricConverter {
 
     private final long deltaTimeUnixNano;
 
-    OtlpMetricConverter(Clock clock, Duration step, TimeUnit baseTimeUnit,
+        OtlpMetricConverter(Clock clock, Duration step, TimeUnit baseTimeUnit,
             AggregationTemporality aggregationTemporality, NamingConvention namingConvention) {
         this.clock = clock;
         this.step = step;
