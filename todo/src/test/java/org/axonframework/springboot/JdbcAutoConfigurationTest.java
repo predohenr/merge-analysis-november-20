@@ -27,8 +27,8 @@ import org.axonframework.messaging.eventhandling.processing.streaming.token.stor
 import org.axonframework.messaging.eventhandling.processing.streaming.token.store.jdbc.JdbcTokenStore;
 import org.axonframework.messaging.eventhandling.processing.streaming.token.store.jdbc.TokenSchema;
 import org.axonframework.eventsourcing.eventstore.EventStore;
-import org.axonframework.messaging.eventsourcing.eventstore.LegacyEventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.StorageEngineBackedEventStore;
+import org.axonframework.messaging.eventsourcing.eventstore.LegacyEventStorageEngine;
 import org.axonframework.messaging.eventsourcing.eventstore.jdbc.EventSchema;
 import org.axonframework.messaging.eventsourcing.eventstore.jdbc.JdbcSQLErrorCodesResolver;
 import org.axonframework.messaging.eventsourcing.eventstore.jdbc.LegacyJdbcEventStorageEngine;

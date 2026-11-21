@@ -60,6 +60,12 @@ import static org.mockito.Mockito.*;
  *
  * @author Milan Savic
  */
+
+/**
+ * Tests for annotated command handler interceptor on aggregate / child entities.
+ *
+ * @author Milan Savic
+ */
 class CommandHandlerInterceptorTest {
 
     private static final MessageType TEST_COMMAND_TYPE = new MessageType("command");

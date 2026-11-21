@@ -25,6 +25,12 @@ import org.axonframework.messaging.core.unitofwork.ProcessingContext;
  *
  * @author Steven van Beelen
  */
+
+/**
+ * Test class validating the {@link StorageEngineBackedEventStore} together with the {@link InMemoryEventStorageEngine}.
+ *
+ * @author Steven van Beelen
+ */
 class InMemoryEventStorageEngineTest extends StorageEngineTestSuite<InMemoryEventStorageEngine> {
 
     @Override

@@ -179,6 +179,14 @@ public interface EventStorageEngine extends DescribableComponent {
      *
      * @param <R> the type of the commit result
      */
+
+    /**
+     * Interface representing the transaction of an appendEvents invocation.
+     * <p>
+     * Events may only be visible to consumers after the invocation of {@link #commit()}.
+     *
+     * @param <R> the type of the commit result
+     */
     interface AppendTransaction<R> {
 
         /**

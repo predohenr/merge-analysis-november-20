@@ -45,6 +45,13 @@ import static org.mockito.Mockito.*;
  *
  * @author Stefan Andjelkovic
  */
+
+/**
+ * Tests various ways to create aggregates based on incoming Commands. Some cases will use aggregate class's
+ * constructors while others might use regular or static methods
+ *
+ * @author Stefan Andjelkovic
+ */
 class AggregateCreationFromCommandsTest {
 
     private CommandBus commandBus;
