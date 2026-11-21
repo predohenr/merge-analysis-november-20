@@ -60,6 +60,12 @@ public interface Meter {
      * corresponding interface. For example, a heisen-counter like structure will emit the
      * same metric as a {@link Counter} but does not have the same increment-driven API.
      */
+
+    /**
+     * Custom meters may emit metrics like one of these types without implementing the
+     * corresponding interface. For example, a heisen-counter like structure will emit the
+     * same metric as a {@link Counter} but does not have the same increment-driven API.
+     */
     enum Type {
 
         COUNTER, GAUGE, LONG_TASK_TIMER, TIMER, DISTRIBUTION_SUMMARY, OTHER;
@@ -175,6 +181,10 @@ public interface Meter {
             visitMeter.accept(this);
         }
     }
+
+    /**
+     * A meter is uniquely identified by its combination of name and tags.
+     */
 
     /**
      * A meter is uniquely identified by its combination of name and tags.
@@ -397,6 +407,10 @@ public interface Meter {
     /**
      * Fluent builder for custom meters.
      */
+
+    /**
+     * Fluent builder for custom meters.
+     */
     class Builder {
 
         private final String name;
@@ -479,6 +493,15 @@ public interface Meter {
         }
 
     }
+
+    /**
+     * Convenience interface to create new meters from tags based on a common
+     * "template"/builder. See usage in Meter implementations, e.g.: {@code Timer},
+     * {@code Counter}
+     *
+     * @param <T> Meter type
+     * @since 1.12.0
+     */
 
     /**
      * Convenience interface to create new meters from tags based on a common

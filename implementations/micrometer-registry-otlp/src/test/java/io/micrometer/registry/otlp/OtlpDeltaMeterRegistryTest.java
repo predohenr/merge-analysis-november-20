@@ -107,7 +107,7 @@ class OtlpDeltaMeterRegistryTest extends OtlpMeterRegistryTest {
     }
 
     @Override
-    @Test
+@Test
     void timeGauge() {
         TimeGauge timeGauge = TimeGauge.builder("gauge.time", this, TimeUnit.MICROSECONDS, o -> 24).register(registry);
 
@@ -377,7 +377,7 @@ class OtlpDeltaMeterRegistryTest extends OtlpMeterRegistryTest {
     }
 
     @Override
-    @Test
+@Test
     void testMetricsStartAndEndTime() {
         Counter counter = Counter.builder("test_publish_time").register(registry);
 
