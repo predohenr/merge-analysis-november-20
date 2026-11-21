@@ -1538,7 +1538,7 @@ public interface StudioClientApplicationConstants extends com.google.gwt.i18n.cl
     @Key("overMemoryLimit")
     String overMemoryLimit();
 
-    /*
+    /**
      * Translated "Posit Workbench Login Required".
      *
      * @return translated "Posit Workbench Login Required"
