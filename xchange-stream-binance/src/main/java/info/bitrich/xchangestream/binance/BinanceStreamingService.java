@@ -266,6 +266,10 @@ public class BinanceStreamingService extends JsonNettyStreamingService {
   /**
    * Custom client handler in order to execute an external, user-provided handler on channel events.
    */
+
+  /**
+   * Custom client handler in order to execute an external, user-provided handler on channel events.
+   */
   class BinanceWebSocketClientHandler extends NettyWebSocketClientHandler {
 
     public BinanceWebSocketClientHandler(
