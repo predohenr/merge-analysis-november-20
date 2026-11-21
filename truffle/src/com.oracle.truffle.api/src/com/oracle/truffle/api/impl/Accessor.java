@@ -164,10 +164,6 @@ public abstract class Accessor {
 
         static final String IMPL_CLASS_NAME = "com.oracle.truffle.api.nodes.NodeAccessor$AccessNodes";
 
-        protected NodeSupport() {
-            super(IMPL_CLASS_NAME);
-        }
-
         public abstract Lookup nodeLookup();
 
         public abstract boolean isInstrumentable(RootNode rootNode);

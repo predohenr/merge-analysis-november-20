@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * The Universal Permissive License (UPL), Version 1.0
@@ -148,12 +148,6 @@ public final class SLObject extends DynamicObject implements TruffleObject {
         }
     }
 
-    @ExportMessage
-    Object getMembers(@SuppressWarnings("unused") boolean includeInternal,
-                    @Cached DynamicObject.GetKeyArrayNode getKeyArrayNode) {
-        return new Keys(getKeyArrayNode.execute(this));
-    }
-
     @ExportMessage(name = "isMemberReadable")
     @ExportMessage(name = "isMemberModifiable")
     @ExportMessage(name = "isMemberRemovable")
@@ -161,6 +155,12 @@ public final class SLObject extends DynamicObject implements TruffleObject {
                     @Cached @Shared("fromJavaStringNode") TruffleString.FromJavaStringNode fromJavaStringNode,
                     @Cached @Shared DynamicObject.ContainsKeyNode containsKeyNode) {
         return containsKeyNode.execute(this, fromJavaStringNode.execute(member, SLLanguage.STRING_ENCODING));
+    }
+
+    @ExportMessage
+    Object getMembers(@SuppressWarnings("unused") boolean includeInternal,
+                    @Cached DynamicObject.GetKeyArrayNode getKeyArrayNode) {
+        return new Keys(getKeyArrayNode.execute(this));
     }
 
     @ExportMessage
@@ -203,6 +203,16 @@ public final class SLObject extends DynamicObject implements TruffleObject {
     }
 
     /**
+     * {@link DynamicObject.PutNode} provides the polymorphic inline cache for writing properties.
+     */
+    @ExportMessage
+    void writeMember(String name, Object value,
+                    @Cached @Shared("fromJavaStringNode") TruffleString.FromJavaStringNode fromJavaStringNode,
+                    @Cached DynamicObject.PutNode putNode) {
+        putNode.execute(this, fromJavaStringNode.execute(name, SLLanguage.STRING_ENCODING), value);
+    }
+
+    /**
      * {@link DynamicObject.GetNode} provides the polymorphic inline cache for reading properties.
      */
     @ExportMessage
@@ -216,15 +226,5 @@ public final class SLObject extends DynamicObject implements TruffleObject {
             throw UnknownIdentifierException.create(name);
         }
         return result;
-    }
-
-    /**
-     * {@link DynamicObject.PutNode} provides the polymorphic inline cache for writing properties.
-     */
-    @ExportMessage
-    void writeMember(String name, Object value,
-                    @Cached @Shared("fromJavaStringNode") TruffleString.FromJavaStringNode fromJavaStringNode,
-                    @Cached DynamicObject.PutNode putNode) {
-        putNode.execute(this, fromJavaStringNode.execute(name, SLLanguage.STRING_ENCODING), value);
     }
 }
