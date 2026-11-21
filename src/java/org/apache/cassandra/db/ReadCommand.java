@@ -25,8 +25,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.LongPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -64,15 +64,23 @@ import org.apache.cassandra.db.rows.Row;
 import org.apache.cassandra.db.rows.Rows;
 import org.apache.cassandra.db.rows.UnfilteredRowIterator;
 import org.apache.cassandra.db.rows.UnfilteredRowIterators;
+
+import io.netty.util.concurrent.FastThreadLocal;
+
+import static com.google.common.base.Preconditions.checkArgument;
 import org.apache.cassandra.db.transform.BasePartitions;
 import org.apache.cassandra.db.transform.BaseRows;
+import org.apache.cassandra.exceptions.QueryCancelledException;
+import org.apache.cassandra.net.MessageFlag;
+import org.apache.cassandra.net.MessagingService;
+import org.apache.cassandra.net.ParamType;
+import org.apache.cassandra.net.Verb;
 import org.apache.cassandra.db.transform.RTBoundCloser;
 import org.apache.cassandra.db.transform.RTBoundValidator;
 import org.apache.cassandra.db.transform.RTBoundValidator.Stage;
 import org.apache.cassandra.db.transform.StoppingTransformation;
 import org.apache.cassandra.db.transform.Transformation;
 import org.apache.cassandra.exceptions.CoordinatorBehindException;
-import org.apache.cassandra.exceptions.QueryCancelledException;
 import org.apache.cassandra.exceptions.UnknownIndexException;
 import org.apache.cassandra.exceptions.UnknownTableException;
 import org.apache.cassandra.index.Index;
@@ -85,16 +93,12 @@ import org.apache.cassandra.locator.Replica;
 import org.apache.cassandra.metrics.TCMMetrics;
 import org.apache.cassandra.metrics.TableMetrics;
 import org.apache.cassandra.net.Message;
-import org.apache.cassandra.net.MessageFlag;
-import org.apache.cassandra.net.MessagingService;
-import org.apache.cassandra.net.ParamType;
-import org.apache.cassandra.net.Verb;
 import org.apache.cassandra.schema.IndexMetadata;
 import org.apache.cassandra.schema.Schema;
 import org.apache.cassandra.schema.SchemaConstants;
-import org.apache.cassandra.schema.SchemaProvider;
 import org.apache.cassandra.schema.TableId;
 import org.apache.cassandra.schema.TableMetadata;
+import org.apache.cassandra.schema.SchemaProvider;
 import org.apache.cassandra.service.ActiveRepairService;
 import org.apache.cassandra.service.ClientWarn;
 import org.apache.cassandra.service.accord.serializers.TableMetadatas;
@@ -102,20 +106,16 @@ import org.apache.cassandra.service.consensus.migration.ConsensusRequestRouter;
 import org.apache.cassandra.tcm.ClusterMetadata;
 import org.apache.cassandra.tcm.Epoch;
 import org.apache.cassandra.tracing.Tracing;
-import org.apache.cassandra.transport.Dispatcher;
 import org.apache.cassandra.utils.CassandraUInt;
+import org.apache.cassandra.transport.Dispatcher;
 import org.apache.cassandra.utils.FBUtilities;
 import org.apache.cassandra.utils.NoSpamLogger;
 import org.apache.cassandra.utils.ObjectSizes;
 import org.apache.cassandra.utils.TimeUUID;
-
-import io.netty.util.concurrent.FastThreadLocal;
-
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
-import static org.apache.cassandra.db.partitions.UnfilteredPartitionIterators.MergeListener.NOOP;
 import static org.apache.cassandra.utils.Clock.Global.nanoTime;
+import static org.apache.cassandra.db.partitions.UnfilteredPartitionIterators.MergeListener.NOOP;
 import static org.apache.cassandra.utils.MonotonicClock.Global.approxTime;
 
 /**
@@ -337,7 +337,7 @@ public abstract class ReadCommand extends AbstractReadQuery
      * @return index query plan chosen for this query
      */
     @Override
-    @Nullable
+@Nullable
     public Index.QueryPlan indexQueryPlan()
     {
         return indexQueryPlan;
@@ -648,14 +648,14 @@ public abstract class ReadCommand extends AbstractReadQuery
                 final boolean rowHasDeletion = row.hasDeletion(nowInSec);
                 if (rowHasDeletion) // perf optimization, to avoid iteration if all cells are alive
                 {
-                    for (Cell<?> cell : row.cells())
-                    {
+                for (Cell<?> cell : row.cells())
+                {
                         if (!cell.isLive(nowInSec))
-                        {
-                            countTombstone(row.clustering());
-                            hasTombstones = true; // allows to avoid counting an extra tombstone if the whole row expired
-                        }
+                    {
+                        countTombstone(row.clustering());
+                        hasTombstones = true; // allows to avoid counting an extra tombstone if the whole row expired
                     }
+                }
                 }
 
                 if (row.hasLiveData(nowInSec, enforceStrictLiveness))
@@ -895,7 +895,7 @@ public abstract class ReadCommand extends AbstractReadQuery
      *  A transformation used for simulating slow queries by tests.
      */
     @VisibleForTesting
-    private static class DelayInjector extends Transformation<UnfilteredRowIterator>
+private static class DelayInjector extends Transformation<UnfilteredRowIterator>
     {
         @Override
         protected UnfilteredRowIterator applyToPartition(UnfilteredRowIterator partition)
@@ -957,7 +957,7 @@ public abstract class ReadCommand extends AbstractReadQuery
     // Skip purgeable tombstones. We do this because it's safe to do (post-merge of the memtable and sstable at least), it
     // can save us some bandwith, and avoid making us throw a TombstoneOverwhelmingException for purgeable tombstones (which
     // are to some extend an artefact of compaction lagging behind and hence counting them is somewhat unintuitive).
-    protected UnfilteredPartitionIterator withoutPurgeableTombstones(UnfilteredPartitionIterator iterator,
+    protected UnfilteredPartitionIterator withoutPurgeableTombstones(UnfilteredPartitionIterator iterator, 
                                                                      ColumnFamilyStore cfs,
                                                                      ReadExecutionController controller)
     {
@@ -1452,9 +1452,9 @@ public abstract class ReadCommand extends AbstractReadQuery
             // better complain loudly than doing the wrong thing.
             if (isForThrift(flags))
                 throw new IllegalStateException("Received a command with the thrift flag set. "
-                                                + "This means thrift is in use in a mixed 3.0/3.X and 4.0+ cluster, "
-                                                + "which is unsupported. Make sure to stop using thrift before "
-                                                + "upgrading to 4.0");
+                                              + "This means thrift is in use in a mixed 3.0/3.X and 4.0+ cluster, "
+                                              + "which is unsupported. Make sure to stop using thrift before "
+                                              + "upgrading to 4.0");
 
             int digestVersion = isDigest(flags) ? in.readUnsignedVInt32() : 0;
             TableId tableId = TableId.deserialize(in);

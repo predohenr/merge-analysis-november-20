@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -194,9 +193,10 @@ import org.apache.cassandra.utils.concurrent.UncheckedInterruptedException;
 
 import static accord.primitives.Txn.Kind.Read;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.concat;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static com.google.common.collect.Iterables.concat;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.cassandra.db.ConsistencyLevel.SERIAL;
 import static org.apache.cassandra.db.partitions.PartitionIterators.singletonIterator;
 import static org.apache.cassandra.metrics.ClientRequestsMetricsHolder.casReadMetrics;
@@ -239,7 +239,6 @@ import static org.apache.cassandra.utils.Throwables.getStackTraceAsToString;
 import static org.apache.cassandra.utils.Throwables.unchecked;
 import static org.apache.cassandra.utils.TimeUUID.Generator.nextTimeUUID;
 import static org.apache.cassandra.utils.concurrent.CountDownLatch.newCountDownLatch;
-import static org.apache.commons.lang3.StringUtils.join;
 
 public class StorageProxy implements StorageProxyMBean
 {
@@ -430,13 +429,13 @@ public class StorageProxy implements StorageProxyMBean
     }
 
     private static ConsensusAttemptResult legacyCas(TableMetadata metadata,
-                                                    DecoratedKey key,
-                                                    CASRequest request,
-                                                    ConsistencyLevel consistencyForPaxos,
-                                                    ConsistencyLevel consistencyForCommit,
-                                                    ClientState clientState,
-                                                    long nowInSeconds,
-                                                    Dispatcher.RequestTime requestTime)
+                                        DecoratedKey key,
+                                        CASRequest request,
+                                        ConsistencyLevel consistencyForPaxos,
+                                        ConsistencyLevel consistencyForCommit,
+                                        ClientState clientState,
+                                        long nowInSeconds,
+                                        Dispatcher.RequestTime requestTime)
     throws UnavailableException, IsBootstrappingException, RequestFailureException, RequestTimeoutException, InvalidRequestException
     {
         try
@@ -484,12 +483,12 @@ public class StorageProxy implements StorageProxyMBean
             };
 
             return casResult(doPaxos(metadata,
-                                     key,
-                                     consistencyForPaxos,
-                                     consistencyForCommit,
-                                     consistencyForCommit,
-                                     requestTime,
-                                     casWriteMetrics,
+                           key,
+                           consistencyForPaxos,
+                           consistencyForCommit,
+                           consistencyForCommit,
+                           requestTime,
+                           casWriteMetrics,
                                      updateProposer));
         }
         catch (CasWriteUnknownResultException e)
@@ -1625,11 +1624,11 @@ public class StorageProxy implements StorageProxyMBean
                     {
                         if (uniqueColumnFamilyStores == null)
                             uniqueColumnFamilyStores = new HashSet<>();
-                        if (uniqueColumnFamilyStores.add(store))
-                            store.metric.coordinatorWriteLatency.update(latency, NANOSECONDS);
-                    }
+                    if (uniqueColumnFamilyStores.add(store))
+                        store.metric.coordinatorWriteLatency.update(latency, NANOSECONDS);
                 }
             }
+        }
         }
         catch (Exception ex)
         {
@@ -1650,7 +1649,7 @@ public class StorageProxy implements StorageProxyMBean
         for (Replica replica : replicaPlan.liveAndDown())
         {
             if (logger.isTraceEnabled())
-                logger.trace("Sending batchlog store request {} to {} for {} mutations", batch.id, replica, batch.size());
+            logger.trace("Sending batchlog store request {} to {} for {} mutations", batch.id, replica, batch.size());
 
             if (replica.isSelf())
                 performLocally(Stage.MUTATION, replica, () -> BatchlogManager.store(batch), handler, "Batchlog store", requestTime);
@@ -3188,13 +3187,13 @@ public class StorageProxy implements StorageProxyMBean
                     return;
 
                 HintRunnable runnable = new HintRunnable(ImmutableSet.of(localReplica.endpoint()))
-                {
-                    protected void runMayThrow() throws Exception
                     {
-                        LocalMutationRunnable.this.runMayThrow();
-                    }
-                };
-                submitHint(runnable);
+                        protected void runMayThrow() throws Exception
+                        {
+                            LocalMutationRunnable.this.runMayThrow();
+                        }
+                    };
+                    submitHint(runnable);
                 return;
             }
 
@@ -3326,8 +3325,8 @@ public class StorageProxy implements StorageProxyMBean
     }
 
     private static Future<Void> submitHint(Mutation mutation,
-                                           EndpointsForToken targets,
-                                           AbstractWriteResponseHandler<IMutation> responseHandler)
+                                   EndpointsForToken targets,
+                                   AbstractWriteResponseHandler<IMutation> responseHandler)
     {
         // hints should not be written for transient replicas because there is no point if they didn't contribute
         // to quorum, they would eventually be removed anyways after running incremental repair.
