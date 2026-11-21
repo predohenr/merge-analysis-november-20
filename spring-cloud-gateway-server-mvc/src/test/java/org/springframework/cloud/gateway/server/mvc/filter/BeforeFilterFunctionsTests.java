@@ -30,6 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author raccoonback
  * @author Jens Mallien
  */
+
+/**
+ * @author raccoonback
+ * @author Jens Mallien
+ */
 class BeforeFilterFunctionsTests {
 
 	@Test
@@ -210,7 +215,7 @@ class BeforeFilterFunctionsTests {
 	@Test
 	void rewritePathWithSpace() {
 		MockHttpServletRequest servletRequest = MockMvcRequestBuilders.get("http://localhost/get/path/with spaces")
-			.buildRequest(null);
+				.buildRequest(null);
 
 		ServerRequest request = ServerRequest.create(servletRequest, Collections.emptyList());
 
@@ -222,7 +227,7 @@ class BeforeFilterFunctionsTests {
 	@Test
 	void rewritePathWithEnDash() {
 		MockHttpServletRequest servletRequest = MockMvcRequestBuilders.get("http://localhost/get/path/with–en–dashes")
-			.buildRequest(null);
+				.buildRequest(null);
 
 		ServerRequest request = ServerRequest.create(servletRequest, Collections.emptyList());
 
@@ -235,7 +240,7 @@ class BeforeFilterFunctionsTests {
 	void rewritePathWithEnDashAndSpace() {
 		MockHttpServletRequest servletRequest = MockMvcRequestBuilders
 			.get("http://localhost/get/path/with–en–dashes and spaces")
-			.buildRequest(null);
+				.buildRequest(null);
 
 		ServerRequest request = ServerRequest.create(servletRequest, Collections.emptyList());
 

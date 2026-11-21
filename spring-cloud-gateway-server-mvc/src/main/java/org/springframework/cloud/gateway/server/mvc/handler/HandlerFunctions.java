@@ -155,17 +155,17 @@ public abstract class HandlerFunctions {
 	// TODO: current discovery only goes by method name
 	// so last one wins, so put parameterless last
 	@Deprecated
-	public static HandlerFunction<ServerResponse> http(String uri) {
+public static HandlerFunction<ServerResponse> http(String uri) {
 		return http(URI.create(uri));
 	}
 
 	@Deprecated
-	public static HandlerFunction<ServerResponse> http(URI uri) {
+public static HandlerFunction<ServerResponse> http(URI uri) {
 		return new LookupProxyExchangeHandlerFunction(uri);
 	}
 
 	@Deprecated
-	public static HandlerFunction<ServerResponse> https(URI uri) {
+public static HandlerFunction<ServerResponse> https(URI uri) {
 		return new LookupProxyExchangeHandlerFunction(uri);
 	}
 
@@ -184,7 +184,7 @@ public abstract class HandlerFunctions {
 	static class LookupProxyExchangeHandlerFunction implements HandlerFunction<ServerResponse> {
 
 		@Deprecated
-		private final URI uri;
+private final URI uri;
 
 		private AtomicReference<ProxyExchangeHandlerFunction> proxyExchangeHandlerFunction = new AtomicReference<>();
 
@@ -193,7 +193,7 @@ public abstract class HandlerFunctions {
 		}
 
 		@Deprecated
-		LookupProxyExchangeHandlerFunction(URI uri) {
+LookupProxyExchangeHandlerFunction(URI uri) {
 			this.uri = uri;
 		}
 
@@ -227,7 +227,7 @@ public abstract class HandlerFunctions {
 	}
 
 	@Deprecated
-	public static class HandlerSupplier
+public static class HandlerSupplier
 			implements org.springframework.cloud.gateway.server.mvc.handler.HandlerSupplier {
 
 		@Override
