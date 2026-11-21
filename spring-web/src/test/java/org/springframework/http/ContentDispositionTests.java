@@ -31,10 +31,17 @@ import static org.springframework.http.ContentDisposition.parse;
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev
  */
+
+/**
+ * Tests for {@link ContentDisposition}.
+ *
+ * @author Sebastien Deleuze
+ * @author Rossen Stoyanchev
+ */
 class ContentDispositionTests {
 
 
-	@Test
+		@Test
 	void parseFilenameQuoted() {
 		assertThat(parse("form-data; name=\"foo\"; filename=\"foo.txt\""))
 				.isEqualTo(ContentDisposition.formData()
@@ -171,7 +178,7 @@ class ContentDispositionTests {
 		assertThat(cd.toString()).isEqualTo("form-data; name=\"foo\"; filename=\"D:\\\\foo\\\\bar.txt\"");
 	}
 
-	@Test
+		@Test
 	void parseWithExtraSemicolons() {
 		assertThat(parse("form-data; name=\"foo\";; ; filename=\"foo.txt\";"))
 				.isEqualTo(ContentDisposition.formData()
@@ -203,7 +210,7 @@ class ContentDispositionTests {
 		assertThatIllegalArgumentException().isThrownBy(() -> parse("foo;bar"));
 	}
 
-	@Test
+		@Test
 	void format() {
 		assertThat(
 				ContentDisposition.formData()
