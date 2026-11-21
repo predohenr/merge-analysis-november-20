@@ -2184,7 +2184,7 @@ public final class TypeOps {
      * @deprecated Since 7.11.0. Use {@link #isContextDependent(JExecutableSymbol)} instead which is more flexible.
      */
     @Deprecated
-    public static boolean isContextDependent(JMethodSig sig) {
+public static boolean isContextDependent(JMethodSig sig) {
         return isContextDependent(sig.getSymbol());
     }
 
