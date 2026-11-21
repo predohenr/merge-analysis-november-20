@@ -184,6 +184,6 @@ public class RuntimeOptionKey<T> extends OptionKey<T> implements SubstrateOption
          * See {@link IsolateArgumentParser#verifyOptionValues()} for the validation that these
          * options are not changed after isolate creation and potential exceptions to the rule.
          */
-        RegisterForIsolateArgumentParser,
+        RegisterForIsolateArgumentParser
     }
 }
