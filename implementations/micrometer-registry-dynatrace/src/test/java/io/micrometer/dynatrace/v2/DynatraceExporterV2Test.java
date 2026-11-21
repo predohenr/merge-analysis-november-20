@@ -58,6 +58,13 @@ import static org.mockito.Mockito.*;
  * @author Georg Pirklbauer
  * @author Jonatan Ivanov
  */
+
+/**
+ * Tests for {@link DynatraceExporterV2}.
+ *
+ * @author Georg Pirklbauer
+ * @author Jonatan Ivanov
+ */
 class DynatraceExporterV2Test {
 
     private static final Map<String, String> SEEN_METADATA = new HashMap<>();
