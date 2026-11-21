@@ -756,13 +756,13 @@ public class TruffleFeature implements InternalFeature {
     private void blocklistAllMethods(MetaAccessProvider metaAccess, Class<?> clazz) {
         for (Executable m : clazz.getDeclaredMethods()) {
             try {
-                blocklistMethods.add(metaAccess.lookupJavaMethod(m));
+            blocklistMethods.add(metaAccess.lookupJavaMethod(m));
             } catch (DeletedElementException e) {
             }
         }
         for (Executable m : clazz.getDeclaredConstructors()) {
             try {
-                blocklistMethods.add(metaAccess.lookupJavaMethod(m));
+            blocklistMethods.add(metaAccess.lookupJavaMethod(m));
             } catch (DeletedElementException e) {
             }
         }
@@ -779,13 +779,13 @@ public class TruffleFeature implements InternalFeature {
     private void tempTargetAllowlistAllMethods(MetaAccessProvider metaAccess, Class<?> clazz) {
         for (Executable m : clazz.getMethods()) {
             try {
-                tempTargetAllowlistMethods.add(metaAccess.lookupJavaMethod(m));
+            tempTargetAllowlistMethods.add(metaAccess.lookupJavaMethod(m));
             } catch (DeletedElementException e) {
             }
         }
         for (Executable m : clazz.getConstructors()) {
             try {
-                tempTargetAllowlistMethods.add(metaAccess.lookupJavaMethod(m));
+            tempTargetAllowlistMethods.add(metaAccess.lookupJavaMethod(m));
             } catch (DeletedElementException e) {
             }
         }
