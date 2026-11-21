@@ -608,6 +608,23 @@ public class JavacHandlerUtil {
 			originalAnnos = o;
 		}
 		
+		static {
+			Field a = null;
+			Field o = null;
+			Method m = null;
+			try {
+				Class<?> forName = Class.forName("com.sun.tools.javac.code.Symbol$RecordComponent");
+				a = Permit.permissiveGetField(forName, "ast");
+				o = Permit.permissiveGetField(forName, "originalAnnos");
+				m = Permit.permissiveGetMethod(ClassSymbol.class, "findRecordComponentToRemove", JCVariableDecl.class);
+			} catch (Throwable e) {
+				// Ignore
+			}
+			astField = a;
+			originalAnnos = o;
+			findRecordComponentToRemove = m;
+		}
+		
 		static void deleteAnnotation(JCClassDecl record, JCVariableDecl component, JCTree annotation) {
 			if ((astField == null && originalAnnos == null) || getRecordComponents == null) return;
 			
@@ -618,12 +635,12 @@ public class JavacHandlerUtil {
 					Name recordComponentName = ((Symbol) recordComponent).name;
 					if (!recordComponentName.equals(component.name)) continue;
 					
-					if (astField != null) {
-						// OpenJDK
+				if (astField != null) {
+					// OpenJDK
 						JCVariableDecl variable = Permit.get(astField, recordComponent);
-						variable.mods.annotations =  filterListByPos(variable.mods.annotations, annotation);
-					} else {
-						// Zulu JDK 17
+					variable.mods.annotations =  filterListByPos(variable.mods.annotations, annotation);
+				} else {
+					// Zulu JDK 17
 						List<JCAnnotation> annotations = Permit.get(originalAnnos, recordComponent);
 						Permit.set(originalAnnos, recordComponent, filterListByPos(annotations, annotation));
 					}
