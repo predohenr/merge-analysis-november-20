@@ -297,7 +297,7 @@ public class AvoidReassigningLoopVariablesRule extends AbstractJavaRulechainRule
         /**
          * Allow reassigning the 'foreach' control variable.
          */
-        ALLOW
+        ALLOW;
     }
 
     private enum ForReassignOption {
