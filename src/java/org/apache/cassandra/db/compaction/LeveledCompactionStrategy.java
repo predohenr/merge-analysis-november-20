@@ -44,6 +44,7 @@ import org.apache.cassandra.io.sstable.ISSTableScanner;
 import org.apache.cassandra.io.sstable.format.SSTableReader;
 
 import static org.apache.cassandra.config.CassandraRelevantProperties.TOLERATE_SSTABLE_SIZE;
+
 import static org.apache.cassandra.db.compaction.LeveledGenerations.MAX_LEVEL_COUNT;
 
 public class LeveledCompactionStrategy extends AbstractCompactionStrategy
