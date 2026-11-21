@@ -102,7 +102,6 @@ import org.thingsboard.server.common.data.id.AlarmCommentId;
 import org.thingsboard.server.common.data.id.AlarmId;
 import org.thingsboard.server.common.data.id.AssetId;
 import org.thingsboard.server.common.data.id.AssetProfileId;
-import org.thingsboard.server.common.data.id.CalculatedFieldId;
 import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.DashboardId;
 import org.thingsboard.server.common.data.id.DeviceId;
@@ -185,7 +184,6 @@ import org.thingsboard.server.common.data.widget.WidgetType;
 import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
 import org.thingsboard.server.common.data.widget.WidgetTypeInfo;
 import org.thingsboard.server.common.data.widget.WidgetsBundle;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
@@ -199,8 +197,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import static org.thingsboard.server.common.data.StringUtils.isEmpty;
+import org.thingsboard.server.common.data.id.CalculatedFieldId;
 
 /**
  * @author Andrew Shvayka
@@ -4089,13 +4087,14 @@ public class RestClient implements Closeable {
 
     public PageData<CalculatedField> getCalculatedFieldsByEntityId(EntityId entityId, PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
+        params.put("entityType", entityId.getEntityType().name());
+        params.put("entityId", entityId.getId().toString());
         addPageLinkToParam(params, pageLink);
         return restTemplate.exchange(
-                baseURL + "/api/" + entityId.getEntityType() + "/" + entityId.getId() + "/calculatedFields?" + getUrlParams(pageLink),
+                baseURL + "/api/{entityType}/{entityId}/calculatedFields?" + getUrlParams(pageLink),
                 HttpMethod.GET, HttpEntity.EMPTY,
                 new ParameterizedTypeReference<PageData<CalculatedField>>() {
                 }, params).getBody();
-
     }
 
     public void deleteCalculatedField(CalculatedFieldId calculatedFieldId) {
@@ -4126,6 +4125,21 @@ public class RestClient implements Closeable {
                 throw exception;
             }
         }
+    }
+
+    public CalculatedField saveCalculatedField(CalculatedField calculatedField) {
+        return restTemplate.postForEntity(baseURL + "/api/calculatedField", calculatedField, CalculatedField.class).getBody();
+    }
+
+    public PageData<CalculatedField> getCalculatedFieldsByEntityId(EntityId entityId, PageLink pageLink) {
+        Map<String, String> params = new HashMap<>();
+        addPageLinkToParam(params, pageLink);
+        return restTemplate.exchange(
+                baseURL + "/api/" + entityId.getEntityType() + "/" + entityId.getId() + "/calculatedFields?" + getUrlParams(pageLink),
+                HttpMethod.GET, HttpEntity.EMPTY,
+                new ParameterizedTypeReference<PageData<CalculatedField>>() {
+                }, params).getBody();
+
     }
 
     private String getTimeUrlParams(TimePageLink pageLink) {
