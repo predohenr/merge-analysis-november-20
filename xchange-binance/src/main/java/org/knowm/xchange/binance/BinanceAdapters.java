@@ -536,16 +536,16 @@ public class BinanceAdapters {
             .put(
                 currentCurrencyPair,
                 new InstrumentMetaData.Builder()
-                        .minimumAmount(minQty)
-                        .maximumAmount(maxQty)
-                        .counterMinimumAmount(counterMinQty)
-                        .counterMaximumAmount(counterMaxQty)
-                        .volumeScale(amountPrecision)
-                        .priceScale(pairPrecision)
+                    .minimumAmount(minQty)
+                    .maximumAmount(maxQty)
+                    .counterMinimumAmount(counterMinQty)
+                    .counterMaximumAmount(counterMaxQty)
+                    .volumeScale(amountPrecision)
+                    .priceScale(pairPrecision)
                         .priceStepSize(priceStepSize)
-                        .amountStepSize(stepSize)
+                    .amountStepSize(stepSize)
                         .marketOrderEnabled(Arrays.asList(futureSymbol.getOrderTypes()).contains("MARKET"))
-                        .build());
+                    .build());
       }
     }
   }
@@ -576,7 +576,7 @@ public class BinanceAdapters {
         BigDecimal counterMaxQtyFallback = null;
 
         CurrencyPair currentCurrencyPair =
-                new CurrencyPair(symbol.getBaseAsset(), symbol.getQuoteAsset());
+            new CurrencyPair(symbol.getBaseAsset(), symbol.getQuoteAsset());
 
         for (Filter filter : symbol.getFilters()) {
           switch (filter.getFilterType()) {
