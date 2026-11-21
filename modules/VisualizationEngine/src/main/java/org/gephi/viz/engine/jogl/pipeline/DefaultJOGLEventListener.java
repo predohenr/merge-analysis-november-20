@@ -57,6 +57,7 @@ public class DefaultJOGLEventListener implements InputListener<JOGLRenderingTarg
                 }
 
                 inputActionsProcessor.selectNodesWithinRadius(worldCoords.x, worldCoords.y, radius);
+
             }
         }
     }
