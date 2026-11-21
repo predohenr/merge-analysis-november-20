@@ -44,7 +44,6 @@ import com.jme3.renderer.opengl.*;
 import com.jme3.system.*;
 import com.jme3.util.IosNativeBufferAllocator;
 import com.jme3.util.BufferAllocatorFactory;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +64,7 @@ public class IGLESContext implements JmeContext {
     protected Timer timer;
     protected SystemListener listener;
     protected IosInputHandler input;
-    protected int minFrameDuration = 0; // No FPS cap
+    protected int minFrameDuration = 0;                   // No FPS cap
 
     static {
         final String implementation = BufferAllocatorFactory.PROPERTY_BUFFER_ALLOCATOR_IMPLEMENTATION;
@@ -76,7 +75,7 @@ public class IGLESContext implements JmeContext {
     }
 
     public IGLESContext() {
-        logger.log(Level.FINE, "IGLESContext constructor");
+           logger.log(Level.FINE, "IGLESContext constructor");
     }
 
     @Override
@@ -133,13 +132,13 @@ public class IGLESContext implements JmeContext {
 
     @Override
     public JoyInput getJoyInput() {
-        /*
+    /*
         if (androidSensorJoyInput == null) {
             androidSensorJoyInput = new AndroidSensorJoyInput();
         }
         return androidSensorJoyInput;
         */
-        return null; //  new DummySensorJoyInput();
+        return null;//  new DummySensorJoyInput();
     }
 
     @Override
@@ -169,7 +168,7 @@ public class IGLESContext implements JmeContext {
     @Override
     public boolean isRenderable() {
         logger.log(Level.FINE, "IGLESContext isRenderable");
-        return true; // renderable.get();
+        return true;// renderable.get();
     }
 
     @Override
@@ -178,18 +177,18 @@ public class IGLESContext implements JmeContext {
         IosGL gl = new IosGL();
 
         if (settings.getBoolean("GraphicsDebug")) {
-            gl = (IosGL) GLDebug.createProxy(gl, gl, GL.class, GLExt.class, GLFbo.class);
+            gl = (IosGL)GLDebug.createProxy(gl, gl, GL.class, GLExt.class, GLFbo.class);
         }
 
         renderer = new GLRenderer(gl, gl, gl);
         renderer.initialize();
-
+        
         input = new IosInputHandler();
         timer = new NanoTimer();
 
-        //synchronized (createdLock){
-        created.set(true);
-        //createdLock.notifyAll();
+//synchronized (createdLock){
+            created.set(true);
+            //createdLock.notifyAll();
         //}
 
         listener.initialize();
