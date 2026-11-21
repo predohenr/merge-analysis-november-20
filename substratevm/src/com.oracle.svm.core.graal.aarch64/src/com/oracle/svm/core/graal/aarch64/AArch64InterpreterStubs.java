@@ -77,8 +77,8 @@ import com.oracle.svm.shared.singletons.traits.BuiltinTraits.NoLayeredCallbacks;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.RuntimeAccessOnly;
 import com.oracle.svm.shared.singletons.traits.SingletonLayeredInstallationKind.Duplicable;
 import com.oracle.svm.shared.singletons.traits.SingletonTraits;
-import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.SubstrateUtil;
+import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.VMError;
 import com.oracle.svm.util.AnnotationUtil;
 
@@ -145,10 +145,6 @@ public class AArch64InterpreterStubs {
             materializeFieldAddress(masm, obj, offset, compressedBase, compressionShift, addressScratch);
             masm.ldr(64, dst, createBaseRegisterOnlyAddress(64, addressScratch));
         }
-
-        /**
-         * See {@code SubstrateBasicLoweringProvider#createReadHub}.
-         */
         private static void loadHub(AArch64MacroAssembler masm, Register obj, Register hub, Register scratch) {
             ObjectLayout ol = ObjectLayout.singleton();
             long reservedHubBitsMask = Heap.getHeap().getObjectHeader().getReservedHubBitsMask();
@@ -195,13 +191,6 @@ public class AArch64InterpreterStubs {
             masm.cmp(32, index, scratch);
             masm.branchConditionally(AArch64Assembler.ConditionFlag.HS, slowPath);
         }
-
-        /**
-         * Fast path for {@code InterpreterStubSection.enterDirectInterpreterStub(...)}, or for the
-         * method resolved by {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. If the
-         * target method already has valid installed code, jump to its entry point instead of
-         * entering the interpreter.
-         */
         private static void emitInstalledCodeFastPath(AArch64MacroAssembler masm, Register interpreterMethod, boolean compressedInterpreterMethod, Register scratch) {
             Label slowPath = new Label();
 
@@ -232,13 +221,6 @@ public class AArch64InterpreterStubs {
 
             masm.bind(slowPath);
         }
-
-        /**
-         * Fast path for resolving the target of
-         * {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. This performs the same
-         * high-level lookup as the Java helper, then tries the installed-code jump before falling
-         * back to the slow path.
-         */
         private static void emitVTableInstalledCodeFastPath(AArch64MacroAssembler masm, Register receiver, Register vtableIndex, Register scratch1, Register scratch2) {
             ObjectLayout ol = ObjectLayout.singleton();
             boolean compression = ReferenceAccess.singleton().haveCompressedReferences();
@@ -350,6 +332,24 @@ public class AArch64InterpreterStubs {
 
             super.leave(crb);
         }
+
+        /**
+         * See {@code SubstrateBasicLoweringProvider#createReadHub}.
+         */
+
+        /**
+         * Fast path for {@code InterpreterStubSection.enterDirectInterpreterStub(...)}, or for the
+         * method resolved by {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. If the
+         * target method already has valid installed code, jump to its entry point instead of
+         * entering the interpreter.
+         */
+
+        /**
+         * Fast path for resolving the target of
+         * {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. This performs the same
+         * high-level lookup as the Java helper, then tries the installed-code jump before falling
+         * back to the slow path.
+         */
     }
 
     public static class InterpreterLeaveStubContext extends SubstrateAArch64Backend.SubstrateAArch64FrameContext {
@@ -474,6 +474,101 @@ public class AArch64InterpreterStubs {
         return 2 * wordSize;
     }
 
+    @Fold
+    public static int offsetAbiSpReg() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiSpReg");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg0() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg0");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg1() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg1");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg2() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg2");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg3() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg3");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg4() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg4");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg5() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg5");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg6() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg6");
+    }
+
+    @Fold
+    public static int offsetAbiGpArg7() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg7");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg0() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg0");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg1() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg1");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg2() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg2");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg3() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg3");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg4() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg4");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg5() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg5");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg6() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg6");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg7() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg7");
+    }
+
+    @Fold
+    public static int offsetAbiFpRet() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpRet");
+    }
+
+    @Fold
+    public static int offsetAbiGpRet() {
+        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpRet");
+    }
+
     @RawStructure
     public interface InterpreterDataAArch64 extends PointerBase {
         @RawField
@@ -487,8 +582,6 @@ public class AArch64InterpreterStubs {
 
         @RawField
         void setAbiSpReg(long val);
-
-        /* arch specific */
         @RawField
         long getAbiGpArg0();
 
@@ -596,101 +689,8 @@ public class AArch64InterpreterStubs {
 
         @RawField
         long getAbiFpRet();
-    }
 
-    @Fold
-    public static int offsetAbiSpReg() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiSpReg");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg0() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg0");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg1() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg1");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg2() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg2");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg3() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg3");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg4() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg4");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg5() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg5");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg6() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg6");
-    }
-
-    @Fold
-    public static int offsetAbiGpArg7() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpArg7");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg0() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg0");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg1() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg1");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg2() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg2");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg3() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg3");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg4() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg4");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg5() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg5");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg6() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg6");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg7() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpArg7");
-    }
-
-    @Fold
-    public static int offsetAbiFpRet() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiFpRet");
-    }
-
-    @Fold
-    public static int offsetAbiGpRet() {
-        return OffsetOf.get(InterpreterDataAArch64.class, "AbiGpRet");
+        /* arch specific */
     }
 
     @SingletonTraits(access = RuntimeAccessOnly.class, layeredCallbacks = NoLayeredCallbacks.class, layeredInstallationKind = Duplicable.class, other = Disallowed.class)

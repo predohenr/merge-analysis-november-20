@@ -64,8 +64,8 @@ import com.oracle.svm.shared.singletons.traits.BuiltinTraits.NoLayeredCallbacks;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.RuntimeAccessOnly;
 import com.oracle.svm.shared.singletons.traits.SingletonLayeredInstallationKind.Duplicable;
 import com.oracle.svm.shared.singletons.traits.SingletonTraits;
-import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.SubstrateUtil;
+import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.VMError;
 import com.oracle.svm.util.AnnotationUtil;
 
@@ -91,6 +91,108 @@ public class AMD64InterpreterStubs {
     private static SubstrateAMD64RegisterConfig getRegisterConfig() {
         return new SubstrateAMD64RegisterConfig(SubstrateRegisterConfig.ConfigKind.NORMAL, null, SubstrateTarget.singleton(),
                         SubstrateOptions.PreserveFramePointer.getValue());
+    }
+
+    @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
+    public static int sizeOfInterpreterData() {
+        return NumUtil.roundUp(SizeOf.get(InterpreterDataAMD64.class), 0x10);
+    }
+
+    public static int additionalFrameSizeEnterStub() {
+        int wordSize = 8;
+        int deoptSlotSize = wordSize + wordSize /* for padding */;
+        return sizeOfInterpreterData() + deoptSlotSize;
+    }
+
+    public static int additionalFrameSizeLeaveStub() {
+        int wordSize = 8;
+        // reserve two slots for: base address of outgoing stack args and variable stack size.
+        return 2 * wordSize;
+    }
+
+    @Fold
+    public static int offsetAbiSpReg() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiSpReg");
+    }
+
+    @Fold
+    public static int offsetAbiGp0() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp0");
+    }
+
+    @Fold
+    public static int offsetAbiGp1() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp1");
+    }
+
+    @Fold
+    public static int offsetAbiGp2() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp2");
+    }
+
+    @Fold
+    public static int offsetAbiGp3() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp3");
+    }
+
+    @Fold
+    public static int offsetAbiGp4() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp4");
+    }
+
+    @Fold
+    public static int offsetAbiGp5() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp5");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg0() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg0");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg1() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg1");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg2() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg2");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg3() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg3");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg4() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg4");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg5() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg5");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg6() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg6");
+    }
+
+    @Fold
+    public static int offsetAbiFpArg7() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg7");
+    }
+
+    @Fold
+    public static int offsetAbiGpRet() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGpRet");
+    }
+
+    @Fold
+    public static int offsetAbiFpRet() {
+        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpRet");
     }
 
     public static class InterpreterEnterStubContext extends SubstrateAMD64Backend.SubstrateAMD64FrameContext {
@@ -131,10 +233,6 @@ public class AMD64InterpreterStubs {
         private static void loadObjectWordField(AMD64MacroAssembler masm, Register dst, Register obj, int offset, boolean compressedBase, int compressionShift) {
             AMD64Assembler.AMD64RMOp.MOV.emit(masm, AMD64BaseAssembler.OperandSize.QWORD, dst, heapObjectAddress(obj, offset, compressedBase, compressionShift));
         }
-
-        /**
-         * See {@code SubstrateBasicLoweringProvider#createReadHub}.
-         */
         private static void loadHub(AMD64MacroAssembler masm, Register obj, Register hub, Register scratch2) {
             ObjectLayout ol = ObjectLayout.singleton();
             long reservedHubBitsMask = Heap.getHeap().getObjectHeader().getReservedHubBitsMask();
@@ -188,13 +286,6 @@ public class AMD64InterpreterStubs {
             masm.cmpl(index, scratch);
             masm.jcc(AMD64Assembler.ConditionFlag.AboveEqual, slowPath);
         }
-
-        /**
-         * Fast path for {@code InterpreterStubSection.enterDirectInterpreterStub(...)}, or for the
-         * method resolved by {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. If the
-         * target method already has valid installed code, jump to its entry point instead of
-         * entering the interpreter.
-         */
         private static void emitInstalledCodeFastPath(AMD64MacroAssembler masm, Register interpreterMethod, boolean compressedInterpreterMethod, Register scratch) {
             Label slowPath = new Label();
 
@@ -222,13 +313,6 @@ public class AMD64InterpreterStubs {
 
             masm.bind(slowPath);
         }
-
-        /**
-         * Fast path for resolving the target of
-         * {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. This performs the same
-         * high-level lookup as the Java helper, then tries the installed-code jump before falling
-         * back to the slow path.
-         */
         private static void emitVTableInstalledCodeFastPath(AMD64MacroAssembler masm, Register receiver, Register vtableIndex, Register scratch1, Register scratch2) {
             ObjectLayout ol = ObjectLayout.singleton();
             boolean compression = ReferenceAccess.singleton().haveCompressedReferences();
@@ -345,6 +429,24 @@ public class AMD64InterpreterStubs {
 
             super.leave(crb);
         }
+
+        /**
+         * See {@code SubstrateBasicLoweringProvider#createReadHub}.
+         */
+
+        /**
+         * Fast path for {@code InterpreterStubSection.enterDirectInterpreterStub(...)}, or for the
+         * method resolved by {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. If the
+         * target method already has valid installed code, jump to its entry point instead of
+         * entering the interpreter.
+         */
+
+        /**
+         * Fast path for resolving the target of
+         * {@code InterpreterStubSection.enterVTableInterpreterStub(...)}. This performs the same
+         * high-level lookup as the Java helper, then tries the installed-code jump before falling
+         * back to the slow path.
+         */
     }
 
     public static class InterpreterLeaveStubContext extends SubstrateAMD64Backend.SubstrateAMD64FrameContext {
@@ -463,23 +565,6 @@ public class AMD64InterpreterStubs {
         }
     }
 
-    @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
-    public static int sizeOfInterpreterData() {
-        return NumUtil.roundUp(SizeOf.get(InterpreterDataAMD64.class), 0x10);
-    }
-
-    public static int additionalFrameSizeEnterStub() {
-        int wordSize = 8;
-        int deoptSlotSize = wordSize + wordSize /* for padding */;
-        return sizeOfInterpreterData() + deoptSlotSize;
-    }
-
-    public static int additionalFrameSizeLeaveStub() {
-        int wordSize = 8;
-        // reserve two slots for: base address of outgoing stack args and variable stack size.
-        return 2 * wordSize;
-    }
-
     @RawStructure
     public interface InterpreterDataAMD64 extends PointerBase {
         @RawField
@@ -493,8 +578,6 @@ public class AMD64InterpreterStubs {
 
         @RawField
         void setAbiSpReg(long val);
-
-        /* arch specific */
 
         @RawField
         void setAbiGpRet(long val);
@@ -567,8 +650,6 @@ public class AMD64InterpreterStubs {
 
         @RawField
         void setAbiFpArg3(long val);
-
-        // GR-55154: We could save 32 bytes on Windows by exluding storage for xmm4-xmm7
         @RawField
         long getAbiFpArg4();
 
@@ -592,91 +673,10 @@ public class AMD64InterpreterStubs {
 
         @RawField
         void setAbiFpArg7(long val);
-    }
 
-    @Fold
-    public static int offsetAbiSpReg() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiSpReg");
-    }
+        /* arch specific */
 
-    @Fold
-    public static int offsetAbiGp0() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp0");
-    }
-
-    @Fold
-    public static int offsetAbiGp1() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp1");
-    }
-
-    @Fold
-    public static int offsetAbiGp2() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp2");
-    }
-
-    @Fold
-    public static int offsetAbiGp3() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp3");
-    }
-
-    @Fold
-    public static int offsetAbiGp4() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp4");
-    }
-
-    @Fold
-    public static int offsetAbiGp5() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGp5");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg0() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg0");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg1() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg1");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg2() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg2");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg3() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg3");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg4() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg4");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg5() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg5");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg6() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg6");
-    }
-
-    @Fold
-    public static int offsetAbiFpArg7() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpArg7");
-    }
-
-    @Fold
-    public static int offsetAbiGpRet() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiGpRet");
-    }
-
-    @Fold
-    public static int offsetAbiFpRet() {
-        return OffsetOf.get(InterpreterDataAMD64.class, "AbiFpRet");
+        // GR-55154: We could save 32 bytes on Windows by exluding storage for xmm4-xmm7
     }
 
     @SingletonTraits(access = RuntimeAccessOnly.class, layeredCallbacks = NoLayeredCallbacks.class, layeredInstallationKind = Duplicable.class, other = Disallowed.class)

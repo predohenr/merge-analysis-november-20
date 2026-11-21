@@ -50,6 +50,7 @@ import com.oracle.graal.pointsto.meta.AnalysisMetaAccess;
 import com.oracle.graal.pointsto.meta.AnalysisType;
 import com.oracle.graal.pointsto.meta.AnalysisUniverse;
 import com.oracle.svm.core.ParsingReason;
+import com.oracle.svm.core.config.ConfigurationValues;
 import com.oracle.svm.shared.feature.AutomaticallyRegisteredFeature;
 import com.oracle.svm.core.feature.InternalFeature;
 import com.oracle.svm.core.imagelayer.DynamicImageLayerInfo;
@@ -111,21 +112,14 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 @SingletonTraits(access = BuildtimeAccessOnly.class, layeredCallbacks = NoLayeredCallbacks.class)
 public class LoadImageSingletonFeature implements InternalFeature {
     public static final String CROSS_LAYER_SINGLETON_TABLE_SYMBOL = "__svm_layer_singleton_table_start";
+    private final Map<Class<?>, JavaConstant> keyToMultiLayerConstantMap = new ConcurrentHashMap<>();
+    private SVMImageLayerLoader loader;
+    private final boolean buildingApplicationLayer = ImageLayerBuildingSupport.buildingApplicationLayer();
+    private Map<JavaConstant, Integer> constantToTableSlotMap;
 
     static CrossLayerSingletonMappingInfo getCrossLayerSingletonMappingInfo() {
         return (CrossLayerSingletonMappingInfo) ImageSingletons.lookup(LoadImageSingletonFactory.class);
     }
-
-    /*
-     * Cache for objects created by the calls to getAllLayers. This cache is only used in the
-     * application layer.
-     */
-    private final Map<Class<?>, JavaConstant> keyToMultiLayerConstantMap = new ConcurrentHashMap<>();
-    /*
-     * We need to cache this for the invocation plugin.
-     */
-    private SVMImageLayerLoader loader;
-    private final boolean buildingApplicationLayer = ImageLayerBuildingSupport.buildingApplicationLayer();
 
     @Override
     public boolean isInConfiguration(IsInConfigurationAccess access) {
@@ -187,16 +181,6 @@ public class LoadImageSingletonFeature implements InternalFeature {
             return ConstantNode.forConstant(multiLayerArray, 1, true, b.getMetaAccess());
         }
     }
-
-    /**
-     * This method needs to be called after all image singletons are registered. Currently, some
-     * singletons are registered in
-     * {@link org.graalvm.nativeimage.hosted.Feature#beforeAnalysis(BeforeAnalysisAccess)}, but the
-     * singleton registration might get restricted to only
-     * {@link org.graalvm.nativeimage.hosted.Feature#duringSetup(DuringSetupAccess)} or before. In
-     * this case, this method should override
-     * {@link org.graalvm.nativeimage.hosted.Feature#beforeAnalysis(BeforeAnalysisAccess)}.
-     */
     public void processRegisteredSingletons(AnalysisUniverse universe) {
         AnalysisMetaAccess metaAccess = universe.getBigbang().getMetaAccess();
         loader = (SVMImageLayerLoader) universe.getImageLayerLoader();
@@ -360,20 +344,10 @@ public class LoadImageSingletonFeature implements InternalFeature {
         return ImageHeapObjectArray.createUnbackedImageHeapArray(arrayType, elements);
     }
 
-    /**
-     * Holds the values which need to be stored in the cross-layer singleton table.
-     */
-    private Map<JavaConstant, Integer> constantToTableSlotMap;
-
     public Map<JavaConstant, Integer> getConstantToTableSlotMap() {
         assert constantToTableSlotMap != null;
         return constantToTableSlotMap;
     }
-
-    /**
-     * Ensure all objects needed for {@link MultiLayeredImageSingleton}s and
-     * {@link SingletonLayeredInstallationKind#APP_LAYER_ONLY_TRAIT}s are installed in the heap.
-     */
     private void addInitialObjects(NativeImageHeap heap, HostedUniverse hUniverse) {
         Object addReason = ImageHeapReasonSupport.singleton().description("Read via the layered image singleton support");
 
@@ -448,6 +422,33 @@ public class LoadImageSingletonFeature implements InternalFeature {
             }
         }
     }
+
+    /*
+     * Cache for objects created by the calls to getAllLayers. This cache is only used in the
+     * application layer.
+     */
+    /*
+     * We need to cache this for the invocation plugin.
+     */
+
+    /**
+     * This method needs to be called after all image singletons are registered. Currently, some
+     * singletons are registered in
+     * {@link org.graalvm.nativeimage.hosted.Feature#beforeAnalysis(BeforeAnalysisAccess)}, but the
+     * singleton registration might get restricted to only
+     * {@link org.graalvm.nativeimage.hosted.Feature#duringSetup(DuringSetupAccess)} or before. In
+     * this case, this method should override
+     * {@link org.graalvm.nativeimage.hosted.Feature#beforeAnalysis(BeforeAnalysisAccess)}.
+     */
+
+    /**
+     * Holds the values which need to be stored in the cross-layer singleton table.
+     */
+
+    /**
+     * Ensure all objects needed for {@link MultiLayeredImageSingleton}s and
+     * {@link SingletonLayeredInstallationKind#APP_LAYER_ONLY_TRAIT}s are installed in the heap.
+     */
 }
 
 enum SlotRecordKind {
@@ -485,31 +486,31 @@ class CrossLayerSingletonMappingInfo extends LoadImageSingletonFactory {
      * Map of slot infos created in prior layers.
      */
     private final Map<Class<?>, SlotInfo> priorKeyToSlotInfoMap;
-
-    /**
-     * Map of all MultiLayer objects created in prior layers.
-     */
     private final Map<Class<?>, List<Integer>> priorKeyToSingletonObjectIDsMap;
-
-    /**
-     * Map of all slot infos (past & present). Is created in {@link #assignSlots}.
-     */
     Map<Class<?>, SlotInfo> currentKeyToSlotInfoMap;
-
-    /**
-     * Map of constant identifiers for MultiLayer objects installed in this layer.
-     */
     private final Map<Class<?>, Integer> layerKeyToObjectIDMap = new HashMap<>();
-
-    /**
-     * Cache for created LoadImageSingletonDataImpl objects within the current layer.
-     */
     private final Map<Class<?>, LoadImageSingletonDataImpl> layerKeyToSingletonDataMap = new ConcurrentHashMap<>();
     private final boolean buildingApplicationLayer = ImageLayerBuildingSupport.buildingApplicationLayer();
 
     boolean sealedSingletonLookup = false;
     CGlobalData<Pointer> singletonTableStart;
     int referenceSize = 0;
+
+    /**
+     * Map of all MultiLayer objects created in prior layers.
+     */
+
+    /**
+     * Map of all slot infos (past & present). Is created in {@link #assignSlots}.
+     */
+
+    /**
+     * Map of constant identifiers for MultiLayer objects installed in this layer.
+     */
+
+    /**
+     * Cache for created LoadImageSingletonDataImpl objects within the current layer.
+     */
 
     CrossLayerSingletonMappingInfo() {
         priorKeyToSlotInfoMap = Map.of();
