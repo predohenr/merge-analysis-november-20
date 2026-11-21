@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.cassandra.io.util.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,6 @@ import org.apache.cassandra.io.sstable.KeyIterator;
 import org.apache.cassandra.io.sstable.SSTable;
 import org.apache.cassandra.io.sstable.format.SSTableFormat.Components;
 import org.apache.cassandra.io.sstable.format.SSTableReader;
-import org.apache.cassandra.io.util.File;
 import org.apache.cassandra.service.ActiveRepairService;
 import org.apache.cassandra.service.StorageService;
 import org.apache.cassandra.utils.OutputHandler;
@@ -133,7 +133,7 @@ public class SSTableImporter
                             }
 
                             if (options.verifySSTables || options.verifyTokens)
-                                verifySSTableForImport(descriptor, entry.getValue(), options.verifyTokens, options.verifySSTables, options.extendedVerify);
+                            verifySSTableForImport(descriptor, entry.getValue(), options.verifyTokens, options.verifySSTables, options.extendedVerify);
                         }
                         catch (Throwable t)
                         {
@@ -238,7 +238,7 @@ public class SSTableImporter
         {
             logger.error("[{}] Failed adding SSTables", importID, t);
             throw new RuntimeException("Failed adding SSTables", t);
-        }
+            }
 
         logger.info("[{}] Done loading load new SSTables for {}/{}", importID, cfs.getKeyspaceName(), cfs.getTableName());
         return failedDirectories;
@@ -385,7 +385,7 @@ public class SSTableImporter
         logger.debug("Removing copied SSTables which were left in data directories after failed SSTable import.");
         for (MovedSSTable movedSSTable : movedSSTables)
         {
-            // no logging here as for moveSSTablesBack case above as logging is done in delete method
+                // no logging here as for moveSSTablesBack case above as logging is done in delete method
             movedSSTable.newDescriptor.getFormat().delete(movedSSTable.newDescriptor);
         }
     }
@@ -424,11 +424,11 @@ public class SSTableImporter
         {
             reader = SSTableReader.open(cfs, descriptor, components, cfs.metadata);
             IVerifier.Options verifierOptions = IVerifier.options()
-                                                         .extendedVerification(extendedVerify)
-                                                         .checkOwnsTokens(verifyTokens)
-                                                         .quick(!verifySSTables)
-                                                         .invokeDiskFailurePolicy(false)
-                                                         .mutateRepairStatus(false).build();
+                                                       .extendedVerification(extendedVerify)
+                                                       .checkOwnsTokens(verifyTokens)
+                                                       .quick(!verifySSTables)
+                                                       .invokeDiskFailurePolicy(false)
+                                                       .mutateRepairStatus(false).build();
 
             try (IVerifier verifier = reader.getVerifier(cfs, new OutputHandler.LogOutput(), false, verifierOptions))
             {
@@ -477,8 +477,8 @@ public class SSTableImporter
         final boolean invalidateCaches;
         final boolean extendedVerify;
         final boolean copyData;
-        final boolean failOnMissingIndex;
-        final boolean validateIndexChecksum;
+        private final boolean failOnMissingIndex;
+        public final boolean validateIndexChecksum;
 
         public Options(Set<String> srcPaths, boolean resetLevel, boolean clearRepaired,
                        boolean verifySSTables, boolean verifyTokens, boolean invalidateCaches,

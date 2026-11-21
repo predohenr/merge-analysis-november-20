@@ -66,6 +66,7 @@ import org.apache.cassandra.utils.FBUtilities;
 import static org.apache.lucene.codecs.CodecUtil.FOOTER_MAGIC;
 import static org.apache.lucene.codecs.CodecUtil.writeBEInt;
 import static org.apache.lucene.codecs.CodecUtil.writeBELong;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -1023,10 +1024,6 @@ public class ImportTest extends CQLTester
             args.add("--extended-verify");
         if (options.copyData)
             args.add("-cd");
-        if (options.failOnMissingIndex)
-            args.add("--require-index-components");
-        if (!options.validateIndexChecksum)
-            args.add("--no-index-validation");
 
         args.add(cfs.keyspace.getName());
         args.add(cfs.getTableName());
