@@ -45,8 +45,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import jakarta.servlet.http.Cookie;
 import org.apache.commons.lang3.ObjectUtils;
+
+import jakarta.servlet.http.Cookie;
 import org.apereo.cas.client.validation.AssertionImpl;
 import org.instancio.Instancio;
 import org.instancio.InstancioApi;
@@ -206,6 +207,7 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SimpleSavedRequest;
 import org.springframework.security.web.server.firewall.ServerExchangeRejectedException;
 import org.springframework.security.web.session.HttpSessionCreatedEvent;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.security.web.webauthn.api.Bytes;
 import org.springframework.security.web.webauthn.api.ImmutablePublicKeyCredentialUserEntity;
 import org.springframework.security.web.webauthn.api.PublicKeyCredentialUserEntity;
@@ -216,6 +218,21 @@ import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+
+/**
+ * Tests that Spring Security classes that implements {@link Serializable} and have the
+ * same serial version as {@link SpringSecurityCoreVersion#SERIAL_VERSION_UID} can be
+ * deserialized from a previous minor version.
+ * <p>
+ * For example, all classes from version 6.2.x that matches the previous requirement
+ * should be serialized and saved to a folder, and then later on, in 6.3.x, it is verified
+ * if they can be deserialized
+ *
+ * @author Marcus da Coregio
+ * @since 6.2.2
+ * @see <a href="https://github.com/spring-projects/spring-security/issues/3737">GitHub
+ * Issue #3737</a>
+ */
 
 /**
  * Tests that Spring Security classes that implements {@link Serializable} and have the
