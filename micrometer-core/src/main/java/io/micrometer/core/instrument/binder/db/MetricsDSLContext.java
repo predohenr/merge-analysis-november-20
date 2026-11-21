@@ -19,10 +19,9 @@ import io.micrometer.core.annotation.Incubating;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.jooq.impl.DefaultDSLContext;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
