@@ -253,16 +253,16 @@ public final class Commons {
 			Awaitilities.awaitUntil(120, 1000, () -> {
 
 				try {
-					String appPodName = k3sContainer
-						.execInContainer("sh", "-c",
-								"kubectl get pods -l app=" + appLabelValue
-										+ " -o custom-columns=POD:metadata.name,STATUS:status.phase"
-										+ " | grep -i 'running' | awk '{print $1}' | tr -d '\n' ")
-						.getStdout();
+				String appPodName = k3sContainer
+					.execInContainer("sh", "-c",
+							"kubectl get pods -l app=" + appLabelValue
+									+ " -o custom-columns=POD:metadata.name,STATUS:status.phase"
+									+ " | grep -i 'running' | awk '{print $1}' | tr -d '\n' ")
+					.getStdout();
 
-					String execResult = k3sContainer.execInContainer("sh", "-c", "kubectl logs " + appPodName.trim())
-						.getStdout();
-					return execResult.contains(message);
+				String execResult = k3sContainer.execInContainer("sh", "-c", "kubectl logs " + appPodName.trim())
+					.getStdout();
+				return execResult.contains(message);
 				}
 				catch (Exception e) {
 					throw new RuntimeException(e);
