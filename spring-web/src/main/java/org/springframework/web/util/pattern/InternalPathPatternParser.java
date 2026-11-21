@@ -33,6 +33,15 @@ import org.springframework.web.util.pattern.PatternParseException.PatternMessage
  * @author Brian Clozel
  * @since 5.0
  */
+
+/**
+ * Parser for URI template patterns. It breaks the path pattern into a number of
+ * {@link PathElement PathElements} in a linked list. Instances are reusable but are not thread-safe.
+ *
+ * @author Andy Clement
+ * @author Brian Clozel
+ * @since 5.0
+ */
 class InternalPathPatternParser {
 
 	private final PathPatternParser parser;
