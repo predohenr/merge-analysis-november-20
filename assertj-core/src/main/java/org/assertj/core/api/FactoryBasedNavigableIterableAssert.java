@@ -74,7 +74,7 @@ public class FactoryBasedNavigableIterableAssert<SELF extends FactoryBasedNaviga
   }
 
   @SuppressWarnings("unchecked")
-  @Override
+@Override
   public ELEMENT_ASSERT toAssert(ELEMENT value, String description) {
     return assertFactory.createAssert(value).as(description);
   }

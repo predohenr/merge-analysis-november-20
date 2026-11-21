@@ -61,8 +61,8 @@ public class AssertionErrorCreator {
   public AssertionError assertionError(String message, Object actual, Object expected, Representation representation) {
     // @format:off
     return assertionFailedError(message, actual, expected, representation)
-                .orElse(comparisonFailure(message, actual, expected, representation)
-                .orElse(assertionError(message)));
+                    .orElse(comparisonFailure(message, actual, expected, representation)
+                    .orElse(assertionError(message)));
     // @format:on
   }
 

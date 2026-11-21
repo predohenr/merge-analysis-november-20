@@ -394,7 +394,7 @@ public class AssertionsForInterfaceTypes extends AssertionsForClassTypes {
    * This ensures that all navigation methods return element-specific assertions without needing additional parameters.
    */
   @Deprecated
-  // @format:off
+//@format:off
   public static <ACTUAL extends Iterable<? extends ELEMENT>, ELEMENT, ELEMENT_ASSERT extends AbstractAssert<ELEMENT_ASSERT, ELEMENT>>
          FactoryBasedNavigableIterableAssert<?, ACTUAL, ELEMENT, ELEMENT_ASSERT> assertThat(Iterable<? extends ELEMENT> actual,
                                                                                  AssertFactory<ELEMENT, ELEMENT_ASSERT> assertFactory) {

@@ -65,7 +65,7 @@ public class ClassBasedNavigableIterableAssert<SELF extends ClassBasedNavigableI
           ClassBasedNavigableIterableAssert<?, ACTUAL, ELEMENT, ELEMENT_ASSERT> assertThat(ACTUAL actual,
                                                                                            Class<ELEMENT_ASSERT> assertClass) {
      return new ClassBasedNavigableIterableAssert(actual, ClassBasedNavigableIterableAssert.class, assertClass);
-  }
+   }
   // @format:on
 
   public ClassBasedNavigableIterableAssert(ACTUAL actual, Class<?> selfType, Class<ELEMENT_ASSERT> assertClass) {

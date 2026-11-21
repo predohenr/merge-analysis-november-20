@@ -757,8 +757,8 @@ public class Assertions implements InstanceOfAssertFactories {
   @Deprecated
   public static <ACTUAL extends Iterable<? extends ELEMENT>, ELEMENT, ELEMENT_ASSERT extends AbstractAssert<ELEMENT_ASSERT, ELEMENT>>
          ClassBasedNavigableIterableAssert<?, ACTUAL, ELEMENT, ELEMENT_ASSERT> assertThat(ACTUAL actual,
-                                                                                   Class<ELEMENT_ASSERT> assertClass) {
-    return AssertionsForInterfaceTypes.assertThat(actual, assertClass);
+                                                                                          Class<ELEMENT_ASSERT> assertClass) {
+           return AssertionsForInterfaceTypes.assertThat(actual, assertClass);
   }
   // @format:on
 
