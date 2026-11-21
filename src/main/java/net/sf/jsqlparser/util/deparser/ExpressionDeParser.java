@@ -1165,7 +1165,7 @@ public class ExpressionDeParser extends AbstractDeParser<Expression>
             builder.append(" ORDER BY ");
             builder.append(
                     analyticExpression.getFuncOrderBy().stream().map(OrderByElement::toString)
-                            .collect(joining(", ")));
+                    .collect(joining(", ")));
         }
 
         if (analyticExpression.getOnOverflowTruncate() != null) {
