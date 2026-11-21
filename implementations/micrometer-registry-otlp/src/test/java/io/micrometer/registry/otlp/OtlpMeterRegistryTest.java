@@ -16,8 +16,8 @@
 package io.micrometer.registry.otlp;
 
 import io.micrometer.core.Issue;
-import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.ipc.http.HttpSender;
 import io.opentelemetry.proto.metrics.v1.ExponentialHistogramDataPoint;
@@ -209,7 +209,7 @@ abstract class OtlpMeterRegistryTest {
             .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
     }
 
-    @Test
+        @Test
     void multipleMetricsWithSameMetaDataShouldBeSingleMetric() {
         Tags firstTag = Tags.of("key", "first");
         Tags secondTag = Tags.of("key", "second");
@@ -693,7 +693,7 @@ abstract class OtlpMeterRegistryTest {
         clock.addSeconds(otlpConfig().step().toSeconds() * numStepsToSkip);
     }
 
-    protected void assertHistogram(Metric metric, long startTime, long endTime, String unit, long count, double sum,
+        protected void assertHistogram(Metric metric, long startTime, long endTime, String unit, long count, double sum,
             double max) {
         assertThat(metric.getHistogram().getAggregationTemporality())
             .isEqualTo(AggregationTemporality.toOtlpAggregationTemporality(otlpConfig().aggregationTemporality()));
@@ -718,7 +718,7 @@ abstract class OtlpMeterRegistryTest {
         }
     }
 
-    protected void assertSum(Metric metric, long startTime, long endTime, double expectedValue) {
+        protected void assertSum(Metric metric, long startTime, long endTime, double expectedValue) {
         NumberDataPoint sumDataPoint = metric.getSum().getDataPoints(0);
         assertMetricMetadata(metric, Optional.empty());
         assertThat(sumDataPoint.getStartTimeUnixNano()).isEqualTo(startTime);
