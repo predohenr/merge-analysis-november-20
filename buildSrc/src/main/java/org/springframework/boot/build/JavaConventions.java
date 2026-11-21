@@ -131,6 +131,69 @@ import org.springframework.util.StringUtils;
  * @author Mike Smithson
  * @author Scott Frederick
  */
+
+/**
+ * Conventions that are applied in the presence of the {@link JavaBasePlugin}. When the
+ * plugin is applied:
+ *
+ * <ul>
+ * <li>The project is configured with source and target compatibility of 17
+ * <li>{@link SpringJavaFormatPlugin Spring Java Format}, {@link CheckstylePlugin
+ * Checkstyle}, {@link TestFailuresPlugin Test Failures}, {@link ArchitecturePlugin
+ * Architecture} and {@link NullabilityPlugin} plugins are applied
+ * <li>{@link Test} tasks are configured:
+ * <ul>
+ * <li>to use JUnit Platform
+ * <li>with a max heap of 1536M
+ * <li>to run after any Checkstyle and format checking tasks
+ * <li>to enable retries with a maximum of three attempts when running on CI
+ * <li>to use predictive test selection when the value of the
+ * {@code ENABLE_PREDICTIVE_TEST_SELECTION} environment variable is {@code true}
+ * </ul>
+ * <li>A {@code testRuntimeOnly} dependency upon
+ * {@code org.junit.platform:junit-platform-launcher} is added to projects with the
+ * {@link JavaPlugin} applied
+ * <li>{@link JavaCompile}, {@link Javadoc}, and {@link Format} tasks are configured to
+ * use UTF-8 encoding
+ * <li>{@link JavaCompile} tasks are configured to:
+ * <ul>
+ * <li>Use {@code -parameters}.
+ * <li>Treat warnings as errors
+ * <li>Enable {@code unchecked}, {@code deprecation}, {@code rawtypes}, and
+ * {@code varargs} warnings
+ * </ul>
+ * <li>{@link Jar} tasks are configured to produce jars with LICENSE.txt and NOTICE.txt
+ * files and the following manifest entries:
+ * <ul>
+ * <li>{@code Automatic-Module-Name}
+ * <li>{@code Build-Jdk-Spec}
+ * <li>{@code Built-By}
+ * <li>{@code Implementation-Title}
+ * <li>{@code Implementation-Version}
+ * </ul>
+ * <li>{@code spring-boot-parent} is used for dependency management</li>
+ * <li>Additional checks are configured:
+ * <ul>
+ * <li>For all source sets:
+ * <ul>
+ * <li>Prohibited dependencies on the compile classpath
+ * <li>Prohibited dependencies on the runtime classpath
+ * </ul>
+ * <li>For the {@code main} source set:
+ * <ul>
+ * <li>{@code META-INF/spring/aot.factories}
+ * <li>{@code META-INF/spring.factories}
+ * </ul>
+ * </ul>
+ * </ul>
+ *
+ * <p/>
+ *
+ * @author Andy Wilkinson
+ * @author Christoph Dreis
+ * @author Mike Smithson
+ * @author Scott Frederick
+ */
 class JavaConventions {
 
 	public static final int BUILD_JAVA_VERSION = 25;
