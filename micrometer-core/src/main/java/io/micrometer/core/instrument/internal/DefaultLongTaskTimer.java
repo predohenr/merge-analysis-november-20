@@ -204,18 +204,18 @@ public class DefaultLongTaskTimer extends AbstractMeter implements LongTaskTimer
                     if (count < rank) {
                         break;
                     }
-                    double percentileValue = activeTaskDuration;
-                    if (count != rank && priorActiveTaskDuration != null) {
-                        // interpolate the percentile value when the active task rank
-                        // is non-integral
-                        double priorPercentileValue = priorActiveTaskDuration;
-                        percentileValue = priorPercentileValue
-                                + ((percentileValue - priorPercentileValue) * (rank - (int) rank));
-                    }
+                        double percentileValue = activeTaskDuration;
+                        if (count != rank && priorActiveTaskDuration != null) {
+                            // interpolate the percentile value when the active task rank
+                            // is non-integral
+                            double priorPercentileValue = priorActiveTaskDuration;
+                            percentileValue = priorPercentileValue
+                                    + ((percentileValue - priorPercentileValue) * (rank - (int) rank));
+                        }
 
-                    valueAtPercentiles.add(new ValueAtPercentile(percentile, percentileValue));
-                    percentile = percentilesRequested.poll();
-                }
+                        valueAtPercentiles.add(new ValueAtPercentile(percentile, percentileValue));
+                        percentile = percentilesRequested.poll();
+                    }
 
                 priorActiveTaskDuration = activeTaskDuration;
             }
