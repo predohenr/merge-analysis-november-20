@@ -39,6 +39,12 @@ import static org.mockito.Mockito.when;
  *
  * @author Oleksii Bondar
  */
+
+/**
+ * Tests for {@link JCacheMetrics}.
+ *
+ * @author Oleksii Bondar
+ */
 class JCacheMetricsTest extends AbstractCacheMetricsTest {
 
     @SuppressWarnings("unchecked")

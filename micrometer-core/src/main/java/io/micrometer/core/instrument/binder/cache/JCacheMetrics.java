@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package io.micrometer.core.instrument.binder.cache;
-
 import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.config.InvalidConfigurationException;
 import org.jspecify.annotations.NullMarked;
@@ -161,12 +160,12 @@ public class JCacheMetrics<K, V, C extends Cache<K, V>> extends CacheMeterBinder
                     .register(registry);
             }
             else {
-                Gauge.builder("cache.removals", objectName, objectName -> lookupStatistic("CacheRemovals"))
-                    .tags(getTagsWithCacheName())
-                    .description("Cache removals")
-                    .register(registry);
-            }
+            Gauge.builder("cache.removals", objectName, objectName -> lookupStatistic("CacheRemovals"))
+                .tags(getTagsWithCacheName())
+                .description("Cache removals")
+                .register(registry);
         }
+    }
     }
 
     private Long lookupStatistic(String name) {
