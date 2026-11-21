@@ -8,18 +8,6 @@
  *******************************************************************************/
 package org.cryptomator.common.vaults;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.cryptomator.common.recovery.BackupRestorer;
-import org.cryptomator.common.settings.Settings;
-import org.cryptomator.common.settings.VaultSettings;
-import org.cryptomator.cryptofs.CryptoFileSystemProvider;
-import org.cryptomator.cryptofs.DirStructure;
-import org.cryptomator.cryptofs.migration.Migrators;
-import org.cryptomator.integrations.mount.MountService;
-import org.cryptomator.ui.keyloading.masterkeyfile.MasterkeyFileLoadingStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javafx.collections.ObservableList;
@@ -32,10 +20,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import static org.cryptomator.common.Constants.MASTERKEY_FILENAME;
 import static org.cryptomator.common.Constants.VAULTCONFIG_FILENAME;
 import static org.cryptomator.common.vaults.VaultState.Value.*;
+import org.apache.commons.lang3.SystemUtils;
+import org.cryptomator.common.Constants;
+import org.cryptomator.common.recovery.BackupRestorer;
+import org.cryptomator.common.settings.Settings;
+import org.cryptomator.common.settings.VaultSettings;
+import org.cryptomator.cryptofs.CryptoFileSystemProvider;
+import org.cryptomator.cryptofs.DirStructure;
+import org.cryptomator.cryptofs.migration.Migrators;
+import org.cryptomator.integrations.mount.MountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.cryptomator.ui.keyloading.masterkeyfile.MasterkeyFileLoadingStrategy;
 
 @Singleton
 public class VaultListManager {
