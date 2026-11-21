@@ -33,6 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author wind57
  */
+
+/**
+ * @author wind57
+ */
 class ConfigUtilsTests {
 
 	@Test
