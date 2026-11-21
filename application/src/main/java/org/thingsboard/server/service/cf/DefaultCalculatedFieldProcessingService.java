@@ -50,8 +50,8 @@ import org.thingsboard.server.queue.util.TbRuleEngineComponent;
 import org.thingsboard.server.service.cf.ctx.CalculatedFieldEntityCtxId;
 import org.thingsboard.server.service.cf.ctx.state.ArgumentEntry;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
-import org.thingsboard.server.service.cf.ctx.state.aggregation.single.AggIntervalEntry;
 import org.thingsboard.server.service.telemetry.TelemetrySubscriptionService;
+import org.thingsboard.server.service.cf.ctx.state.aggregation.single.AggIntervalEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,6 +136,7 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
         return super.fetchMetricDuringInterval(tenantId, entityId, argKey, metric, interval);
     }
 
+    @Override
     public void processResult(TenantId tenantId, EntityId entityId, CalculatedFieldResult result, List<CalculatedFieldId> cfIds, TbCallback callback) {
         if (result instanceof AlarmCalculatedFieldResult) {
             sendMsgToRuleEngine(tenantId, entityId, callback, result.toTbMsg(entityId, cfIds));

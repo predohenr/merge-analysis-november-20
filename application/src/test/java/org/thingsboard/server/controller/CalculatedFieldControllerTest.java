@@ -330,7 +330,9 @@ public class CalculatedFieldControllerTest extends AbstractControllerTest {
         config.setWatermark(new Watermark(TimeUnit.DAYS.toSeconds(1)));
         config.setInterval(new HourInterval("Europe/Kiev", TimeUnit.MINUTES.toSeconds(15)));
 
-        config.setOutput(new TimeSeriesOutput());
+        Output output = new Output();
+        output.setType(OutputType.TIME_SERIES);
+        config.setOutput(output);
 
         return config;
     }
