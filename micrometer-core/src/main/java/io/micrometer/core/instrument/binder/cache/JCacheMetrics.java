@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 package io.micrometer.core.instrument.binder.cache;
-
 import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.config.InvalidConfigurationException;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Tags;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
