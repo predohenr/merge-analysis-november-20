@@ -384,24 +384,24 @@ public class RedisDockerTest {
         Config config = new Config();
         config.useClusterServers()
                 .setNatMapper(uri -> {
-                    for (ContainerState state : nodes) {
-                        if (state.getContainerInfo() == null) {
-                            continue;
+                        for (ContainerState state : nodes) {
+                            if (state.getContainerInfo() == null) {
+                                continue;
+                            }
+
+                            InspectContainerResponse node = state.getContainerInfo();
+                            Ports.Binding[] mappedPort = node.getNetworkSettings()
+                                    .getPorts().getBindings().get(new ExposedPort(uri.getPort()));
+
+                            Map<String, ContainerNetwork> ss = node.getNetworkSettings().getNetworks();
+                            ContainerNetwork s = ss.values().iterator().next();
+
+                            if (mappedPort != null
+                                    && s.getIpAddress().equals(uri.getHost())) {
+                                return new RedisURI(uri.getScheme(), "127.0.0.1", Integer.valueOf(mappedPort[0].getHostPortSpec()));
+                            }
                         }
-
-                        InspectContainerResponse node = state.getContainerInfo();
-                        Ports.Binding[] mappedPort = node.getNetworkSettings()
-                                .getPorts().getBindings().get(new ExposedPort(uri.getPort()));
-
-                        Map<String, ContainerNetwork> ss = node.getNetworkSettings().getNetworks();
-                        ContainerNetwork s = ss.values().iterator().next();
-
-                        if (mappedPort != null
-                                && s.getIpAddress().equals(uri.getHost())) {
-                            return new RedisURI(uri.getScheme(), "127.0.0.1", Integer.valueOf(mappedPort[0].getHostPortSpec()));
-                        }
-                    }
-                    return uri;
+                        return uri;
                 })
                 .addNodeAddress("redis://127.0.0.1:" + mp[0].getHostPortSpec());
 

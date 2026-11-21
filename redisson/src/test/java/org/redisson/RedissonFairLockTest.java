@@ -72,18 +72,18 @@ public class RedissonFairLockTest extends BaseConcurrentTest {
         AtomicInteger acquiredLocks = new AtomicInteger();
         for (int i = 0; i < 500; i++) {
             executorService.submit(() -> {
-                RLock test = redisson.getFairLock("lock");
-                try {
-                    test.lock(5, TimeUnit.SECONDS);
+                    RLock test = redisson.getFairLock("lock");
                     try {
-                        Thread.sleep(200); // 200ms
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
+                        test.lock(5, TimeUnit.SECONDS);
+                        try {
+                            Thread.sleep(200); // 200ms
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        acquiredLocks.incrementAndGet();
+                    } finally {
+                        test.unlock();
                     }
-                    acquiredLocks.incrementAndGet();
-                } finally {
-                    test.unlock();
-                }
             });
         }
         executorService.shutdown();

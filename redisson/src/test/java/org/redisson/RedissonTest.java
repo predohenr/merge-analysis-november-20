@@ -481,21 +481,21 @@ public class RedissonTest extends RedisDockerTest {
     public static class SlowCodec extends BaseCodec {
 
         private final Encoder encoder = in -> {
-            ByteBuf out = ByteBufAllocator.DEFAULT.buffer();
-            out.writeCharSequence(in.toString(), CharsetUtil.UTF_8);
-            return out;
+                ByteBuf out = ByteBufAllocator.DEFAULT.buffer();
+                out.writeCharSequence(in.toString(), CharsetUtil.UTF_8);
+                return out;
         };
 
         public final Decoder<Object> decoder = (buf, state) -> {
-            String str = buf.toString(CharsetUtil.UTF_8);
-            buf.readerIndex(buf.readableBytes());
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return str;
+                String str = buf.toString(CharsetUtil.UTF_8);
+                buf.readerIndex(buf.readableBytes());
+                try {
+                    Thread.sleep(2500);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return str;
         };
 
         public SlowCodec() {
@@ -1192,24 +1192,24 @@ public class RedissonTest extends RedisDockerTest {
             Config config = new Config();
             config.useClusterServers()
                     .setNatMapper(uri -> {
-                        for (ContainerState state : nodes) {
-                            if (state.getContainerInfo() == null) {
-                                continue;
+                            for (ContainerState state : nodes) {
+                                if (state.getContainerInfo() == null) {
+                                    continue;
+                                }
+
+                                InspectContainerResponse node = state.getContainerInfo();
+                                Ports.Binding[] mappedPort = node.getNetworkSettings()
+                                        .getPorts().getBindings().get(new ExposedPort(uri.getPort()));
+
+                                Map<String, ContainerNetwork> ss = node.getNetworkSettings().getNetworks();
+                                ContainerNetwork s = ss.values().iterator().next();
+
+                                if (mappedPort != null
+                                        && s.getIpAddress().equals(uri.getHost())) {
+                                    return new RedisURI("redis://127.0.0.1:" + mappedPort[0].getHostPortSpec());
+                                }
                             }
-
-                            InspectContainerResponse node = state.getContainerInfo();
-                            Ports.Binding[] mappedPort = node.getNetworkSettings()
-                                    .getPorts().getBindings().get(new ExposedPort(uri.getPort()));
-
-                            Map<String, ContainerNetwork> ss = node.getNetworkSettings().getNetworks();
-                            ContainerNetwork s = ss.values().iterator().next();
-
-                            if (mappedPort != null
-                                    && s.getIpAddress().equals(uri.getHost())) {
-                                return new RedisURI("redis://127.0.0.1:" + mappedPort[0].getHostPortSpec());
-                            }
-                        }
-                        return uri;
+                            return uri;
                     })
                     .addNodeAddress("redis://yes@localhost:" + mp[0].getHostPortSpec());
 
