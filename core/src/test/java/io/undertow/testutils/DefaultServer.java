@@ -153,11 +153,11 @@ public class DefaultServer extends BlockJUnit4ClassRunner {
     public @interface BeforeServerStarts {}
 
     /**
-     * Static methods marked with this annotation will be invoked after the server is stopped.
+     * Static methods marked with this annotation will be invoked before the server is started.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    public @interface AfterServerStops {}
+    public @interface BeforeServerStarts {}
 
     private static final Throwable OPENSSL_FAILURE;
 
