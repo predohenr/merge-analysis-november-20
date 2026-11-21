@@ -47,7 +47,6 @@ import org.axonframework.queryhandling.annotations.QueryHandler;
 import org.axonframework.serialization.json.JacksonConverter;
 import org.axonframework.queryhandling.gateway.DefaultQueryGateway;
 import org.axonframework.queryhandling.gateway.QueryGateway;
-import org.axonframework.serialization.PassThroughConverter;
 import org.junit.jupiter.api.*;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
