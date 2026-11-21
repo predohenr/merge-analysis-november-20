@@ -106,10 +106,6 @@ import jdk.internal.misc.Unsafe;
  * @see JavaThreads
  */
 public abstract class PlatformThreads {
-    @Fold
-    public static PlatformThreads singleton() {
-        return ImageSingletons.lookup(PlatformThreads.class);
-    }
 
     protected static final CEntryPointLiteral<CFunctionPointer> threadStartRoutine = CEntryPointLiteral.create(PlatformThreads.class, "threadStartRoutine", IsolateThread.class);
 
@@ -470,17 +466,6 @@ public abstract class PlatformThreads {
         }
     }
 
-    @Uninterruptible(reason = "Called during isolate creation.")
-    public void assignMainThreadObject() {
-        /* The thread that creates the isolate is considered the "main" thread. */
-        assignThreadObject0(CurrentIsolate.getCurrentThread(), mainThread, true);
-
-        /*
-         * Note that we can't call ThreadListenerSupport.beforeThreadRun() because the isolate is
-         * not fully initialized yet. This is done later on, during isolate initialization.
-         */
-    }
-
     /**
      * Releases the preallocated main {@link Thread} from the launcher thread without detaching the
      * launcher thread from the isolate.
@@ -523,6 +508,17 @@ public abstract class PlatformThreads {
         assert thread == currentThread.get() || VMOperation.isInProgressAtSafepoint();
         assert !isVirtual(thread);
         return toTarget(thread).vthread;
+    }
+
+    @Uninterruptible(reason = "Called during isolate creation.")
+    public void assignMainThreadObject() {
+        /* The thread that creates the isolate is considered the "main" thread. */
+        assignThreadObject0(CurrentIsolate.getCurrentThread(), mainThread, true);
+
+        /*
+         * Note that we can't call ThreadListenerSupport.beforeThreadRun() because the isolate is
+         * not fully initialized yet. This is done later on, during isolate initialization.
+         */
     }
 
     /**
@@ -769,6 +765,17 @@ public abstract class PlatformThreads {
         }
     }
 
+    protected void undoPrepareStartOnError(Thread thread, IsolateThread isolateThread) {
+        if (!thread.isDaemon()) {
+            decrementNonDaemonThreads();
+        }
+
+        int numThreads = unattachedStartedThreads.decrementAndGet();
+        assert numThreads >= 0;
+
+        VMThreads.singleton().freeIsolateThread(isolateThread);
+    }
+
     /** This method must not throw any exceptions. */
     protected IsolateThread prepareThreadStart(Thread thread) {
         IsolateThread isolateThread = VMThreads.singleton().allocateIsolateThread();
@@ -786,17 +793,6 @@ public abstract class PlatformThreads {
             incrementNonDaemonThreads();
         }
         return isolateThread;
-    }
-
-    protected void undoPrepareStartOnError(Thread thread, IsolateThread isolateThread) {
-        if (!thread.isDaemon()) {
-            decrementNonDaemonThreads();
-        }
-
-        int numThreads = unattachedStartedThreads.decrementAndGet();
-        assert numThreads >= 0;
-
-        VMThreads.singleton().freeIsolateThread(isolateThread);
     }
 
     @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
@@ -881,6 +877,11 @@ public abstract class PlatformThreads {
     @RestrictHeapAccess(reason = "Simplifies error handling.", access = NO_ALLOCATION)
     protected abstract IsolateThread doStartThread(Thread thread, long stackSize);
 
+    /** Hook for subclasses. Only executed for threads that are started by an isolate. */
+    @Uninterruptible(reason = "Prevent stack overflow checks and recurring callbacks until the thread is fully set up.")
+    protected void afterThreadStart(@SuppressWarnings("unused") Thread thread) {
+    }
+
     @CEntryPoint(include = CEntryPoint.NotIncludedAutomatically.class, publishAs = CEntryPoint.Publish.NotPublished)
     @CEntryPointOptions(prologue = ThreadStartRoutinePrologue.class, epilogue = CEntryPointSetup.LeaveDetachThreadEpilogue.class)
     @Uninterruptible(reason = "Prevent stack overflow checks and recurring callbacks until the thread is fully set up.", calleeMustBe = false)
@@ -916,11 +917,6 @@ public abstract class PlatformThreads {
         } catch (Throwable ex) {
             JavaThreads.dispatchUncaughtException(thread, ex);
         }
-    }
-
-    /** Hook for subclasses. Only executed for threads that are started by an isolate. */
-    @Uninterruptible(reason = "Prevent stack overflow checks and recurring callbacks until the thread is fully set up.")
-    protected void afterThreadStart(@SuppressWarnings("unused") Thread thread) {
     }
 
     /**

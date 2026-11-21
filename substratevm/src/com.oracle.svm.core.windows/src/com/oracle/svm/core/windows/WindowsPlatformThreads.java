@@ -75,7 +75,7 @@ public final class WindowsPlatformThreads extends PlatformThreads {
         if (threadStackSize != 0) {
             initFlag |= Process.STACK_SIZE_PARAM_IS_A_RESERVATION();
         }
-        return doStartThread0(thread, threadStackSize, initFlag);
+            return doStartThread0(thread, threadStackSize, initFlag);
     }
 
     /**
@@ -90,11 +90,11 @@ public final class WindowsPlatformThreads extends PlatformThreads {
             return Word.nullPointer();
         }
         WinBase.HANDLE osThreadHandle = Process._beginthreadex(Word.nullPointer(), threadStackSize, threadStartRoutine.getFunctionPointer(), isolateThread, initFlag, Word.nullPointer());
-        if (osThreadHandle.isNull()) {
+            if (osThreadHandle.isNull()) {
             undoPrepareStartOnError(thread, isolateThread);
             return Word.nullPointer();
-        }
-        WinBase.CloseHandle(osThreadHandle);
+            }
+            WinBase.CloseHandle(osThreadHandle);
         return isolateThread;
     }
 

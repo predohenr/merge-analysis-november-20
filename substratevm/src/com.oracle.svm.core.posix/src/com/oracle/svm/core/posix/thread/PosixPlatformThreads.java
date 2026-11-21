@@ -89,7 +89,7 @@ import jdk.internal.misc.Unsafe;
 public final class PosixPlatformThreads extends PlatformThreads {
 
     @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
-    @SuppressFBWarnings(value = "BC", justification = "Cast for @TargetClass")
+@SuppressFBWarnings(value = "BC", justification = "Cast for @TargetClass")
     private static Target_java_lang_Thread toTarget(Thread thread) {
         return Target_java_lang_Thread.class.cast(thread);
     }
@@ -125,8 +125,8 @@ public final class PosixPlatformThreads extends PlatformThreads {
                 }
             }
 
-            return doStartThread0(thread, attributes);
-        } finally {
+                return doStartThread0(thread, attributes);
+            } finally {
             Pthread.pthread_attr_destroy(attributes);
         }
     }
@@ -140,16 +140,16 @@ public final class PosixPlatformThreads extends PlatformThreads {
         if (isolateThread.isNull()) {
             return Word.nullPointer();
         }
-        Pthread.pthread_tPointer newThread = UnsafeStackValue.get(Pthread.pthread_tPointer.class);
+            Pthread.pthread_tPointer newThread = UnsafeStackValue.get(Pthread.pthread_tPointer.class);
         if (Pthread.pthread_create(newThread, attributes, threadStartRoutine.getFunctionPointer(), isolateThread) != 0) {
             undoPrepareStartOnError(thread, isolateThread);
             return Word.nullPointer();
-        }
+            }
         return isolateThread;
     }
 
     @Uninterruptible(reason = "Thread is not fully set up yet.")
-    private static void setPthreadIdentifier(Thread thread, Pthread.pthread_t pthread) {
+private static void setPthreadIdentifier(Thread thread, Pthread.pthread_t pthread) {
         toTarget(thread).hasPthreadIdentifier = true;
         toTarget(thread).pthreadIdentifier = pthread;
     }
