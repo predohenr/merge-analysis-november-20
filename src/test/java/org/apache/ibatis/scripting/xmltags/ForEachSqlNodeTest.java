@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +26,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -38,6 +39,23 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
+ */
+
+/**
+ * <pre>{@code
+ * 	SELECT *
+ * 	FROM POST
+ * 	<where>
+ * 	    <foreach item="item" index="index" collection="list" open="ID in (" separator="," close=")" nullable="true">
+ * 	        #{item}
+ * 	    </foreach>
+ * 	</where>
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#foreach">foreach</a>
  */
 class ForEachSqlNodeTest extends SqlNodeBase {
@@ -59,7 +77,7 @@ class ForEachSqlNodeTest extends SqlNodeBase {
 
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("list", Arrays.asList("a", "b", "c"));
+      put("list", Arrays.asList("a", "b", "c"));
       }
     });
 

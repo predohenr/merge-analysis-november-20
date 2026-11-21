@@ -27,6 +27,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
+
+/**
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ */
 class TextSqlNodeTest extends SqlNodeBase {
 
   private static final String TEXT = "select 1 from dual";
@@ -53,7 +57,7 @@ class TextSqlNodeTest extends SqlNodeBase {
     TextSqlNode sqlNode = new TextSqlNode(DYNAMIC_TEXT);
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("id", 1);
+      put("id", 1);
       }
     });
 

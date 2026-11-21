@@ -41,6 +41,12 @@ import org.mockito.Mock;
  *
  * @see MapWrapper
  */
+
+/**
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see MapWrapper
+ */
 class MapWrapperUnitTest extends ObjectWrapperBase {
 
   @Mock
@@ -104,7 +110,7 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
 
     verify(map).put("author", new HashMap<>() {
       {
-        put("id", 1);
+      put("id", 1);
       }
     });
   }
@@ -130,8 +136,8 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
   void shouldGetGetterNames() {
     Set<String> sets = new HashSet<>() {
       {
-        add("key1");
-        add("key2");
+      add("key1");
+      add("key2");
       }
     };
     when(map.keySet()).thenReturn(sets);
@@ -147,8 +153,8 @@ class MapWrapperUnitTest extends ObjectWrapperBase {
   void shouldGetSetterNames() {
     Set<String> sets = new HashSet<>() {
       {
-        add("key1");
-        add("key2");
+      add("key1");
+      add("key2");
       }
     };
     when(map.keySet()).thenReturn(sets);

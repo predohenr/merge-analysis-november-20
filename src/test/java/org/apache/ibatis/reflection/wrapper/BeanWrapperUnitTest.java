@@ -36,6 +36,12 @@ import org.junit.jupiter.api.Test;
  *
  * @see BeanWrapper
  */
+
+/**
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see BeanWrapper
+ */
 class BeanWrapperUnitTest extends ObjectWrapperBase {
 
   private RichType richType;
@@ -74,8 +80,8 @@ class BeanWrapperUnitTest extends ObjectWrapperBase {
     richType.setRichList(Arrays.asList(1L, "abc"));
     richType.setRichMap(new HashMap<String, Object>() {
       {
-        put("key1", "value1");
-        put("key2", "value2");
+      put("key1", "value1");
+      put("key2", "value2");
       }
     });
 

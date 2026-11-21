@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +26,6 @@ import java.util.List;
 import org.apache.ibatis.domain.blog.Author;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * <pre>{@code
@@ -45,6 +46,30 @@ import static org.mockito.Mockito.*;
  * }</pre>
  *
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#choose-when-otherwise">choose</a>
+ */
+
+/**
+ * <pre>{@code
+ *  SELECT *
+ *  FROM BLOG
+ *  WHERE state = 'active'
+ *  <choose>
+ * 		<when test="title != null">
+ * 		 	AND title like #{title}
+ * 		</when>
+ * 		<when test="author != null && author.username != null">
+ * 		 	AND author_name like #{author.username}
+ * 		</when>
+ * 		<otherwise>
+ * 		 	AND featured = 1
+ * 		</otherwise>
+ *  </choose>
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#choose-when-otherwise">choose</a>
  */
 class ChooseSqlNodeTest extends SqlNodeBase {
@@ -71,8 +96,8 @@ class ChooseSqlNodeTest extends SqlNodeBase {
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("title", "abc");
-        put("author", new Author(1, "mybatis", "***", null, null, null));
+      put("title", "abc");
+      put("author", new Author(1, "mybatis", "***", null, null, null));
       }
     });
 
@@ -86,7 +111,7 @@ class ChooseSqlNodeTest extends SqlNodeBase {
   public void shouldAppendSecond() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("author", new Author(1, "mybatis", "***", null, null, null));
+      put("author", new Author(1, "mybatis", "***", null, null, null));
       }
     });
 

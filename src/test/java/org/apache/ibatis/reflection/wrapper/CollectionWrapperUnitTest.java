@@ -118,7 +118,7 @@ class CollectionWrapperUnitTest extends ObjectWrapperBase {
   @Override
   void shouldInstantiatePropertyValue() {
     assertThatExceptionOfType(UnsupportedOperationException.class)
-        .isThrownBy(() -> wrapper.instantiatePropertyValue("abc", tokenizer, null));
+      .isThrownBy(() -> wrapper.instantiatePropertyValue("abc", tokenizer, null));
   }
 
   @Test
@@ -134,9 +134,9 @@ class CollectionWrapperUnitTest extends ObjectWrapperBase {
   void shouldAddAll() {
     List<Object> list = new ArrayList<>() {
       {
-        add("1");
-        add("2");
-        add("3");
+      add("1");
+      add("2");
+      add("3");
       }
     };
     wrapper.addAll(list);

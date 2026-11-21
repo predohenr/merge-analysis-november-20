@@ -23,6 +23,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author <a href="1181963012mw@gmail.com">mawen12</a>
  */
+
+/**
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ */
 class StaticTextSqlNodeTest extends SqlNodeBase {
 
   private static final String TEXT = "select 1 from dual";
@@ -33,7 +37,7 @@ class StaticTextSqlNodeTest extends SqlNodeBase {
     // given
     SqlNode sqlNode = new StaticTextSqlNode(TEXT);
 
-    // when
+    //when
     boolean result = sqlNode.apply(context);
 
     // then

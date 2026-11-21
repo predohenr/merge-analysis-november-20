@@ -43,6 +43,25 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
+
+/**
+ * <pre>{@code
+ * 	UPDATE author
+ * 	<set>
+ * 		<if test="username != null>
+ * 			username = #{username},
+ * 		</if>
+ * 		<if test="password != null">
+ * 		 	password = #{password}
+ * 		</if>
+ * 	</set>
+ * 	WHERE id = #{id}
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
+ */
 class SetSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " username = #{username},";
@@ -64,8 +83,8 @@ class SetSqlNodeTest extends SqlNodeBase {
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("username", "Jack");
-        put("password", "***");
+      put("username", "Jack");
+      put("password", "***");
       }
     });
 
@@ -79,7 +98,7 @@ class SetSqlNodeTest extends SqlNodeBase {
   public void shouldAppendOnlyUsername() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("username", "Jack");
+      put("username", "Jack");
       }
     });
 
@@ -93,7 +112,7 @@ class SetSqlNodeTest extends SqlNodeBase {
   public void shouldAppendOnlyPassword() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("password", "***");
+      put("password", "***");
       }
     });
 

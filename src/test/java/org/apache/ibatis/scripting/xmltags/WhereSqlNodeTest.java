@@ -43,6 +43,25 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
  */
+
+/**
+ * <pre>{@code
+ * 	SELECT *
+ * 	FROM users
+ * 	<where>
+ * 	    <if test="id != null">
+ * 			AND id = #{id}
+ * 	    </if>
+ * 	    <if test="name != null">
+ * 			AND name = #{name}
+ * 	    </if>
+ * 	</where>
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#trim-where-set">trim-where-set</a>
+ */
 class WhereSqlNodeTest extends SqlNodeBase {
 
   private static final String FIRST_TEXT = " AND id = #{id}";
@@ -64,8 +83,8 @@ class WhereSqlNodeTest extends SqlNodeBase {
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("id", 1);
-        put("name", "mybatis");
+      put("id", 1);
+      put("name", "mybatis");
       }
     });
 
@@ -79,7 +98,7 @@ class WhereSqlNodeTest extends SqlNodeBase {
   public void shouldAppendOnlyId() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("id", 1);
+      put("id", 1);
       }
     });
 
@@ -93,7 +112,7 @@ class WhereSqlNodeTest extends SqlNodeBase {
   public void shouldAppendOnlyName() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("name", "mybatis");
+      put("name", "mybatis");
       }
     });
 

@@ -35,6 +35,18 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
  */
+
+/**
+ * <pre>{@code
+ * 	<bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+ * 	SELECT * FROM BLOG
+ * 	WHERE title like #{pattern}
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#bind">bind</a>
+ */
 class VarDeclSqlNodeTest extends SqlNodeBase {
 
   private SqlNode sqlNode;
@@ -49,7 +61,7 @@ class VarDeclSqlNodeTest extends SqlNodeBase {
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("_parameter", new Bean("abc"));
+      put("_parameter", new Bean("abc"));
       }
     });
 

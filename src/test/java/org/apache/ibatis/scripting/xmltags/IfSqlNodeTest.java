@@ -35,6 +35,18 @@ import org.junit.jupiter.api.Test;
  *
  * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#if">if</a>
  */
+
+/**
+ * <pre>{@code
+ * 	<if test="title != null>
+ * 		AND title like #{title}
+ * 	</if>
+ * }</pre>
+ *
+ * @author <a href="1181963012mw@gmail.com">mawen12</a>
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/dynamic-sql.html#if">if</a>
+ */
 class IfSqlNodeTest extends SqlNodeBase {
 
   private static final String CONDITION = "title != null";
@@ -53,7 +65,7 @@ class IfSqlNodeTest extends SqlNodeBase {
   public void shouldApply() throws Exception {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("title", "ENGLISH");
+      put("title", "ENGLISH");
       }
     });
 
@@ -67,7 +79,7 @@ class IfSqlNodeTest extends SqlNodeBase {
   public void shouldAppendNone() {
     when(context.getBindings()).thenReturn(new HashMap<>() {
       {
-        put("title", null);
+      put("title", null);
       }
     });
 
