@@ -75,6 +75,13 @@ public class ObjectMapperAutoConfiguration {
         modules.orderedStream().forEach(builder::addModule);
         return builder.build();
     }
+    @Bean
+    @ConditionalOnClass(Page.class)
+    @Conditional(JacksonConfiguredCondition.class)
+    public JacksonModule springDataPageJacksonModule() {
+        return new SimpleModule()
+                .addDeserializer(Page.class, new JacksonPageDeserializer());
+    }
 
     /**
      * Returns a Jackson {@link Module} that provides a custom deserializer for the Spring Data {@link Page} interface.
@@ -89,13 +96,6 @@ public class ObjectMapperAutoConfiguration {
      * @see JacksonPageDeserializer
      * @since 5.1.0
      */
-    @Bean
-    @ConditionalOnClass(Page.class)
-    @Conditional(JacksonConfiguredCondition.class)
-    public JacksonModule springDataPageJacksonModule() {
-        return new SimpleModule()
-                .addDeserializer(Page.class, new JacksonPageDeserializer());
-    }
 
     /**
      * An {@link AnyNestedCondition} implementation, to support the following use cases:
