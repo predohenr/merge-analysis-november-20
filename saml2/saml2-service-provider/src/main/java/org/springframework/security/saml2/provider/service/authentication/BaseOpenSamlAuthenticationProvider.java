@@ -335,7 +335,7 @@ class BaseOpenSamlAuthenticationProvider implements AuthenticationProvider {
 					"Did not decrypt response [" + response.getID() + "] since it is not signed"));
 		}
 		if (!this.validateResponseAfterAssertions) {
-			result = result.concat(this.responseValidator.convert(responseToken));
+		result = result.concat(this.responseValidator.convert(responseToken));
 		}
 		boolean allAssertionsSigned = true;
 		for (Assertion assertion : response.getAssertions()) {
@@ -356,12 +356,12 @@ class BaseOpenSamlAuthenticationProvider implements AuthenticationProvider {
 			result = result.concat(this.responseValidator.convert(responseToken));
 		}
 		else {
-			Assertion firstAssertion = CollectionUtils.firstElement(response.getAssertions());
-			if (firstAssertion != null && !hasName(firstAssertion)) {
-				Saml2Error error = new Saml2Error(Saml2ErrorCodes.SUBJECT_NOT_FOUND,
-						"Assertion [" + firstAssertion.getID() + "] is missing a subject");
-				result = result.concat(error);
-			}
+		Assertion firstAssertion = CollectionUtils.firstElement(response.getAssertions());
+		if (firstAssertion != null && !hasName(firstAssertion)) {
+			Saml2Error error = new Saml2Error(Saml2ErrorCodes.SUBJECT_NOT_FOUND,
+					"Assertion [" + firstAssertion.getID() + "] is missing a subject");
+			result = result.concat(error);
+		}
 		}
 
 		if (result.hasErrors()) {
