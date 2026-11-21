@@ -219,7 +219,7 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
                : blockingExecutor.submit(reloadTask);
     }
 
-    private synchronized Future<Void> createIndex(IndexMetadata indexDef, boolean isNewCF)
+        private synchronized Future<Void> createIndex(IndexMetadata indexDef, boolean isNewCF)
     {
         final Index index = createInstance(indexDef);
         index.register(this);
@@ -681,8 +681,8 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
                 flushIndexesBlocking(builtIndexes, new FutureCallback<>()
                 {
                     final String indexNames = StringUtils.join(builtIndexes.stream()
-                                                                           .map(i -> i.getIndexMetadata().name)
-                                                                           .collect(Collectors.toList()), ',');
+                                                                     .map(i -> i.getIndexMetadata().name)
+                                                                     .collect(Collectors.toList()), ',');
 
                     @Override
                     public void onFailure(Throwable ignored)
@@ -792,7 +792,7 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
         String indexName = index.getIndexMetadata().name;
         if (isFullRebuild)
             makeIndexQueryable(index, Index.Status.BUILD_SUCCEEDED);
-        
+
         AtomicInteger counter = inProgressBuilds.get(indexName);
         if (counter != null)
         {
@@ -1028,7 +1028,8 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
      * @param pageSize the number of {@link Unfiltered} objects to process in a single page
      * @param columns the columns indexed by at least one of the supplied indexes
      */
-    public void indexPartition(DecoratedKey key, Set<Index> indexes, int pageSize, RegularAndStaticColumns columns)
+    @SuppressWarnings("resource") // for `UnfilteredRowIterator partition` as it is closed later in finally block
+public void indexPartition(DecoratedKey key, Set<Index> indexes, int pageSize, RegularAndStaticColumns columns)
     {
         if (logger.isTraceEnabled())
             logger.trace("Indexing partition {}", baseCfs.metadata().partitionKeyType.getString(key.getKey()));
@@ -1071,9 +1072,9 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
                         {
                             Index.Indexer indexerFor = g.indexerFor(indexes::contains,
                                                                     key,
-                                                                    partition.columns(),
-                                                                    nowInSec,
-                                                                    ctx,
+                                                                                            partition.columns(),
+                                                                                            nowInSec,
+                                                                                            ctx,
                                                                     IndexTransaction.Type.UPDATE,
                                                                     null);
                             if (indexerFor != null)
@@ -1521,10 +1522,8 @@ public class SecondaryIndexManager implements IndexRegistry, INotificationConsum
         }
 
         public void start()
-        {
-            for (Index.Indexer indexer : indexers)
-                indexer.begin();
-        }
+    {
+    }
 
         public void onPartitionDeletion(DeletionTime deletionTime)
         {
