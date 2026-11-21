@@ -34,6 +34,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Stephane Nicoll
  * @author Réda Housni Alaoui
  */
+
+/**
+ * Tests for {@link AbstractMockHttpServletRequestBuilder}
+ *
+ * @author Stephane Nicoll
+ * @author Réda Housni Alaoui
+ */
 class AbstractMockHttpServletRequestBuilderTests {
 
 	private final ServletContext servletContext = new MockServletContext();
@@ -128,6 +135,7 @@ class AbstractMockHttpServletRequestBuilderTests {
 
 		assertThat(buildRequest(builder).getHeader("API-Version")).isEqualTo("1.1");
 	}
+
 
 	@Test // gh-35493
 	void pathInfoIsNotMutatedByBuildMethod() {
