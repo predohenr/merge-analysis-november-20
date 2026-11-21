@@ -167,6 +167,8 @@ public interface ExprMirror {
     }
 
     /** A general category of types. */
+
+    /** A general category of types. */
     enum TypeSpecies {
         PRIMITIVE,
         REFERENCE,
@@ -217,6 +219,9 @@ public interface ExprMirror {
 
 
     /** Mirrors a conditional or switch expression. */
+
+
+    /** Mirrors a conditional or switch expression. */
     interface BranchingMirror extends PolyExprMirror {
 
         /**
@@ -244,6 +249,11 @@ public interface ExprMirror {
             return branchesMatch(ExprMirror::isEquivalentToUnderlyingAst);
         }
     }
+
+    /**
+     * Mirror of some expression that targets a functional interface type:
+     * lambda or method reference.
+     */
 
     /**
      * Mirror of some expression that targets a functional interface type:
@@ -286,6 +296,11 @@ public interface ExprMirror {
      * Common interface for {@link InvocationMirror} and {@link MethodRefMirror},
      * both of which wrap nods that implement {@link MethodUsage}.
      */
+
+    /**
+     * Common interface for {@link InvocationMirror} and {@link MethodRefMirror},
+     * both of which wrap nods that implement {@link MethodUsage}.
+     */
     interface MethodUsageMirror extends PolyExprMirror {
 
         /**
@@ -302,6 +317,10 @@ public interface ExprMirror {
          */
         @Nullable JTypeMirror getTypeToSearch();
     }
+
+    /**
+     * Mirror of a method reference expression.
+     */
 
     /**
      * Mirror of a method reference expression.
@@ -370,6 +389,8 @@ public interface ExprMirror {
     }
 
     /** Mirrors a lambda expression. */
+
+    /** Mirrors a lambda expression. */
     interface LambdaExprMirror extends FunctionalExprMirror {
 
         /**
@@ -433,6 +454,10 @@ public interface ExprMirror {
          */
         void updateTypingContext(List<? extends JTypeMirror> formalParameters);
     }
+
+    /**
+     * Adapter over a method or constructor invocation expression.
+     */
 
     /**
      * Adapter over a method or constructor invocation expression.
@@ -523,6 +548,11 @@ public interface ExprMirror {
         /**
          * Information about the overload-resolution for a specific method.
          */
+
+
+        /**
+         * Information about the overload-resolution for a specific method.
+         */
         class MethodCtDecl implements OverloadSelectionResult {
             // note this data is gathered by the MethodCallSite during
             // applicability inference, stashed in this object, and
@@ -534,7 +564,6 @@ public interface ExprMirror {
             private final OptionalBool needsUncheckedConversion;
             private final boolean failed;
             private final @Nullable MethodUsageMirror expr;
-            private final boolean neededSpecificityCheck;
 
             MethodCtDecl(JMethodSig methodType,
                          MethodResolutionPhase resolvePhase,
@@ -551,6 +580,7 @@ public interface ExprMirror {
                 this.expr = expr;
                 this.neededSpecificityCheck = neededSpecificityCheck;
             }
+            private final boolean neededSpecificityCheck;
 
             // package-private:
 
@@ -625,6 +655,10 @@ public interface ExprMirror {
             }
         }
     }
+
+    /**
+     * An invocation mirror reflecting a constructor invocation expression.
+     */
 
     /**
      * An invocation mirror reflecting a constructor invocation expression.

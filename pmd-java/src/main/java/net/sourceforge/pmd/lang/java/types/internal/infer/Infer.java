@@ -382,10 +382,10 @@ public final class Infer {
         } else {
             return new MethodCtDecl(
                 candidate,
-                phase,
-                site.canSkipInvocation(),
-                OptionalBool.definitely(site.needsUncheckedConversion()),
-                false,
+                                    phase,
+                                    site.canSkipInvocation(),
+                    OptionalBool.definitely(site.needsUncheckedConversion()),
+                                    false,
                 site.getExpr(),
                 false
             );
