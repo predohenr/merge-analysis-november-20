@@ -149,7 +149,7 @@ public class ShutdownMonitorTest
      * the IDE, or via the surefire plugin in the pom.
      * This test expects STOP.EXIT to be FALSE.
      */
-    @Test
+        @Test
     @EnabledIfSystemProperty(named = "STOP.EXIT", matches = "[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]")
     public void testNoExitSystemProperty() throws Exception
     {
@@ -181,7 +181,7 @@ public class ShutdownMonitorTest
         }
     }
 
-    @Test
+        @Test
     @DisabledIfSystemProperty(named = "STOP.EXIT", matches = "[Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee]")
     public void testExitVmDefault() throws Exception
     {
@@ -192,7 +192,7 @@ public class ShutdownMonitorTest
         assertTrue(monitor.isExitVm());
     }
 
-    @Test
+        @Test
     public void testExitVmTrue() throws Exception
     {
         //Note that this cannot be tested via the System property STOP.EXIT=true
@@ -203,7 +203,7 @@ public class ShutdownMonitorTest
         assertTrue(monitor.isExitVm());
     }
 
-    @Test
+        @Test
     public void testForceStopCommand() throws Exception
     {
         ShutdownMonitor monitor = ShutdownMonitor.getInstance();
