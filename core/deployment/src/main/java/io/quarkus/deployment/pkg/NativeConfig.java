@@ -414,7 +414,7 @@ public interface NativeConfig {
          *             for JDK 21 as well (see https://github.com/quarkusio/quarkus/issues/41016)
          */
         @Deprecated(since = "3.29", forRemoval = true)
-        Optional<List<String>> excludes();
+Optional<List<String>> excludes();
     }
 
     /**
@@ -500,6 +500,10 @@ public interface NativeConfig {
          */
         Optional<List<String>> additionalArgs();
     }
+
+    /**
+     * Supported Builder Image providers/distributions
+     */
 
     /**
      * Supported Builder Image providers/distributions
