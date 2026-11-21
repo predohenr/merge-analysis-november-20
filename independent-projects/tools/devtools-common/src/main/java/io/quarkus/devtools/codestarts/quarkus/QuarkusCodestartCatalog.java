@@ -51,7 +51,7 @@ public final class QuarkusCodestartCatalog extends GenericCodestartCatalog<Quark
     public enum AppContent implements DataKey {
         BUILD_TOOL_WRAPPER,
         DOCKERFILES,
-        CODE,
+        CODE
     }
 
     public enum Tag implements DataKey {
@@ -62,7 +62,7 @@ public final class QuarkusCodestartCatalog extends GenericCodestartCatalog<Quark
 
     public enum Language implements DataKey {
         JAVA,
-        KOTLIN
+        KOTLIN,
     }
 
     public enum Tooling implements DataKey {
