@@ -646,11 +646,11 @@ abstract class OtlpMeterRegistryTest {
             });
         }
         else {
-            assertThat(metrics).hasSize(3);
-            assertThat(metrics).filteredOn(Metric::hasGauge).singleElement().satisfies(metric -> {
-                assertThat(metric.getDescription()).isEqualTo("description");
-                assertThat(metric.getGauge().getDataPointsCount()).isEqualTo(2);
-            });
+        assertThat(metrics).hasSize(3);
+        assertThat(metrics).filteredOn(Metric::hasGauge).singleElement().satisfies(metric -> {
+            assertThat(metric.getDescription()).isEqualTo("description");
+            assertThat(metric.getGauge().getDataPointsCount()).isEqualTo(2);
+        });
         }
 
         assertThat(metrics).filteredOn(Metric::hasSum).singleElement().satisfies(metric -> {
@@ -695,11 +695,11 @@ abstract class OtlpMeterRegistryTest {
                         metric -> assertThat(metric.getDescription()).isEqualTo(description2));
         }
         else {
-            assertThat(metrics).hasSize(6);
-            assertThat(metrics).filteredOn(Metric::hasGauge)
-                .hasSize(2)
-                .satisfiesExactlyInAnyOrder(metric -> assertThat(metric.getDescription()).isEqualTo(description1),
-                        metric -> assertThat(metric.getDescription()).isEqualTo(description2));
+        assertThat(metrics).hasSize(6);
+        assertThat(metrics).filteredOn(Metric::hasGauge)
+            .hasSize(2)
+            .satisfiesExactlyInAnyOrder(metric -> assertThat(metric.getDescription()).isEqualTo(description1),
+                    metric -> assertThat(metric.getDescription()).isEqualTo(description2));
 
         }
 
@@ -971,10 +971,10 @@ abstract class OtlpMeterRegistryTest {
             .singleElement()
             .satisfies(exponentialHistogram -> {
                 ExponentialHistogramDataPoint dataPoint = exponentialHistogram.getExponentialHistogram()
-                    .getDataPoints(0);
-                assertThat(dataPoint.getZeroCount()).isEqualTo(1);
-                assertThat(dataPoint.getCount()).isEqualTo(2);
-                assertThat(dataPoint.getPositive().getBucketCountsCount()).isEqualTo(1);
+            .getDataPoints(0);
+        assertThat(dataPoint.getZeroCount()).isEqualTo(1);
+        assertThat(dataPoint.getCount()).isEqualTo(2);
+        assertThat(dataPoint.getPositive().getBucketCountsCount()).isEqualTo(1);
                 assertThat(exponentialHistogram.getDataCase().getNumber())
                     .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
             });
@@ -984,9 +984,9 @@ abstract class OtlpMeterRegistryTest {
             .satisfies(exponentialHistogram -> {
                 ExponentialHistogramDataPoint dataPoint = exponentialHistogram.getExponentialHistogram()
                     .getDataPoints(0);
-                assertThat(dataPoint.getZeroCount()).isZero();
-                assertThat(dataPoint.getCount()).isEqualTo(2);
-                assertThat(dataPoint.getPositive().getBucketCountsCount()).isGreaterThan(1);
+        assertThat(dataPoint.getZeroCount()).isZero();
+        assertThat(dataPoint.getCount()).isEqualTo(2);
+        assertThat(dataPoint.getPositive().getBucketCountsCount()).isGreaterThan(1);
             });
     }
 
@@ -1075,16 +1075,16 @@ abstract class OtlpMeterRegistryTest {
                 ExponentialHistogramDataPoint dataPoint = exponentialHistogram.getExponentialHistogram()
                     .getDataPoints(0);
 
-                assertThat(dataPoint.getCount()).isEqualTo(3);
-                assertThat(dataPoint.getSum()).isEqualTo(1001.001);
+        assertThat(dataPoint.getCount()).isEqualTo(3);
+        assertThat(dataPoint.getSum()).isEqualTo(1001.001);
 
-                ExponentialHistogramDataPoint.Buckets buckets = dataPoint.getPositive();
-                assertThat(buckets.getOffset()).isEqualTo(-80);
-                assertThat(buckets.getBucketCountsCount()).isEqualTo(160);
-                assertThat(buckets.getBucketCountsList().get(0)).isEqualTo(1);
-                assertThat(buckets.getBucketCountsList().get(79)).isEqualTo(1);
-                assertThat(buckets.getBucketCountsList().get(159)).isEqualTo(1);
-                assertThat(buckets.getBucketCountsList()).filteredOn(v -> v == 0).hasSize(157);
+        ExponentialHistogramDataPoint.Buckets buckets = dataPoint.getPositive();
+        assertThat(buckets.getOffset()).isEqualTo(-80);
+        assertThat(buckets.getBucketCountsCount()).isEqualTo(160);
+        assertThat(buckets.getBucketCountsList().get(0)).isEqualTo(1);
+        assertThat(buckets.getBucketCountsList().get(79)).isEqualTo(1);
+        assertThat(buckets.getBucketCountsList().get(159)).isEqualTo(1);
+        assertThat(buckets.getBucketCountsList()).filteredOn(v -> v == 0).hasSize(157);
             });
     }
 
@@ -1173,7 +1173,7 @@ abstract class OtlpMeterRegistryTest {
             .singleElement()
             .satisfies(exponentialHistogram -> {
                 assertThat(exponentialHistogram.getDataCase().getNumber())
-                    .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
+            .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
             });
 
         meterRegistry.clear();
@@ -1186,7 +1186,7 @@ abstract class OtlpMeterRegistryTest {
             .singleElement()
             .satisfies(exponentialHistogram -> {
                 assertThat(exponentialHistogram.getDataCase().getNumber())
-                    .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
+            .isEqualTo(Metric.DataCase.EXPONENTIAL_HISTOGRAM.getNumber());
             });
     }
 
