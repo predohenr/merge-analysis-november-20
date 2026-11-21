@@ -19,8 +19,8 @@ package org.axonframework.eventsourcing.eventstore.jpa;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.axonframework.common.jdbc.PersistenceExceptionResolver;
-import org.axonframework.messaging.eventhandling.processors.streaming.token.GapAwareTrackingToken;
 import org.axonframework.eventsourcing.eventstore.EventCoordinator;
+import org.axonframework.messaging.eventhandling.processors.streaming.token.GapAwareTrackingToken;
 import org.axonframework.eventsourcing.eventstore.SourcingCondition;
 
 import java.util.List;
@@ -76,10 +76,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
     private static final int DEFAULT_MAX_GAP_OFFSET = 10000;
     private static final long DEFAULT_LOWEST_GLOBAL_SEQUENCE = 1;
     private static final int DEFAULT_GAP_TIMEOUT = 60000;
-
-    /**
-     * A default instance of the {@link AggregateBasedJpaEventStorageEngineConfiguration}.
-     */
     public static final AggregateBasedJpaEventStorageEngineConfiguration DEFAULT =
             new AggregateBasedJpaEventStorageEngineConfiguration(null,
                                                                  DEFAULT_BATCH_PREDICATE,
@@ -89,6 +85,10 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
                                                                  DEFAULT_MAX_GAP_OFFSET,
                                                                  DEFAULT_LOWEST_GLOBAL_SEQUENCE,
                                                                  DEFAULT_GAP_TIMEOUT);
+
+    /**
+     * A default instance of the {@link AggregateBasedJpaEventStorageEngineConfiguration}.
+     */
 
     /**
      * Compact constructor validating that the given {@code key} and {@code value} are not {@code null}.
@@ -128,17 +128,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
                                                                     this.lowestGlobalSequence,
                                                                     this.gapTimeout);
     }
-
-    /**
-     * Defines the predicate used to recognize the terminal batch when
-     * {@link org.axonframework.eventsourcing.eventstore.EventStorageEngine#source(SourcingCondition) sourcing} events.
-     * <p>
-     * Defaults to the first empty batch.
-     *
-     * @param finalBatchPredicate The predicate that indicates whether a given batch is to be considered the final batch
-     *                            of an event stream.
-     * @return A new configuration instance, for fluent interfacing.
-     */
     public AggregateBasedJpaEventStorageEngineConfiguration finalBatchPredicate(
             @Nonnull Predicate<List<? extends AggregateEventEntry>> finalBatchPredicate
     ) {
@@ -151,15 +140,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
                                                                     this.lowestGlobalSequence,
                                                                     this.gapTimeout);
     }
-
-    /**
-     * Defines the {@link EventCoordinator} to use.
-     * <p>
-     * Defaults to {@link EventCoordinator#SIMPLE}.
-     *
-     * @param eventCoordinator The {@link EventCoordinator} to use, cannot be {@code null}.
-     * @return A new configuration instance, for fluent interfacing.
-     */
     public AggregateBasedJpaEventStorageEngineConfiguration eventCoordinator(@Nonnull EventCoordinator eventCoordinator) {
         return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
                                                                     this.finalBatchPredicate,
@@ -170,6 +150,76 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
                                                                     this.lowestGlobalSequence,
                                                                     this.gapTimeout);
     }
+    public AggregateBasedJpaEventStorageEngineConfiguration batchSize(int batchSize) {
+        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
+                                                                    this.finalBatchPredicate,
+                                                                    this.eventCoordinator,
+                                                                    batchSize,
+                                                                    this.gapCleaningThreshold,
+                                                                    this.maxGapOffset,
+                                                                    this.lowestGlobalSequence,
+                                                                    this.gapTimeout);
+    }
+    public AggregateBasedJpaEventStorageEngineConfiguration gapCleaningThreshold(int gapCleaningThreshold) {
+        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
+                                                                    this.finalBatchPredicate,
+                                                                    this.eventCoordinator,
+                                                                    this.batchSize,
+                                                                    gapCleaningThreshold,
+                                                                    this.maxGapOffset,
+                                                                    this.lowestGlobalSequence,
+                                                                    this.gapTimeout);
+    }
+    public AggregateBasedJpaEventStorageEngineConfiguration maxGapOffset(int maxGapOffset) {
+        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
+                                                                    this.finalBatchPredicate,
+                                                                    this.eventCoordinator,
+                                                                    this.batchSize,
+                                                                    this.gapCleaningThreshold,
+                                                                    maxGapOffset,
+                                                                    this.lowestGlobalSequence,
+                                                                    this.gapTimeout);
+    }
+    public AggregateBasedJpaEventStorageEngineConfiguration lowestGlobalSequence(long lowestGlobalSequence) {
+        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
+                                                                    this.finalBatchPredicate,
+                                                                    this.eventCoordinator,
+                                                                    this.batchSize,
+                                                                    this.gapCleaningThreshold,
+                                                                    this.maxGapOffset,
+                                                                    lowestGlobalSequence,
+                                                                    this.gapTimeout);
+    }
+    public AggregateBasedJpaEventStorageEngineConfiguration gapTimeout(int gapTimeout) {
+        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
+                                                                    this.finalBatchPredicate,
+                                                                    this.eventCoordinator,
+                                                                    this.batchSize,
+                                                                    this.gapCleaningThreshold,
+                                                                    this.maxGapOffset,
+                                                                    lowestGlobalSequence,
+                                                                    gapTimeout);
+    }
+
+    /**
+     * Defines the predicate used to recognize the terminal batch when
+     * {@link org.axonframework.eventsourcing.eventstore.EventStorageEngine#source(SourcingCondition) sourcing} events.
+     * <p>
+     * Defaults to the first empty batch.
+     *
+     * @param finalBatchPredicate The predicate that indicates whether a given batch is to be considered the final batch
+     *                            of an event stream.
+     * @return A new configuration instance, for fluent interfacing.
+     */
+
+    /**
+     * Defines the {@link EventCoordinator} to use.
+     * <p>
+     * Defaults to {@link EventCoordinator#SIMPLE}.
+     *
+     * @param eventCoordinator The {@link EventCoordinator} to use, cannot be {@code null}.
+     * @return A new configuration instance, for fluent interfacing.
+     */
 
     /**
      * Sets the {@code batchSize} specifying the number of events that should be read at each database access. When more
@@ -184,16 +234,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
      * @param batchSize An {@code int} specifying the number of events that should be read at each database access.
      * @return A new configuration instance, for fluent interfacing.
      */
-    public AggregateBasedJpaEventStorageEngineConfiguration batchSize(int batchSize) {
-        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
-                                                                    this.finalBatchPredicate,
-                                                                    this.eventCoordinator,
-                                                                    batchSize,
-                                                                    this.gapCleaningThreshold,
-                                                                    this.maxGapOffset,
-                                                                    this.lowestGlobalSequence,
-                                                                    this.gapTimeout);
-    }
 
     /**
      * Sets the threshold of number of gaps in a token before an attempt to clean gaps up is taken.
@@ -204,16 +244,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
      *                             attempt to clean gaps up is taken
      * @return A new configuration instance, for fluent interfacing.
      */
-    public AggregateBasedJpaEventStorageEngineConfiguration gapCleaningThreshold(int gapCleaningThreshold) {
-        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
-                                                                    this.finalBatchPredicate,
-                                                                    this.eventCoordinator,
-                                                                    this.batchSize,
-                                                                    gapCleaningThreshold,
-                                                                    this.maxGapOffset,
-                                                                    this.lowestGlobalSequence,
-                                                                    this.gapTimeout);
-    }
 
     /**
      * Sets the {@code maxGapOffset} specifying the maximum distance in sequence numbers between a missing event and the
@@ -228,16 +258,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
      *                     and the event with the highest known index.
      * @return A new configuration instance, for fluent interfacing.
      */
-    public AggregateBasedJpaEventStorageEngineConfiguration maxGapOffset(int maxGapOffset) {
-        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
-                                                                    this.finalBatchPredicate,
-                                                                    this.eventCoordinator,
-                                                                    this.batchSize,
-                                                                    this.gapCleaningThreshold,
-                                                                    maxGapOffset,
-                                                                    this.lowestGlobalSequence,
-                                                                    this.gapTimeout);
-    }
 
     /**
      * Sets the {@code lowestGlobalSequence} specifying the first expected auto generated sequence number. For most data
@@ -248,16 +268,6 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
      * @param lowestGlobalSequence a {@code long} specifying the first expected auto generated sequence number
      * @return A new configuration instance, for fluent interfacing.
      */
-    public AggregateBasedJpaEventStorageEngineConfiguration lowestGlobalSequence(long lowestGlobalSequence) {
-        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
-                                                                    this.finalBatchPredicate,
-                                                                    this.eventCoordinator,
-                                                                    this.batchSize,
-                                                                    this.gapCleaningThreshold,
-                                                                    this.maxGapOffset,
-                                                                    lowestGlobalSequence,
-                                                                    this.gapTimeout);
-    }
 
     /**
      * Sets the amount of time until a gap in a {@link GapAwareTrackingToken} may be considered timed out and thus ready
@@ -272,14 +282,4 @@ public record AggregateBasedJpaEventStorageEngineConfiguration(
      *                   may be considered timed out.
      * @return A new configuration instance, for fluent interfacing.
      */
-    public AggregateBasedJpaEventStorageEngineConfiguration gapTimeout(int gapTimeout) {
-        return new AggregateBasedJpaEventStorageEngineConfiguration(this.persistenceExceptionResolver,
-                                                                    this.finalBatchPredicate,
-                                                                    this.eventCoordinator,
-                                                                    this.batchSize,
-                                                                    this.gapCleaningThreshold,
-                                                                    this.maxGapOffset,
-                                                                    lowestGlobalSequence,
-                                                                    gapTimeout);
-    }
 }

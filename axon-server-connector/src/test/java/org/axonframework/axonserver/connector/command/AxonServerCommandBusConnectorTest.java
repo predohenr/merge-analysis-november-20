@@ -28,12 +28,12 @@ import io.axoniq.axonserver.grpc.SerializedObject;
 import io.axoniq.axonserver.grpc.command.Command;
 import io.axoniq.axonserver.grpc.command.CommandResponse;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
-import org.axonframework.common.lifecycle.ShutdownInProgressException;
+import org.axonframework.commandhandling.GenericCommandResultMessage;
 import org.axonframework.messaging.commandhandling.CommandMessage;
 import org.axonframework.messaging.commandhandling.CommandResultMessage;
 import org.axonframework.messaging.commandhandling.GenericCommandMessage;
-import org.axonframework.messaging.commandhandling.GenericCommandResultMessage;
 import org.axonframework.messaging.commandhandling.distributed.CommandBusConnector;
+import org.axonframework.common.lifecycle.ShutdownInProgressException;
 import org.axonframework.messaging.core.GenericMessage;
 import org.axonframework.messaging.core.MessageType;
 import org.axonframework.messaging.core.QualifiedName;
@@ -396,6 +396,47 @@ class AxonServerCommandBusConnectorTest {
                                         assertTrue(dispatchingHasShutdown.isDone());
                                     });
     }
+    private CommandMessage createTestCommandMessage() {
+        return new GenericCommandMessage(new GenericMessage(ANY_TEST_MESSAGE_ID,
+                                                            ANY_TEST_TYPE,
+                                                            ANY_TEST_PAYLOAD,
+                                                            new HashMap<>()));
+    }
+
+    private CommandResponse createSuccessfulCommandResponse() {
+        return CommandResponse.newBuilder()
+                              .setMessageIdentifier(UUID.randomUUID().toString())
+                              .setPayload(SerializedObject.newBuilder()
+                                                          .setType("ResponseType")
+                                                          .setRevision("1.0")
+                                                          .setData(ByteString.copyFrom("response-payload".getBytes()))
+                                                          .build())
+                              .putMetaData("responseKey",
+                                           MetaDataValue.newBuilder().setTextValue("responseValue").build())
+                              .build();
+    }
+
+    private Map<QualifiedName, Registration> getSubscriptions(AxonServerCommandBusConnector instance) {
+        try {
+            Field field = instance.getClass().getDeclaredField("subscriptions");
+            field.setAccessible(true);
+
+            //noinspection unchecked
+            return (Map<QualifiedName, Registration>) field.get(instance);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private CommandBusConnector.Handler getIncomingHandler(AxonServerCommandBusConnector instance) {
+        try {
+            Field field = instance.getClass().getDeclaredField("incomingHandler");
+            field.setAccessible(true);
+            return (CommandBusConnector.Handler) field.get(instance);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Nested
     class GracefulShutdown {
@@ -441,45 +482,4 @@ class AxonServerCommandBusConnectorTest {
     }
 
     // Helpers
-    private CommandMessage createTestCommandMessage() {
-        return new GenericCommandMessage(new GenericMessage(ANY_TEST_MESSAGE_ID,
-                                                            ANY_TEST_TYPE,
-                                                            ANY_TEST_PAYLOAD,
-                                                            new HashMap<>()));
-    }
-
-    private CommandResponse createSuccessfulCommandResponse() {
-        return CommandResponse.newBuilder()
-                              .setMessageIdentifier(UUID.randomUUID().toString())
-                              .setPayload(SerializedObject.newBuilder()
-                                                          .setType("ResponseType")
-                                                          .setRevision("1.0")
-                                                          .setData(ByteString.copyFrom("response-payload".getBytes()))
-                                                          .build())
-                              .putMetaData("responseKey",
-                                           MetaDataValue.newBuilder().setTextValue("responseValue").build())
-                              .build();
-    }
-
-    private Map<QualifiedName, Registration> getSubscriptions(AxonServerCommandBusConnector instance) {
-        try {
-            Field field = instance.getClass().getDeclaredField("subscriptions");
-            field.setAccessible(true);
-
-            //noinspection unchecked
-            return (Map<QualifiedName, Registration>) field.get(instance);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private CommandBusConnector.Handler getIncomingHandler(AxonServerCommandBusConnector instance) {
-        try {
-            Field field = instance.getClass().getDeclaredField("incomingHandler");
-            field.setAccessible(true);
-            return (CommandBusConnector.Handler) field.get(instance);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
