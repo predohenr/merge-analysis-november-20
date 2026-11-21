@@ -53,6 +53,13 @@ import static org.springframework.cloud.kubernetes.client.discovery.TestUtils.mo
  *
  * @author wind57
  */
+
+/**
+ * Test various conditionals for
+ * {@link KubernetesClientInformerDiscoveryClientAutoConfiguration}
+ *
+ * @author wind57
+ */
 class KubernetesClientInformerDiscoveryClientAutoConfigurationApplicationContextTests {
 
 	private ApplicationContextRunner applicationContextRunner;
@@ -61,11 +68,6 @@ class KubernetesClientInformerDiscoveryClientAutoConfigurationApplicationContext
 	private static final WireMockExtension API_SERVER = WireMockExtension.newInstance()
 		.options(options().dynamicPort())
 		.build();
-
-	@AfterAll
-	static void afterAll() {
-		API_SERVER.shutdownServer();
-	}
 
 	@AfterEach
 	void afterEach() {
