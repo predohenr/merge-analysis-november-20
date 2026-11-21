@@ -221,17 +221,6 @@ public abstract class AnalysisType extends AnalysisElement implements WrappedJav
      */
     @SuppressWarnings("unused") private volatile Object overrideableMethods;
 
-    private volatile AnalysisType arrayClass = null;
-
-    /**
-     * Sentinel marker for the uninitialized state of {@link #permittedSubclasses}. Indicates that
-     * the permitted subclasses (for sealed types) has not yet been computed. Distinguishes this
-     * state from both a computed {@code null} (not sealed) and a computed list (which may be
-     * empty).
-     */
-    private static final List<AnalysisType> PERMITTED_SUBCLASSES_UNINITIALIZED = new ArrayList<>();
-    private volatile List<AnalysisType> permittedSubclasses = PERMITTED_SUBCLASSES_UNINITIALIZED;
-
     @SuppressWarnings("this-escape")
     public AnalysisType(AnalysisUniverse universe, ResolvedJavaType javaType, JavaKind storageKind, AnalysisType objectType, AnalysisType cloneableType) {
         super(universe.hostVM.enableTrackAcrossLayers());
@@ -972,6 +961,17 @@ public abstract class AnalysisType extends AnalysisElement implements WrappedJav
             throw GraalError.shouldNotReachHere("Classes can only be initialized using methods in ClassInitializationFeature: " + toClassName()); // ExcludeFromJacocoGeneratedReport
         }
     }
+
+    private volatile AnalysisType arrayClass = null;
+
+    /**
+     * Sentinel marker for the uninitialized state of {@link #permittedSubclasses}. Indicates that
+     * the permitted subclasses (for sealed types) has not yet been computed. Distinguishes this
+     * state from both a computed {@code null} (not sealed) and a computed list (which may be
+     * empty).
+     */
+    private static final List<AnalysisType> PERMITTED_SUBCLASSES_UNINITIALIZED = new ArrayList<>();
+    private volatile List<AnalysisType> permittedSubclasses = PERMITTED_SUBCLASSES_UNINITIALIZED;
 
     @Override
     public final AnalysisType getArrayClass() {
