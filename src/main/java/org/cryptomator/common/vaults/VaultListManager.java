@@ -20,18 +20,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import static org.cryptomator.common.Constants.MASTERKEY_FILENAME;
 import static org.cryptomator.common.Constants.VAULTCONFIG_FILENAME;
 import static org.cryptomator.common.vaults.VaultState.Value.ERROR;
 import static org.cryptomator.common.vaults.VaultState.Value.LOCKED;
 import static org.cryptomator.common.vaults.VaultState.Value.MASTERKEY_MISSING;
-import static org.cryptomator.common.vaults.VaultState.Value.NEEDS_MIGRATION;
 import static org.cryptomator.common.vaults.VaultState.Value.PROCESSING;
 import static org.cryptomator.common.vaults.VaultState.Value.UNLOCKED;
-
 import org.apache.commons.lang3.SystemUtils;
-import org.cryptomator.common.Constants;
 import org.cryptomator.common.recovery.BackupRestorer;
 import org.cryptomator.common.settings.Settings;
 import org.cryptomator.common.settings.VaultSettings;
@@ -42,6 +38,8 @@ import org.cryptomator.integrations.mount.MountService;
 import org.cryptomator.ui.keyloading.KeyLoadingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.cryptomator.common.Constants;
+import static org.cryptomator.common.vaults.VaultState.Value.NEEDS_MIGRATION;
 
 @Singleton
 public class VaultListManager {
@@ -225,7 +223,7 @@ public class VaultListManager {
 			case VAULT -> VaultState.Value.LOCKED;
 			case UNRELATED -> VaultState.Value.MISSING;
 			case MAYBE_LEGACY -> Migrators.get().needsMigration(pathToVault, VAULTCONFIG_FILENAME, MASTERKEY_FILENAME) ? //
-					NEEDS_MIGRATION //
+					VaultState.Value.NEEDS_MIGRATION //
 					: VaultState.Value.MISSING;
 		};
 	}
