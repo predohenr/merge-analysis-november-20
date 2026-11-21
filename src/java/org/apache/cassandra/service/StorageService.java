@@ -2065,7 +2065,7 @@ public class StorageService extends NotificationBroadcasterSupport implements IE
             if ((DatabaseDescriptor.isDaemonInitialized() || DatabaseDescriptor.isToolInitialized()) && CommitLog.instance.isStarted())
                 return SystemKeyspace.getLocalHostId();
             else
-                return null;
+            return null;
         }
         return metadata.myNodeId().toUUID();
     }
