@@ -1115,7 +1115,7 @@ public class OsmandApplication extends MultiDexApplication {
 				if (!OsmAndLocationProvider.isLocationPermissionAvailable(this)) {
 					LOG.info(">>>> Failed APP startForegroundService = " + usageIntent + " {no location permission}");
 					return;
-				}
+					}
 				try {
 					LOG.info(">>>> APP startForegroundService = " + usageIntent + " {foreground " + isAppInForeground() + "}");
 					context.startForegroundService(intent);
