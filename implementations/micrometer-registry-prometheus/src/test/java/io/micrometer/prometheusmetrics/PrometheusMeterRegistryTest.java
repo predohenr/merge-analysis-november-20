@@ -16,9 +16,9 @@
 package io.micrometer.prometheusmetrics;
 
 import io.micrometer.core.Issue;
-import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.LongTaskTimer.Sample;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.binder.BaseUnits;
 import io.micrometer.core.instrument.binder.jvm.JvmInfoMetrics;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
@@ -44,6 +44,14 @@ import java.util.stream.Stream;
 import static io.micrometer.core.instrument.MockClock.clock;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.*;
+
+/**
+ * Tests for {@link PrometheusMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ * @author Jonatan Ivanov
+ */
 
 /**
  * Tests for {@link PrometheusMeterRegistry}.
