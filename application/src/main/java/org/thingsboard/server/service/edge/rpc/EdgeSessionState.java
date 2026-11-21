@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2026 The Thingsboard Authors
+ * Copyright © 2016-2025 The Thingsboard Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,16 +35,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Getter
 public class EdgeSessionState {
-
-    @Setter
-    private SettableFuture<Boolean> sendDownlinkMsgsFuture;
-    @Setter
-    private ScheduledFuture<?> scheduledSendDownlinkTask;
-    @Setter
-    private volatile boolean connected;
-    @Setter
-    private EdgeVersion edgeVersion;
-    private final UUID sessionId = UUID.randomUUID();
     private final Map<Integer, DownlinkMsg> pendingMsgsMap = Collections.synchronizedMap(new LinkedHashMap<>());
     private final Lock sequenceDependencyLock = new ReentrantLock();
     private final AtomicBoolean syncInProgress = new AtomicBoolean(false);
@@ -82,4 +72,14 @@ public class EdgeSessionState {
     public void unlockSequenceDependency() {
         sequenceDependencyLock.unlock();
     }
+
+    @Setter
+private SettableFuture<Boolean> sendDownlinkMsgsFuture;
+    @Setter
+private ScheduledFuture<?> scheduledSendDownlinkTask;
+    @Setter
+    private volatile boolean connected;
+    @Setter
+    private EdgeVersion edgeVersion;
+    private final UUID sessionId = UUID.randomUUID();
 }
