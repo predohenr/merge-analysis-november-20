@@ -82,6 +82,13 @@ import static org.awaitility.Awaitility.await;
  *
  * @author Tadaya Tsuyukubo
  */
+
+/**
+ * Test for {@link ObservationGrpcServerInterceptor} and
+ * {@link ObservationGrpcClientInterceptor}.
+ *
+ * @author Tadaya Tsuyukubo
+ */
 class GrpcObservationTest {
 
     Server server;
