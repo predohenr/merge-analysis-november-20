@@ -48,10 +48,10 @@ public class RedisDockerTest {
         return new GenericContainer<>(version)
                 .withCreateContainerCmdModifier(cmd -> {
                     if (params.length > 0) {
-                        List<String> args = new ArrayList<>();
-                        args.add("redis-server");
-                        args.addAll(Arrays.asList(params));
-                        cmd.withCmd(args);
+                    List<String> args = new ArrayList<>();
+                    args.add("redis-server");
+                    args.addAll(Arrays.asList(params));
+                    cmd.withCmd(args);
                     }
                 })
                 .withExposedPorts(6379)
@@ -106,9 +106,9 @@ public class RedisDockerTest {
         Config config2 = createConfig();
         config2.useSingleServer().setDatabase(1);
         RedissonClient r2 = Redisson.create(config2);
-
+        
         consumer.accept(r1, r2);
-
+        
         r1.shutdown();
         r2.shutdown();
     }
@@ -160,20 +160,20 @@ public class RedisDockerTest {
 
         try {
             GenericContainer<?> master = createMasterContainer(network, password);
-            master.start();
+        master.start();
             preservePortBindings(master);
-            nodes.add(master);
+        nodes.add(master);
 
             String masterIp = getContainerIp(master);
 
             Thread.sleep(1000);
 
-            for (int i = 0; i < slaves; i++) {
+        for (int i = 0; i < slaves; i++) {
                 GenericContainer<?> slave = createSlaveContainer(network, i, password, masterIp);
-                slave.start();
+            slave.start();
                 preservePortBindings(slave);
-                nodes.add(slave);
-            }
+            nodes.add(slave);
+        }
 
             Thread.sleep(3000);
 
@@ -189,9 +189,9 @@ public class RedisDockerTest {
             }
 
             // Wait for sentinels to discover topology
-            Thread.sleep(5000);
+        Thread.sleep(5000);
 
-            Config config = new Config();
+        Config config = new Config();
             SentinelServersConfig sentinelServersConfig = config.useSentinelServers()
                     .setMasterName(MASTER_NAME)
                     .setCheckSentinelsList(false)
@@ -204,7 +204,7 @@ public class RedisDockerTest {
                                 if (nodeIp.equals(address.getHost())) {
                                     int mappedPort = node.getMappedPort(address.getPort());
                                     return new RedisURI(address.getScheme(), node.getHost(), mappedPort);
-                                }
+            }
 
                                 // Check by hostname (network alias)
                                 List<String> aliases = node.getNetworkAliases();
@@ -217,18 +217,18 @@ public class RedisDockerTest {
                             }
                         }
                         return address;
-                    });
+        });
 
             for (GenericContainer<?> sentinel : sentinels) {
                 sentinelServersConfig.addSentinelAddress("redis://127.0.0.1:" + sentinel.getMappedPort(SENTINEL_PORT));
-            }
+                            }
 
             if (password != null && !password.isEmpty()) {
                 config.setPassword(password);
                 sentinelServersConfig.setSentinelPassword(password);
-            }
+                            }
 
-            callback.accept(nodes, config);
+        callback.accept(nodes, config);
 
         } finally {
             for (int i = nodes.size() - 1; i >= 0; i--) {
@@ -239,7 +239,7 @@ public class RedisDockerTest {
                 }
             }
             try {
-                network.close();
+        network.close();
             } catch (Exception e) {
                 // ignore
             }
