@@ -478,8 +478,8 @@ class ReactiveOAuth2ResourceServerAutoConfigurationTests {
 					"spring.security.oauth2.resourceserver.jwt.jwk-set-uri=")
 			.run((context) -> {
 				assertThat(context).hasSingleBean(ReactiveJwtDecoder.class);
-				assertThat(context.containsBean("reactiveJwtDecoderByJwkKeySetUri")).isFalse();
-				assertThat(context.containsBean("reactiveJwtDecoderByIssuerUri")).isTrue();
+				assertThat(context.containsBean("jwtDecoder")).isFalse();
+				assertThat(context.containsBean("jwtDecoderByIssuerUri")).isTrue();
 			});
 	}
 
