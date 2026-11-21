@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -212,7 +212,7 @@ public final class DynamicHubCompanion {
      * happens we must update the companion's field to point to the newly installed value.
      */
     @Platforms(Platform.HOSTED_ONLY.class)
-    static class ArrayHubTransformer extends LayeredFieldValueTransformer<DynamicHubCompanion> {
+static class ArrayHubTransformer extends LayeredFieldValueTransformer<DynamicHubCompanion> {
         boolean appLayer = ImageLayerBuildingSupport.buildingApplicationLayer();
 
         @Override
