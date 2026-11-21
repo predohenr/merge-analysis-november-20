@@ -408,6 +408,13 @@ public interface VMAccess {
      * The {@link java.util.ServiceLoader} API can be used to locate such a builder. Implementations
      * can be distinguished by their {@linkplain #getVMAccessName() name}.
      */
+
+    /**
+     * A builder can be used to set a JVM context up and observe it through a {@link VMAccess}.
+     * <p>
+     * The {@link java.util.ServiceLoader} API can be used to locate such a builder. Implementations
+     * can be distinguished by their {@linkplain #getVMAccessName() name}.
+     */
     interface Builder {
         String getVMAccessName();
 
