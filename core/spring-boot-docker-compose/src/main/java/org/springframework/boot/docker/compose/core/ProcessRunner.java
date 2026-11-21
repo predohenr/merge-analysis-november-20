@@ -40,6 +40,14 @@ import org.springframework.core.log.LogMessage;
  * @author Andy Wilkinson
  * @author Phillip Webb
  */
+
+/**
+ * Runs a process and captures the result.
+ *
+ * @author Moritz Halbritter
+ * @author Andy Wilkinson
+ * @author Phillip Webb
+ */
 class ProcessRunner {
 
 	private static final String USR_LOCAL_BIN = "/usr/local/bin";
@@ -117,7 +125,7 @@ class ProcessRunner {
 					if (path.contains(binDirectory) || command[0].startsWith("/")) {
 						continue;
 					}
-					String[] localCommand = command.clone();
+				String[] localCommand = command.clone();
 					localCommand[0] = binDirectory + "/" + command[0];
 					ProcessBuilder localProcessBuilder = new ProcessBuilder(localCommand);
 					localProcessBuilder.directory(this.workingDirectory);
