@@ -387,6 +387,11 @@ public class JvmGcMetrics implements MeterBinder, AutoCloseable {
      * Generalization of which parts of the heap are considered "young" or "old" for
      * multiple GC implementations
      */
+
+    /**
+     * Generalization of which parts of the heap are considered "young" or "old" for
+     * multiple GC implementations
+     */
     enum GcGenerationAge {
 
         OLD, YOUNG, UNKNOWN;

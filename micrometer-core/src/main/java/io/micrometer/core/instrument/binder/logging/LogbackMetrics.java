@@ -126,9 +126,9 @@ public class LogbackMetrics implements MeterBinder, AutoCloseable {
      * logback events asynchronously and should not get into an infinite loop.
      */
     @Deprecated
-    public static void ignoreMetrics(Runnable r) {
-        r.run();
-    }
+public static void ignoreMetrics(Runnable r) {
+            r.run();
+        }
 
     @Override
     public void close() {
