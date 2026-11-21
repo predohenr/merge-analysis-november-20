@@ -561,7 +561,7 @@ public final class ThreadAccess extends ContextAccessImpl implements GuestInterr
                 } finally {
                     transition.restore(this);
                 }
-                setTerminateStatusAndNotify(thread);
+            setTerminateStatusAndNotify(thread);
             }
         } else {
             assert ThreadState.isTerminated(getState(thread));
