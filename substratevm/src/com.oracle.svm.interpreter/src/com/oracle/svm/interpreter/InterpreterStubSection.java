@@ -63,8 +63,6 @@ import com.oracle.svm.core.nmt.NmtCategory;
 import com.oracle.svm.core.threadlocal.FastThreadLocalFactory;
 import com.oracle.svm.core.threadlocal.FastThreadLocalObject;
 import com.oracle.svm.graal.meta.SubstrateInstalledCodeImpl;
-import com.oracle.svm.guest.staging.c.CGlobalData;
-import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
 import com.oracle.svm.guest.staging.jdk.InternalVMMethod;
 import com.oracle.svm.hosted.image.AbstractImage;
 import com.oracle.svm.hosted.image.NativeImage;
@@ -76,6 +74,10 @@ import com.oracle.svm.interpreter.metadata.InterpreterUniverse;
 import com.oracle.svm.interpreter.ristretto.meta.RistrettoMethod;
 import com.oracle.svm.shared.AlwaysInline;
 import com.oracle.svm.shared.Uninterruptible;
+import com.oracle.svm.core.SubstrateTargetDescription;
+import com.oracle.svm.core.config.ConfigurationValues;
+import com.oracle.svm.guest.staging.c.CGlobalData;
+import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
 import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.VMError;
 
@@ -95,8 +97,6 @@ public abstract class InterpreterStubSection {
     private static final String REASON_REFERENCES_ON_STACK = "stack frame might contain object references that are not known to the GC";
 
     private static final String REASON_DEOPT_INSTALLED_CODE = "InstalledCode can be deoptimized or freed at a safepoint.";
-
-    /* '-3' to reduce padding due to alignment in .svm_interp section */
     static final int MAX_VTABLE_STUBS = 2 * 1024 - 3;
 
     protected final SubstrateTarget target;
@@ -110,6 +110,12 @@ public abstract class InterpreterStubSection {
     private final Map<InterpreterResolvedJavaMethod, Integer> enterTrampolineOffsets = new HashMap<>();
     @Platforms(Platform.HOSTED_ONLY.class) //
     private int vTableStubBaseOffset = -1;
+
+    @SuppressWarnings("rawtypes") //
+    public static final FastThreadLocalObject<ThreadLocalHandles> TL_HANDLES = FastThreadLocalFactory.createObject(ThreadLocalHandles.class, "Interpreter handles for enter stub");
+    public static final int MAX_ARGUMENT_HANDLES = 255;
+
+    /* '-3' to reduce padding due to alignment in .svm_interp section */
 
     protected InterpreterStubSection() {
         this.target = SubstrateTarget.singleton();
@@ -199,18 +205,6 @@ public abstract class InterpreterStubSection {
     @Platforms(Platform.HOSTED_ONLY.class)
     protected abstract void markEnterStubPatch(ObjectFile.ProgbitsSectionImpl pltBuffer, HostedMethod enterStub);
 
-    interface ThreadLocalInterpreterHandle extends ObjectHandle, PointerBase {
-    }
-
-    @SuppressWarnings("rawtypes") //
-    public static final FastThreadLocalObject<ThreadLocalHandles> TL_HANDLES = FastThreadLocalFactory.createObject(ThreadLocalHandles.class, "Interpreter handles for enter stub");
-
-    /*
-     * Maximum number of parameters that can be passed according to 4.3.3 in the JVM spec. Could be
-     * optimized, see GR-71907.
-     */
-    public static final int MAX_ARGUMENT_HANDLES = 255;
-
     @SuppressWarnings("unchecked")
     @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
     private static ThreadLocalHandles<ThreadLocalInterpreterHandle> tlsHandles() {
@@ -259,26 +253,6 @@ public abstract class InterpreterStubSection {
 
         return enterHelper(interpreterMethod, enterData);
     }
-
-    /**
-     * The "enter stub" pretends to be like a compiled method, with the advantage that the caller
-     * does not need to know where the call ends up. Therefore, it has to look like a compiled
-     * entrypoint.
-     * <p>
-     * The low-level stubs calling this helper spill native ABI arguments to the stack frame, see
-     * {@link com.oracle.svm.core.graal.amd64.AMD64InterpreterStubs.InterpreterEnterStubContext} and
-     * {@link com.oracle.svm.core.graal.aarch64.AArch64InterpreterStubs.InterpreterEnterStubContext}.
-     * Its layout is defined in
-     * {@link com.oracle.svm.core.graal.amd64.AMD64InterpreterStubs.InterpreterDataAMD64} and
-     * {@link com.oracle.svm.core.graal.aarch64.AArch64InterpreterStubs.InterpreterDataAArch64}.
-     * <p>
-     * The ABI arguments can contain references which the GC is not aware of, so until they are
-     * moved to a known location, a safepoint must be avoided. ThreadLocalHandles are used for that.
-     *
-     * @param interpreterMethod method that should run in the interpreter.
-     * @param enterData pointer to struct that contains ABI arguments.
-     * @return pointer to enterData, used by the low-level caller stub.
-     */
     @AlwaysInline("Performance")
     @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
     private static Pointer enterHelper(InterpreterResolvedJavaMethod interpreterMethod, Pointer enterData) {
@@ -457,8 +431,6 @@ public abstract class InterpreterStubSection {
     private static long popPrimitiveFromEnterData(InterpreterAccessStubData accessHelper, int cArgType, Pointer enterData, int gpIdx) {
         return accessHelper.getGpArgumentAt(cArgType, enterData, gpIdx);
     }
-
-    /* reserve two slots for: 1. base address of outgoing stack args, and 2. variable stack size. */
     @Deoptimizer.DeoptStub(stubType = Deoptimizer.StubType.InterpreterLeaveStub)
     @NeverInline("needs ABI boundary")
     @Uninterruptible(reason = REASON_REFERENCES_ON_STACK)
@@ -571,53 +543,6 @@ public abstract class InterpreterStubSection {
         };
         // @formatter:on
     }
-
-    public static class TestingBackdoor {
-        private static boolean stressEnterStub = false;
-
-        public static void enableStressEnterStub() {
-            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
-            stressEnterStub = true;
-        }
-
-        public static void disableStressEnterStub() {
-            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
-            stressEnterStub = false;
-        }
-
-        public static void stressEnterStub() {
-            if (InterpreterOptions.InterpreterBackdoor.getValue() && stressEnterStub) {
-                Heap.getHeap().getGC().collectCompletely(GCCause.UnitTest);
-            }
-        }
-
-        private static boolean checkFastPath = false;
-
-        public static void enableFastPathCheck() {
-            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
-            checkFastPath = true;
-        }
-
-        public static void disableFastPathCheck() {
-            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
-            checkFastPath = false;
-        }
-
-        @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
-        public static void handleFastPathWasNotTaken() {
-            if (InterpreterOptions.InterpreterBackdoor.getValue() && checkFastPath) {
-                VMError.shouldNotReachHere("JIT method is available, but the fast path was not taken.");
-            }
-        }
-    }
-
-    /**
-     * Try to query {@link InstalledCode} for the given {@link InterpreterResolvedJavaMethod}. In
-     * order to guarantee that no safepoint happens during this operation and the execution of the
-     * first instruction inside {@code installedCode} this method is marked as
-     * {@code Uninterruptible}. Callers must ensure no safepoint happens between the return and the
-     * call to the installed code.
-     */
     @Uninterruptible(reason = REASON_DEOPT_INSTALLED_CODE, callerMustBe = true)
     private static CFunctionPointer getInstalledCodeEntryPoint(InterpreterResolvedJavaMethod interpreterMethod) {
         RistrettoMethod rMethod = (com.oracle.svm.interpreter.ristretto.meta.RistrettoMethod) interpreterMethod.getRistrettoMethod();
@@ -651,4 +576,81 @@ public abstract class InterpreterStubSection {
     private static Object callInterpreterInterruptibly(InterpreterResolvedJavaMethod interpreterMethod, Object[] args) {
         return Interpreter.execute(interpreterMethod, args);
     }
+
+    interface ThreadLocalInterpreterHandle extends ObjectHandle, PointerBase {
+    }
+
+    /*
+     * Maximum number of parameters that can be passed according to 4.3.3 in the JVM spec. Could be
+     * optimized, see GR-71907.
+     */
+
+    /**
+     * The "enter stub" pretends to be like a compiled method, with the advantage that the caller
+     * does not need to know where the call ends up. Therefore, it has to look like a compiled
+     * entrypoint.
+     * <p>
+     * The low-level stubs calling this helper spill native ABI arguments to the stack frame, see
+     * {@link com.oracle.svm.core.graal.amd64.AMD64InterpreterStubs.InterpreterEnterStubContext} and
+     * {@link com.oracle.svm.core.graal.aarch64.AArch64InterpreterStubs.InterpreterEnterStubContext}.
+     * Its layout is defined in
+     * {@link com.oracle.svm.core.graal.amd64.AMD64InterpreterStubs.InterpreterDataAMD64} and
+     * {@link com.oracle.svm.core.graal.aarch64.AArch64InterpreterStubs.InterpreterDataAArch64}.
+     * <p>
+     * The ABI arguments can contain references which the GC is not aware of, so until they are
+     * moved to a known location, a safepoint must be avoided. ThreadLocalHandles are used for that.
+     *
+     * @param interpreterMethod method that should run in the interpreter.
+     * @param enterData pointer to struct that contains ABI arguments.
+     * @return pointer to enterData, used by the low-level caller stub.
+     */
+
+    /* reserve two slots for: 1. base address of outgoing stack args, and 2. variable stack size. */
+
+    public static class TestingBackdoor {
+        private static boolean stressEnterStub = false;
+
+        private static boolean checkFastPath = false;
+
+        public static void enableStressEnterStub() {
+            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
+            stressEnterStub = true;
+        }
+
+        public static void disableStressEnterStub() {
+            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
+            stressEnterStub = false;
+        }
+
+        public static void stressEnterStub() {
+            if (InterpreterOptions.InterpreterBackdoor.getValue() && stressEnterStub) {
+                Heap.getHeap().getGC().collectCompletely(GCCause.UnitTest);
+            }
+        }
+
+        public static void enableFastPathCheck() {
+            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
+            checkFastPath = true;
+        }
+
+        public static void disableFastPathCheck() {
+            VMError.guarantee(InterpreterOptions.InterpreterBackdoor.getValue());
+            checkFastPath = false;
+        }
+
+        @Uninterruptible(reason = CALLED_FROM_UNINTERRUPTIBLE_CODE, mayBeInlined = true)
+        public static void handleFastPathWasNotTaken() {
+            if (InterpreterOptions.InterpreterBackdoor.getValue() && checkFastPath) {
+                VMError.shouldNotReachHere("JIT method is available, but the fast path was not taken.");
+            }
+        }
+    }
+
+    /**
+     * Try to query {@link InstalledCode} for the given {@link InterpreterResolvedJavaMethod}. In
+     * order to guarantee that no safepoint happens during this operation and the execution of the
+     * first instruction inside {@code installedCode} this method is marked as
+     * {@code Uninterruptible}. Callers must ensure no safepoint happens between the return and the
+     * call to the installed code.
+     */
 }

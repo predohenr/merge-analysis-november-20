@@ -45,8 +45,6 @@ import com.oracle.objectfile.BasicProgbitsSectionImpl;
 import com.oracle.objectfile.ObjectFile;
 import com.oracle.objectfile.SectionName;
 import com.oracle.svm.core.Isolates;
-import com.oracle.svm.shared.util.SubstrateUtil;
-import com.oracle.svm.shared.feature.AutomaticallyRegisteredFeature;
 import com.oracle.svm.core.SubstrateTarget;
 import com.oracle.svm.core.config.ObjectLayout;
 import com.oracle.svm.core.feature.InternalFeature;
@@ -54,15 +52,20 @@ import com.oracle.svm.core.image.ImageHeapLayoutInfo;
 import com.oracle.svm.core.imagelayer.DynamicImageLayerInfo;
 import com.oracle.svm.core.imagelayer.ImageLayerBuildingSupport;
 import com.oracle.svm.core.imagelayer.ImageLayerSection;
-import com.oracle.svm.guest.staging.c.CGlobalData;
-import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
 import com.oracle.svm.hosted.FeatureImpl;
 import com.oracle.svm.hosted.c.AppLayerCGlobalTracking;
 import com.oracle.svm.hosted.c.CGlobalDataFeature;
 import com.oracle.svm.hosted.image.NativeImage;
+import com.oracle.svm.shared.feature.AutomaticallyRegisteredFeature;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.BuildtimeAccessOnly;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.NoLayeredCallbacks;
 import com.oracle.svm.shared.singletons.traits.SingletonTraits;
+import com.oracle.svm.shared.util.SubstrateUtil;
+import com.oracle.svm.shared.util.SubstrateUtil;
+import com.oracle.svm.core.config.ConfigurationValues;
+import com.oracle.svm.shared.feature.AutomaticallyRegisteredFeature;
+import com.oracle.svm.guest.staging.c.CGlobalData;
+import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
 
 import jdk.graal.compiler.core.common.CompressEncoding;
 import jdk.graal.compiler.core.common.NumUtil;
@@ -185,12 +188,6 @@ public final class ImageLayerSectionFeature implements InternalFeature {
             CGlobalDataFeature.singleton().registerWithGlobalSymbol(ImageLayerSection.getCachedImageHeapRelocations());
         }
     }
-
-    /**
-     * Creates the SVM layer section and define all symbols within the section. Note it is necessary
-     * to define symbols in this section before the normal build process to ensure the CGlobals
-     * referring to them are able to pick up this symbol and not refer to an undefined symbol.
-     */
     public void createSection(ObjectFile objectFile, ImageHeapLayoutInfo heapLayout) {
         /*
          * We need to allocate bytes for the section early. We don't know how large it needs to be
@@ -356,6 +353,12 @@ public final class ImageLayerSectionFeature implements InternalFeature {
         buffer.put(buffer.position(), bitmap);
         buffer.position(buffer.position() + longsCount * Long.BYTES);
     }
+
+    /**
+     * Creates the SVM layer section and define all symbols within the section. Note it is necessary
+     * to define symbols in this section before the normal build process to ensure the CGlobals
+     * referring to them are able to pick up this symbol and not refer to an undefined symbol.
+     */
 
     @SingletonTraits(access = BuildtimeAccessOnly.class, layeredCallbacks = NoLayeredCallbacks.class)
     private static class ImageLayerSectionImpl extends ImageLayerSection {

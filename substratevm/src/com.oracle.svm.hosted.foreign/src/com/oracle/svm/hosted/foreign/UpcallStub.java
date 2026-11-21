@@ -44,6 +44,7 @@ import com.oracle.svm.core.SubstrateOptions;
 import com.oracle.svm.core.SubstrateTarget;
 import com.oracle.svm.core.UninterruptibleAnnotationUtils;
 import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
+import com.oracle.svm.core.config.ConfigurationValues;
 import com.oracle.svm.core.foreign.AbiUtils;
 import com.oracle.svm.core.foreign.AbiUtils.Adapter.Result.TypeAdaptation;
 import com.oracle.svm.core.foreign.JavaEntryPointInfo;
@@ -140,6 +141,13 @@ final class LowLevelUpcallStub extends UpcallStub implements CustomCallingConven
     private final List<Register> savedRegisters;
     private final AssignedLocation[] parametersAssignment;
 
+    private static final List<AnnotationValue> INJECTED_ANNOTATIONS = List.of(
+                    newAnnotationValue(ExplicitCallingConvention.class,
+                                    "value", SubstrateCallingConventionKind.Custom),
+                    newAnnotationValue(GuestAccess.elements().Uninterruptible,
+                                    "calleeMustBe", false,
+                                    "reason", "Directly accesses registers and IsolateThread might not be correctly set up"));
+
     static LowLevelUpcallStub make(JavaEntryPointInfo jep, AnalysisUniverse universe, MetaAccessProvider metaAccess) {
         TypeAdaptation adapted = AbiUtils.singleton().adapt(jep);
         AnalysisMethod highLevelStubMethod = universe.lookup(new HighLevelUpcallStub(jep, adapted, metaAccess));
@@ -164,11 +172,6 @@ final class LowLevelUpcallStub extends UpcallStub implements CustomCallingConven
     private static MethodType toLowLevelType(MethodType callType) {
         return callType.insertParameterTypes(0, MethodHandle.class, long.class);
     }
-
-    /**
-     * Prepends assigned locations for special registers that will contain the method handle and the
-     * isolate pointer. This will tell the compiler that those registers are used for parameters.
-     */
     private static AssignedLocation[] toLowLevelAssignments(TypeAdaptation adapted) {
         AbiUtils.Registers specialRegisters = AbiUtils.singleton().upcallSpecialArgumentsRegisters();
         List<AssignedLocation> assignedLocations = adapted.parametersAssignment();
@@ -180,15 +183,6 @@ final class LowLevelUpcallStub extends UpcallStub implements CustomCallingConven
         }
         return extendedAssignments;
     }
-
-    /**
-     * Implementation note: it would have been nice to be able to reuse the
-     * {@link com.oracle.svm.core.foreign.AbiUtils.Adapter} facilities to implement the argument
-     * transformations between the low and high call. Unfortunately, these facilities are not really
-     * suited here: there is no assignment to transform, the type must be transformed before the
-     * function is actually called (so all transformations should not be applied at the same time)
-     * and finally argument injection is not currently supported.
-     */
     @Override
     public StructuredGraph buildGraph(DebugContext debug, AnalysisMethod method, HostedProviders providers, Purpose purpose) {
         assert ExplicitCallingConvention.Util.getCallingConventionKind(method, false) == SubstrateCallingConventionKind.Custom;
@@ -279,13 +273,6 @@ final class LowLevelUpcallStub extends UpcallStub implements CustomCallingConven
         return kit.finalizeGraph();
     }
 
-    private static final List<AnnotationValue> INJECTED_ANNOTATIONS = List.of(
-                    newAnnotationValue(ExplicitCallingConvention.class,
-                                    "value", SubstrateCallingConventionKind.Custom),
-                    newAnnotationValue(GuestAccess.elements().Uninterruptible,
-                                    "calleeMustBe", false,
-                                    "reason", "Directly accesses registers and IsolateThread might not be correctly set up"));
-
     @Override
     public List<AnnotationValue> getInjectedAnnotations() {
         return INJECTED_ANNOTATIONS;
@@ -298,6 +285,20 @@ final class LowLevelUpcallStub extends UpcallStub implements CustomCallingConven
                         parametersAssignment,
                         AbiUtils.singleton().toMemoryAssignment(jep.returnAssignment(), true));
     }
+
+    /**
+     * Prepends assigned locations for special registers that will contain the method handle and the
+     * isolate pointer. This will tell the compiler that those registers are used for parameters.
+     */
+
+    /**
+     * Implementation note: it would have been nice to be able to reuse the
+     * {@link com.oracle.svm.core.foreign.AbiUtils.Adapter} facilities to implement the argument
+     * transformations between the low and high call. Unfortunately, these facilities are not really
+     * suited here: there is no assignment to transform, the type must be transformed before the
+     * function is actually called (so all transformations should not be applied at the same time)
+     * and finally argument injection is not currently supported.
+     */
 
 }
 
@@ -368,8 +369,6 @@ class HighLevelDirectUpcallStub extends UpcallStub {
         /* Inject method handle */
         return lowType.insertParameterTypes(0, MethodHandle.class);
     }
-
-    private final MethodHandle target;
 
     HighLevelDirectUpcallStub(MethodHandle handle, JavaEntryPointInfo jep, AbiUtils.Adapter.Result.TypeAdaptation adapted, MetaAccessProvider metaAccess) {
         super(jep, computeType(jep, adapted.callType()), metaAccess, true, true);
@@ -444,4 +443,6 @@ class HighLevelDirectUpcallStub extends UpcallStub {
 
         return kit.finalizeGraph();
     }
+
+    private final MethodHandle target;
 }

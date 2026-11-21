@@ -77,6 +77,7 @@ import com.oracle.svm.core.Isolates;
 import com.oracle.svm.core.OS;
 import com.oracle.svm.core.SubstrateOptions;
 import com.oracle.svm.core.SubstrateTarget;
+import com.oracle.svm.core.c.CGlobalDataImpl;
 import com.oracle.svm.core.c.function.GraalIsolateHeader;
 import com.oracle.svm.core.c.libc.TemporaryBuildDirectoryProvider;
 import com.oracle.svm.core.config.ObjectLayout;
@@ -153,15 +154,15 @@ public abstract class NativeImage extends AbstractImage {
     private final ObjectFile objectFile;
     private final SubstrateTarget targetDescription;
     private final int wordSize;
-    private final Set<HostedMethod> uniqueEntryPoints = new HashSet<>(); // noEconomicSet(streaming)
+    private final Set<HostedMethod> uniqueEntryPoints = new HashSet<>();
     private final MethodPointerRelocationProvider relocationProvider;
     private final long textSectionSize;
-
-    // The sections of the native image.
     private Section textSection;
     private Section roDataSection;
     private Section rwDataSection;
-    private Section heapSection;
+    private Section heapSection; // noEconomicSet(streaming)
+
+    // The sections of the native image.
 
     public NativeImage(NativeImageKind k, HostedUniverse universe, HostedMetaAccess metaAccess, NativeLibraries nativeLibs, NativeImageHeap heap, ImageHeapLayoutInfo heapLayout,
                     NativeImageCodeCache codeCache, List<HostedMethod> entryPoints, ClassLoader imageClassLoader) {
@@ -274,11 +275,6 @@ public abstract class NativeImage extends AbstractImage {
         Path headerFile = writer.writeFile(header.name() + dynamicSuffix);
         BuildArtifacts.singleton().add(ArtifactType.C_HEADER, headerFile);
     }
-
-    /**
-     * Looks up the corresponding {@link CHeader} annotation for the {@link HostedMethod}. Returns
-     * {@code null} if no annotation was found.
-     */
     private static Class<? extends CHeader.Header> cHeader(HostedMethod entryPointStub) {
         /* check if method is annotated */
         AnalysisMethod entryPoint = CEntryPointCallStubSupport.singleton().getMethodForStub((CEntryPointCallStubMethod) entryPointStub.wrapped.wrapped);
@@ -391,13 +387,9 @@ public abstract class NativeImage extends AbstractImage {
         writer.appendln(");");
         writer.appendln();
     }
-
-    /** Workaround for lack of `Method.getAnnotatedReturnType` in the JVMCI API (GR-9241). */
     private AnnotatedType getAnnotatedReturnType(HostedMethod hostedMethod) {
         return getMethod(hostedMethod).getAnnotatedReturnType();
     }
-
-    /** Workaround for lack of `Method.getAnnotatedParameterTypes` in the JVMCI API (GR-9241). */
     private AnnotatedType[] getAnnotatedParameterTypes(HostedMethod hostedMethod) {
         return getMethod(hostedMethod).getAnnotatedParameterTypes();
     }
@@ -435,10 +427,6 @@ public abstract class NativeImage extends AbstractImage {
             return "__svm_code_section";
         }
     }
-
-    /**
-     * Create the image sections for code, constants, and the heap.
-     */
     @Override
     public void build(String imageName, DebugContext debug) {
         try (DebugContext.Scope _ = debug.scope("NativeImage.build")) {
@@ -618,30 +606,6 @@ public abstract class NativeImage extends AbstractImage {
 
         return (relocationSize == wordSize && RelocationKind.isDirect(relocationKind)) || (relocationSize == 4 && RelocationKind.isPCRelative(relocationKind));
     }
-
-    /**
-     * Mark a location that needs to be patched by the dynamic linker at runtime to reflect the
-     * address where code has been loaded.
-     *
-     * {@linkplain DynamicHub Virtual dispatch tables} typically make up the vast majority of such
-     * locations. Frequent other locations to patch are in {@linkplain SubstrateAccessor reflection
-     * accessors}, {@linkplain JNIAccessibleMethod JNI accessors} and in
-     * {@link FunctionPointerHolder}.
-     *
-     * With {@link SubstrateOptions#useRelativeCodePointers()}, virtual dispatch tables contain
-     * offsets relative to a code base address and so do not need to be patched at runtime, which
-     * also avoids the cost of private copies of memory pages with the patched values.
-     *
-     * With code offsets and layered images, however, the code base refers only to the initial
-     * layer's code section, so we patch offsets to code from other layers to become relative to
-     * that code base ourselves at runtime. We do so in our own code without using the dynamic
-     * linker. See {@link LayeredDispatchTableFeature} which gathers these locations and
-     * {@link ImageLayerSectionFeature} which provides them for patching in the
-     * {@link ImageHeapProvider} at runtime.
-     *
-     * {@link NativeImageHeap#isRelocatableValue} and {@link NativeImageHeapWriter#writeConstant}
-     * determine (for the image heap) whether a code reference requires a linker relocation here.
-     */
     private void markSiteOfRelocationToCode(final ProgbitsSectionImpl sectionImpl, final int offset, final RelocatableBuffer.Info info) {
         Object targetObject = info.getTargetObject();
         assert targetObject instanceof MethodRef : "Wrong type for code relocation: " + targetObject.toString();
@@ -663,11 +627,6 @@ public abstract class NativeImage extends AbstractImage {
             relocationProvider.markMethodPointerRelocation(sectionImpl, offset, info.getRelocationKind(), target, info.getAddend(), (MethodPointer) targetObject, injectedNotCompiled);
         }
     }
-
-    /**
-     * Whether a method has not been compiled in the current image build, and with layered images,
-     * not in a prior layer, but might be compiled in a future layer.
-     */
     static boolean isInjectedNotCompiled(HostedMethod target) {
         return !target.isCompiled() && !target.isCompiledInPriorLayer();
     }
@@ -697,8 +656,6 @@ public abstract class NativeImage extends AbstractImage {
         }
         return true;
     }
-
-    /** Mark a relocation site for the location of an image heap object. */
     private void markHeapReferenceRelocationSite(ProgbitsSectionImpl sectionImpl, int offset, RelocatableBuffer.Info info, ObjectInfo targetObjectInfo) {
         assert targetDescription.arch instanceof AArch64 || info.getRelocationSize() == 4 || info.getRelocationSize() == 8 : "AMD64 Data relocation size should be 4 or 8 bytes.";
         String targetSectionName = heapSection.getName();
@@ -824,47 +781,12 @@ public abstract class NativeImage extends AbstractImage {
 
         return name;
     }
-
-    /**
-     * Given a {@link ResolvedJavaMethod}, compute what symbol name of its start address (if any) in
-     * the image. The symbol name returned is the one that would be used for local references (e.g.
-     * for relocation), so is guaranteed to exist if the method is in the image. However, it is not
-     * necessarily visible for linking from other objects.
-     *
-     * @param sm a SubstrateMethod
-     * @return its symbol name as it would appear in the image (regardless of whether it actually
-     *         does)
-     */
     public static String localSymbolNameForMethod(ResolvedJavaMethod sm) {
         return SubstrateOptions.ImageSymbolsPrefix.getValue() + getUniqueShortName(sm);
     }
-
-    /**
-     * Given a java.lang.reflect.Method, compute the symbol name of its entry point (if any) in the
-     * image. The symbol name returned is one that would be used for external references (e.g. for
-     * linking) and for method lookup by signature. If multiple methods with the same signature are
-     * present in the image, the returned symbol name is not guaranteed to resolve to the method
-     * being passed.
-     *
-     * @param m a java.lang.reflect.Method
-     * @return its symbol name as it would appear in the image (regardless of whether it actually
-     *         does)
-     */
     public static String globalSymbolNameForMethod(java.lang.reflect.Method m) {
         return mangleName(BuilderUtil.uniqueShortName(m));
     }
-
-    /**
-     * Given a {@link ResolvedJavaMethod}, compute what symbol name of its entry point (if any) in
-     * the image. The symbol name returned is one that would be used for external references (e.g.
-     * for linking) and for method lookup by signature. If multiple methods with the same signature
-     * are present in the image, the returned symbol name is not guaranteed to resolve to the method
-     * being passed.
-     *
-     * @param sm a SubstrateMethod
-     * @return its symbol name as it would appear in the image (regardless of whether it actually
-     *         does)
-     */
     public static String globalSymbolNameForMethod(ResolvedJavaMethod sm) {
         return mangleName(getUniqueShortName(sm));
     }
@@ -885,8 +807,91 @@ public abstract class NativeImage extends AbstractImage {
         return objectFile;
     }
 
+    /**
+     * Looks up the corresponding {@link CHeader} annotation for the {@link HostedMethod}. Returns
+     * {@code null} if no annotation was found.
+     */
+
+    /** Workaround for lack of `Method.getAnnotatedReturnType` in the JVMCI API (GR-9241). */
+
+    /** Workaround for lack of `Method.getAnnotatedParameterTypes` in the JVMCI API (GR-9241). */
+
+    /**
+     * Create the image sections for code, constants, and the heap.
+     */
+
+    /**
+     * Mark a location that needs to be patched by the dynamic linker at runtime to reflect the
+     * address where code has been loaded.
+     *
+     * {@linkplain DynamicHub Virtual dispatch tables} typically make up the vast majority of such
+     * locations. Frequent other locations to patch are in {@linkplain SubstrateAccessor reflection
+     * accessors}, {@linkplain JNIAccessibleMethod JNI accessors} and in
+     * {@link FunctionPointerHolder}.
+     *
+     * With {@link SubstrateOptions#useRelativeCodePointers()}, virtual dispatch tables contain
+     * offsets relative to a code base address and so do not need to be patched at runtime, which
+     * also avoids the cost of private copies of memory pages with the patched values.
+     *
+     * With code offsets and layered images, however, the code base refers only to the initial
+     * layer's code section, so we patch offsets to code from other layers to become relative to
+     * that code base ourselves at runtime. We do so in our own code without using the dynamic
+     * linker. See {@link LayeredDispatchTableFeature} which gathers these locations and
+     * {@link ImageLayerSectionFeature} which provides them for patching in the
+     * {@link ImageHeapProvider} at runtime.
+     *
+     * {@link NativeImageHeap#isRelocatableValue} and {@link NativeImageHeapWriter#writeConstant}
+     * determine (for the image heap) whether a code reference requires a linker relocation here.
+     */
+
+    /**
+     * Whether a method has not been compiled in the current image build, and with layered images,
+     * not in a prior layer, but might be compiled in a future layer.
+     */
+
+    /** Mark a relocation site for the location of an image heap object. */
+
+    /**
+     * Given a {@link ResolvedJavaMethod}, compute what symbol name of its start address (if any) in
+     * the image. The symbol name returned is the one that would be used for local references (e.g.
+     * for relocation), so is guaranteed to exist if the method is in the image. However, it is not
+     * necessarily visible for linking from other objects.
+     *
+     * @param sm a SubstrateMethod
+     * @return its symbol name as it would appear in the image (regardless of whether it actually
+     *         does)
+     */
+
+    /**
+     * Given a java.lang.reflect.Method, compute the symbol name of its entry point (if any) in the
+     * image. The symbol name returned is one that would be used for external references (e.g. for
+     * linking) and for method lookup by signature. If multiple methods with the same signature are
+     * present in the image, the returned symbol name is not guaranteed to resolve to the method
+     * being passed.
+     *
+     * @param m a java.lang.reflect.Method
+     * @return its symbol name as it would appear in the image (regardless of whether it actually
+     *         does)
+     */
+
+    /**
+     * Given a {@link ResolvedJavaMethod}, compute what symbol name of its entry point (if any) in
+     * the image. The symbol name returned is one that would be used for external references (e.g.
+     * for linking) and for method lookup by signature. If multiple methods with the same signature
+     * are present in the image, the returned symbol name is not guaranteed to resolve to the method
+     * being passed.
+     *
+     * @param sm a SubstrateMethod
+     * @return its symbol name as it would appear in the image (regardless of whether it actually
+     *         does)
+     */
+
     public abstract static class NativeTextSectionImpl extends BasicProgbitsSectionImpl {
         DeadlockWatchdog watchdog = DeadlockWatchdog.singleton();
+
+        protected final RelocatableBuffer textBuffer;
+        protected final ObjectFile objectFile;
+        protected final NativeImageCodeCache codeCache;
 
         public static NativeTextSectionImpl factory(RelocatableBuffer relocatableBuffer, ObjectFile objectFile, NativeImageCodeCache codeCache) {
             return codeCache.getTextSectionImpl(relocatableBuffer, objectFile, codeCache);
@@ -1039,10 +1044,6 @@ public abstract class NativeImage extends AbstractImage {
             this.objectFile = objectFile;
             this.codeCache = codeCache;
         }
-
-        protected final RelocatableBuffer textBuffer;
-        protected final ObjectFile objectFile;
-        protected final NativeImageCodeCache codeCache;
     }
 }
 

@@ -81,9 +81,6 @@ import com.oracle.svm.core.posix.headers.Fcntl;
 import com.oracle.svm.core.posix.headers.Unistd;
 import com.oracle.svm.core.util.PointerUtils;
 import com.oracle.svm.core.util.UnsignedUtils;
-import com.oracle.svm.guest.staging.c.CGlobalData;
-import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
-import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
 import com.oracle.svm.hosted.imagelayer.ImageLayerSectionFeature;
 import com.oracle.svm.hosted.imagelayer.LayeredDispatchTableFeature;
 import com.oracle.svm.shared.Uninterruptible;
@@ -91,6 +88,9 @@ import com.oracle.svm.shared.singletons.traits.BuiltinTraits.AllAccess;
 import com.oracle.svm.shared.singletons.traits.BuiltinTraits.SingleLayer;
 import com.oracle.svm.shared.singletons.traits.SingletonLayeredInstallationKind.InitialLayerOnly;
 import com.oracle.svm.shared.singletons.traits.SingletonTraits;
+import com.oracle.svm.guest.staging.c.function.CEntryPointErrors;
+import com.oracle.svm.guest.staging.c.CGlobalData;
+import com.oracle.svm.guest.staging.c.CGlobalDataFactory;
 import com.oracle.svm.shared.util.NumUtil;
 import com.oracle.svm.shared.util.VMError;
 
@@ -129,13 +129,13 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
 
     private static final int MAX_PATHLEN = 4096;
 
+    private static final CGlobalData<Word> IMAGE_HEAP_PATCHING_STATE = CGlobalDataFactory.createWord(ImageHeapPatchingState.UNINITIALIZED);
+
     private static final class ImageHeapPatchingState {
         static final Word UNINITIALIZED = Word.zero();
         static final Word IN_PROGRESS = Word.unsigned(1);
         static final Word SUCCESSFUL = Word.unsigned(2);
     }
-
-    private static final CGlobalData<Word> IMAGE_HEAP_PATCHING_STATE = CGlobalDataFactory.createWord(ImageHeapPatchingState.UNINITIALIZED);
 
     @Uninterruptible(reason = "Called during isolate initialization.")
     protected int initializeLayeredImage(Pointer imageHeapStart, Pointer imageHeapEnd, Pointer selfReservedHeapBase) {
@@ -186,12 +186,6 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
         assert imageHeapEnd == currentHeapStart;
         return result;
     }
-
-    /**
-     * Apply patches to the image heap as specified by each layer. See {@link ImageLayerSection} and
-     * {@link ImageLayerSectionFeature} for the layout of the section that contains the patches and
-     * {@link LayeredDispatchTableFeature} where code patches are gathered.
-     */
     @Uninterruptible(reason = "Thread state not yet set up.")
     public static void patchLayeredImageHeap() {
         Word heapPatchStateAddr = IMAGE_HEAP_PATCHING_STATE.get();
@@ -290,11 +284,6 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
         }
         return offset;
     }
-
-    /**
-     * See {@code CrossLayerConstantRegistryFeature#generateRelocationPatchArray} for more details
-     * about the layout.
-     */
     @Uninterruptible(reason = "Thread state not yet set up.")
     private static int applyLayerImageHeapRefPatches(Pointer patches, int startOffset, Pointer layerImageHeap) {
         int referenceSize = ObjectLayout.singleton().getReferenceSize();
@@ -315,11 +304,6 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
         }
         return endOffset;
     }
-
-    /**
-     * See {@code CrossLayerUpdaterFeature#generateUpdatePatchArray} for more details about the
-     * layout.
-     */
     @Uninterruptible(reason = "Thread state not yet set up.")
     private static int applyLayerImageHeapFieldUpdatePatches(Pointer patches, int startOffset, Pointer layerImageHeap) {
         long countAsLong = patches.readLong(startOffset);
@@ -536,15 +520,6 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
 
         return unprotectWritablePages(imageHeap, pageSize, heapBeginSym, heapWritableSym, heapWritableEndSym);
     }
-
-    /**
-     * Returns a valid pointer if successful; otherwise, returns a negated
-     * {@linkplain CEntryPointErrors error code}.
-     *
-     * It is necessary to cache the image heap relocations because when we remap a file-backed
-     * memory region, we observe that the "old" virtual address space is reinitialized to its
-     * original state w/o relocations.
-     */
     @Uninterruptible(reason = "Called during isolate initialization.")
     private static Pointer getCachedImageHeapRelocations(Pointer cachedImageHeapRelocationsPtr, UnsignedWord pageSize, Word heapRelocsSym, Word heapWritablePatchedEndSym) {
         Pointer imageHeapRelocations = cachedImageHeapRelocationsPtr.readWord(0, LocationIdentity.ANY_LOCATION);
@@ -705,11 +680,6 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
         }
         return CEntryPointErrors.NO_ERROR;
     }
-
-    /**
-     * Locate our image file, containing the image heap. Unfortunately we must open it by its path.
-     * We do not use /proc/self/exe because it breaks with some tools like Valgrind.
-     */
     @Uninterruptible(reason = "Called during isolate initialization.")
     private static int openImageFile(Word heapBeginSym, Pointer magicAddress, WordPointer cachedImageHeapOffsetInFile) {
         final int failfd = (int) CANNOT_OPEN_FD.rawValue();
@@ -792,4 +762,34 @@ public class LinuxImageHeapProvider extends AbstractImageHeapProvider {
         }
         return CEntryPointErrors.NO_ERROR;
     }
+
+    /**
+     * Apply patches to the image heap as specified by each layer. See {@link ImageLayerSection} and
+     * {@link ImageLayerSectionFeature} for the layout of the section that contains the patches and
+     * {@link LayeredDispatchTableFeature} where code patches are gathered.
+     */
+
+    /**
+     * See {@code CrossLayerConstantRegistryFeature#generateRelocationPatchArray} for more details
+     * about the layout.
+     */
+
+    /**
+     * See {@code CrossLayerUpdaterFeature#generateUpdatePatchArray} for more details about the
+     * layout.
+     */
+
+    /**
+     * Returns a valid pointer if successful; otherwise, returns a negated
+     * {@linkplain CEntryPointErrors error code}.
+     *
+     * It is necessary to cache the image heap relocations because when we remap a file-backed
+     * memory region, we observe that the "old" virtual address space is reinitialized to its
+     * original state w/o relocations.
+     */
+
+    /**
+     * Locate our image file, containing the image heap. Unfortunately we must open it by its path.
+     * We do not use /proc/self/exe because it breaks with some tools like Valgrind.
+     */
 }
