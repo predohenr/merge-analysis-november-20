@@ -83,6 +83,13 @@ import static org.awaitility.Awaitility.await;
  *
  * @author Tadaya Tsuyukubo
  */
+
+/**
+ * Test for {@link ObservationGrpcServerInterceptor} and
+ * {@link ObservationGrpcClientInterceptor}.
+ *
+ * @author Tadaya Tsuyukubo
+ */
 class GrpcObservationTest {
 
     private @Nullable Server server;
@@ -820,7 +827,7 @@ class GrpcObservationTest {
             this.events.add(event);
         }
 
-        T getContext() {
+                T getContext() {
             return Objects.requireNonNull(this.contextHolder.get());
         }
 
