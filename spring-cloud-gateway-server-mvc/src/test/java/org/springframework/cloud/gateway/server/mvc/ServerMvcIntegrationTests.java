@@ -167,6 +167,9 @@ public class ServerMvcIntegrationTests {
 	@Autowired
 	TestRestClient restClient;
 
+	private static final MediaType FORM_URL_ENCODED_CONTENT_TYPE = new MediaType(APPLICATION_FORM_URLENCODED,
+			StandardCharsets.UTF_8);
+
 	@Test
 	public void nonGatewayRouterFunctionWorks() {
 		restClient.get().uri("/hello").exchange().expectStatus().isOk().expectBody(String.class).isEqualTo("Hello");
@@ -592,9 +595,6 @@ public class ServerMvcIntegrationTests {
 			.expectStatus()
 			.isOk();
 	}
-
-	private static final MediaType FORM_URL_ENCODED_CONTENT_TYPE = new MediaType(APPLICATION_FORM_URLENCODED,
-			StandardCharsets.UTF_8);
 
 	@Test
 	void formUrlencodedWorks() {
@@ -1032,7 +1032,7 @@ public class ServerMvcIntegrationTests {
 	@EnableAutoConfiguration
 	@LoadBalancerClient(name = "httpbin", configuration = TestLoadBalancerConfig.Httpbin.class)
 	@Import(PermitAllSecurityConfiguration.class)
-	protected static class TestConfiguration {
+	protected static class TestConfiguration extends WebMvcConfigurationSupport {
 
 		@Bean
 		StaticPortController staticPortController() {
@@ -1047,6 +1047,19 @@ public class ServerMvcIntegrationTests {
 		@Bean
 		EventController eventController() {
 			return new EventController();
+		}
+		@Bean
+		@Lazy
+		@Override
+		public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+			return new HandlerMappingIntrospector() {
+				@Override
+				public Filter createCacheFilter() {
+					return (request, response, chain) -> {
+						chain.doFilter(request, response);
+					};
+				}
+			};
 		}
 
 		@Bean
@@ -1668,6 +1681,13 @@ public class ServerMvcIntegrationTests {
 				}
 			};
 		}
+
+		// TODO This is needed to work around
+		// https://github.com/spring-cloud/spring-cloud-gateway/issues/3816
+		// which results from Spring Security being on the classpath. Once we can address
+		// this issue we should
+		// remove this bean and no longer extend WebMvcConfigurationSupport in this
+		// configuration class
 
 	}
 
