@@ -39,6 +39,11 @@ import static org.mockito.Mockito.*;
  * @author Allard Buijze
  * @since 0.7
  */
+
+/**
+ * @author Allard Buijze
+ * @since 0.7
+ */
 class FixtureTest_MatcherParams {
 
     private FixtureConfiguration<StandardAggregate> fixture;
