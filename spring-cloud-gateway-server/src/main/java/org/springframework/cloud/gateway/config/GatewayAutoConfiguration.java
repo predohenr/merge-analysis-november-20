@@ -214,7 +214,7 @@ public class GatewayAutoConfiguration {
 	 * {@link org.springframework.cloud.gateway.support.config.KeyValueConverter}
 	 */
 	@Deprecated
-	@Bean
+@Bean
 	public org.springframework.cloud.gateway.support.KeyValueConverter deprecatedKeyValueConverter() {
 		return new org.springframework.cloud.gateway.support.KeyValueConverter();
 	}
@@ -433,14 +433,6 @@ public class GatewayAutoConfiguration {
 		return new WeightCalculatorWebFilter(routeLocator, configurationService);
 	}
 
-	// Predicate Factory beans
-
-	@Bean
-	@ConditionalOnEnabledPredicate
-	public AfterRoutePredicateFactory afterRoutePredicateFactory() {
-		return new AfterRoutePredicateFactory();
-	}
-
 	@Bean
 	@ConditionalOnEnabledPredicate
 	public BeforeRoutePredicateFactory beforeRoutePredicateFactory() {
@@ -476,6 +468,14 @@ public class GatewayAutoConfiguration {
 	@ConditionalOnEnabledPredicate
 	public MethodRoutePredicateFactory methodRoutePredicateFactory() {
 		return new MethodRoutePredicateFactory();
+	}
+
+	// Predicate Factory beans
+
+	@Bean
+	@ConditionalOnEnabledPredicate
+	public AfterRoutePredicateFactory afterRoutePredicateFactory() {
+		return new AfterRoutePredicateFactory();
 	}
 
 	@Bean
