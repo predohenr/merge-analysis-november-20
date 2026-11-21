@@ -86,7 +86,6 @@ public class InputsResource extends AbstractInputsResource {
     private final InputDiagnosticService inputDiagnosticService;
     private final MessageInputFactory messageInputFactory;
     private final Configuration config;
-    private final ClusterEventBus clusterEventBus;
 
     @Inject
     public InputsResource(InputService inputService,
@@ -101,6 +100,7 @@ public class InputsResource extends AbstractInputsResource {
         this.config = config;
         this.clusterEventBus = clusterEventBus;
     }
+    private final ClusterEventBus clusterEventBus;
 
     @GET
     @Timed
