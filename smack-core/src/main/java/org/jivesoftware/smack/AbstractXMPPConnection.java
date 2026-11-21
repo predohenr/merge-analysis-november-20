@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2009 Jive Software, 2018-2025 Florian Schmaus.
+ * Copyright 2009 Jive Software, 2018-2024 Florian Schmaus.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
     protected enum SyncPointState {
         initial,
         request_sent,
-        successful,
+        successful
     }
 
     /**
@@ -384,7 +384,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
      * @param configuration The configuration which is used to establish the connection.
      */
     @SuppressWarnings("this-escape")
-    protected AbstractXMPPConnection(ConnectionConfiguration configuration) {
+protected AbstractXMPPConnection(ConnectionConfiguration configuration) {
         saslAuthentication = new SASLAuthentication(this, configuration);
         config = configuration;
 
@@ -483,7 +483,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
     }
 
     @SuppressWarnings("deprecation")
-    @Override
+@Override
     public boolean trySendStanza(Stanza stanza, long timeout, TimeUnit unit)
                     throws NotConnectedException, InterruptedException {
         // Default implementation which falls back to sendStanza() as mentioned in the methods javadoc. May be
@@ -1444,7 +1444,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
         Stanza stanza = null;
         try {
             try {
-                stanza = PacketParserUtils.parseStanza(parser, incomingStreamXmlEnvironment);
+            stanza = PacketParserUtils.parseStanza(parser, incomingStreamXmlEnvironment);
             } catch (NullPointerException e) {
                 // Those exceptions should probably be wrapped into a SmackParsingException and therefore likely constitute a missing verification in the throwing parser.
                 String message = "Smack parser throw unexpected exception '" + e.getMessage() + "', please report this at " + Smack.BUG_REPORT_URL;
@@ -1527,9 +1527,9 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
                     case reply:
                         boolean isKnownNamespace = iqRequestHandlerNamespaces.contains(iqNamespace);
                         if (isKnownNamespace) {
-                            replyCondition = StanzaError.Condition.feature_not_implemented;
+                        replyCondition = StanzaError.Condition.feature_not_implemented;
                         } else {
-                            replyCondition = StanzaError.Condition.service_unavailable;
+                        replyCondition = StanzaError.Condition.service_unavailable;
                         }
                         break;
                     default:
@@ -2012,12 +2012,12 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
         }, timeout, TimeUnit.MILLISECONDS);
 
         addAsyncStanzaListener(stanzaListener, replyFilter);
-        try {
+            try {
             sendStanzaNonBlocking(stanza);
-        }
+            }
         catch (NotConnectedException | OutgoingQueueFullException exception) {
-            future.setException(exception);
-        }
+                future.setException(exception);
+            }
 
         return future;
     }
@@ -2171,7 +2171,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
      * list ever becomes very big and shrinks again.
      */
     @SuppressWarnings("JdkObsolete")
-    private final Queue<Runnable> deferredAsyncRunnables = new LinkedList<>();
+private final Queue<Runnable> deferredAsyncRunnables = new LinkedList<>();
 
     private int deferredAsyncRunnablesCount;
 
@@ -2266,11 +2266,11 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
         assert StreamOpen.UNPREFIXED_ELEMENT.equals(parser.getName());
 
         streamId = parser.getAttributeValue("id");
-        incomingStreamXmlEnvironment = XmlEnvironment.from(parser);
+            incomingStreamXmlEnvironment = XmlEnvironment.from(parser);
 
         String reportedServerDomainString = parser.getAttributeValue("from");
-        // RFC 6120 § 4.7.1. makes no explicit statement whether or not 'from' in the stream open from the server
-        // in c2s connections is required or not.
+                // RFC 6120 § 4.7.1. makes no explicit statement whether or not 'from' in the stream open from the server
+                // in c2s connections is required or not.
         if (reportedServerDomainString != null) {
             DomainBareJid reportedServerDomain;
             try {
