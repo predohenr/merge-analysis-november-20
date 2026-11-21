@@ -34,14 +34,14 @@ import org.axonframework.messaging.eventstreaming.EventCriteria;
 import org.axonframework.modelling.StateManager;
 import org.axonframework.modelling.repository.Repository;
 import org.junit.jupiter.api.*;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.axonframework.common.configuration.StubLifecycleRegistry;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
