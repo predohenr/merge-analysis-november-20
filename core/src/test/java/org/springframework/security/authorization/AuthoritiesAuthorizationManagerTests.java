@@ -40,6 +40,13 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
  * @author Evgeniy Cheban
  * @author Khyojae
  */
+
+/**
+ * Tests for {@link AuthoritiesAuthorizationManager}.
+ *
+ * @author Evgeniy Cheban
+ * @author Khyojae
+ */
 class AuthoritiesAuthorizationManagerTests {
 
 	@Test
