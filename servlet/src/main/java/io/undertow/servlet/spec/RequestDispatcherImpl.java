@@ -79,8 +79,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         if(System.getSecurityManager() != null) {
             try {
                 java.security.AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
-                    forwardImplSetup(request, response);
-                    return null;
+                        forwardImplSetup(request, response);
+                        return null;
                 });
             } catch (PrivilegedActionException e) {
                 if(e.getCause() instanceof ServletException) {
@@ -227,8 +227,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         if(System.getSecurityManager() != null) {
             try {
                 java.security.AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
-                    setupIncludeImpl(request, response);
-                    return null;
+                        setupIncludeImpl(request, response);
+                        return null;
                 });
             } catch (PrivilegedActionException e) {
                 if(e.getCause() instanceof ServletException) {
