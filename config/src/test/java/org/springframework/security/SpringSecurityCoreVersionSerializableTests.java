@@ -251,6 +251,21 @@ import static org.assertj.core.api.Assertions.fail;
  * @see <a href="https://github.com/spring-projects/spring-security/issues/3737">GitHub
  * Issue #3737</a>
  */
+
+/**
+ * Tests that Spring Security classes that implements {@link Serializable} and have the
+ * same serial version as {@link SpringSecurityCoreVersion#SERIAL_VERSION_UID} can be
+ * deserialized from a previous minor version.
+ * <p>
+ * For example, all classes from version 6.2.x that matches the previous requirement
+ * should be serialized and saved to a folder, and then later on, in 6.3.x, it is verified
+ * if they can be deserialized
+ *
+ * @author Marcus da Coregio
+ * @since 6.2.2
+ * @see <a href="https://github.com/spring-projects/spring-security/issues/3737">GitHub
+ * Issue #3737</a>
+ */
 class SpringSecurityCoreVersionSerializableTests {
 
 	private static final Map<Class<?>, Generator<?>> generatorByClassName = new HashMap<>();
@@ -633,6 +648,40 @@ class SpringSecurityCoreVersionSerializableTests {
 			webAuthnAuthentication.setDetails(details);
 			return webAuthnAuthentication;
 		});
+
+		// webauthn
+		CredProtectAuthenticationExtensionsClientInput.CredProtect credProtect = new CredProtectAuthenticationExtensionsClientInput.CredProtect(
+				CredProtectAuthenticationExtensionsClientInput.CredProtect.ProtectionPolicy.USER_VERIFICATION_OPTIONAL,
+				true);
+		Bytes id = TestBytes.get();
+		AuthenticationExtensionsClientInputs inputs = new ImmutableAuthenticationExtensionsClientInputs(
+				ImmutableAuthenticationExtensionsClientInput.credProps);
+		// @formatter:off
+		PublicKeyCredentialDescriptor descriptor = PublicKeyCredentialDescriptor.builder()
+				.id(id)
+				.type(PublicKeyCredentialType.PUBLIC_KEY)
+				.transports(Set.of(AuthenticatorTransport.USB))
+				.build();
+		// @formatter:on
+		generatorByClassName.put(AuthenticatorTransport.class, (a) -> AuthenticatorTransport.USB);
+		generatorByClassName.put(PublicKeyCredentialType.class, (k) -> PublicKeyCredentialType.PUBLIC_KEY);
+		generatorByClassName.put(UserVerificationRequirement.class, (r) -> UserVerificationRequirement.REQUIRED);
+		generatorByClassName.put(CredProtectAuthenticationExtensionsClientInput.CredProtect.class, (c) -> credProtect);
+		generatorByClassName.put(CredProtectAuthenticationExtensionsClientInput.class,
+				(c) -> new CredProtectAuthenticationExtensionsClientInput(credProtect));
+		generatorByClassName.put(ImmutableAuthenticationExtensionsClientInputs.class, (i) -> inputs);
+		Field credPropsField = ReflectionUtils.findField(ImmutableAuthenticationExtensionsClientInput.class,
+				"credProps");
+		generatorByClassName.put(credPropsField.getType(),
+				(i) -> ImmutableAuthenticationExtensionsClientInput.credProps);
+		generatorByClassName.put(Bytes.class, (b) -> id);
+		generatorByClassName.put(PublicKeyCredentialDescriptor.class, (d) -> descriptor);
+		// @formatter:off
+		generatorByClassName.put(PublicKeyCredentialRequestOptions.class, (o) -> TestPublicKeyCredentialRequestOptions.create()
+				.extensions(inputs)
+				.allowCredentials(List.of(descriptor))
+				.build()
+		);
 		// @formatter:on
 	}
 
