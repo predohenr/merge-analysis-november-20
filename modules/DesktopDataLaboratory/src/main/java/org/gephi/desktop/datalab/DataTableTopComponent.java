@@ -277,7 +277,7 @@ public class DataTableTopComponent extends TopComponent implements AWTEventListe
 
     private void deactivateAll() {
         if (dataTablesObservers != null) {
-            dataTablesObservers.destroy();
+        dataTablesObservers.destroy();
         }
 
         graphModel = null;
@@ -1571,6 +1571,12 @@ public class DataTableTopComponent extends TopComponent implements AWTEventListe
     private enum DisplayTable {
         NODE, EDGE
     }
+
+    /**
+     * This thread is used for processing graphChanged and attributesChanged
+     * events. It takes care to only refresh the UI once (the last one) when a
+     * lot of events come in a short period of time.
+     */
 
     /**
      * This thread is used for processing graphChanged and attributesChanged

@@ -247,15 +247,11 @@ public class GraphTopComponent extends TopComponent implements AWTEventListener 
         propertiesBar.setup(vizModel);
     }
 
-    private void initKeyEventContextMenuActionMappings() {
-//        mapItems(Lookup.getDefault().lookupAll(GraphContextMenuItem.class).toArray(new GraphContextMenuItem[0]));
-    }
-
     private void initToolPanels() {
         if (toolbar != null) {
             return;
         }
-        JPanel westPanel = new JPanel(new BorderLayout(0, 0));
+                JPanel westPanel = new JPanel(new BorderLayout(0, 0));
 
         westPanel.add(selectionToolbar, BorderLayout.NORTH);
         westPanel.add(actionsToolbar, BorderLayout.SOUTH);
@@ -263,17 +259,17 @@ public class GraphTopComponent extends TopComponent implements AWTEventListener 
 
         final DesktopToolController tc = Lookup.getDefault().lookup(DesktopToolController.class);
         if (tc != null) {
-            toolbar = tc.getToolbar();
-            if (toolbar != null) {
-                westPanel.add(toolbar, BorderLayout.CENTER);
-            }
+                toolbar = tc.getToolbar();
+                if (toolbar != null) {
+                    westPanel.add(toolbar, BorderLayout.CENTER);
+                }
             JComponent toolsPropertiesBar = tc.getPropertiesBar();
             propertiesBar.addToolsPropertiesBar(toolsPropertiesBar);
         } else {
             toolbar = new JPanel();
         }
 
-        add(westPanel, BorderLayout.WEST);
+                add(westPanel, BorderLayout.WEST);
 
 //        final ProjectController projectController = Lookup.getDefault().lookup(ProjectController.class);
 //        projectController.addWorkspaceListener(new WorkspaceListener() {
@@ -302,6 +298,10 @@ public class GraphTopComponent extends TopComponent implements AWTEventListener 
 //                }
 //            }
 //        });
+    }
+
+    private void initKeyEventContextMenuActionMappings() {
+//        mapItems(Lookup.getDefault().lookupAll(GraphContextMenuItem.class).toArray(new GraphContextMenuItem[0]));
     }
 
     /**
@@ -351,6 +351,24 @@ public class GraphTopComponent extends TopComponent implements AWTEventListener 
     }
 
     @Override
+    protected void componentDeactivated() {
+        super.componentDeactivated();
+        java.awt.Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+    }
+
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        // TODO store your settings
+    }
+
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        // TODO read your settings according to their version
+    }
+
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         deactivateWorkspaceVizEngine(
@@ -384,23 +402,5 @@ public class GraphTopComponent extends TopComponent implements AWTEventListener 
             Lookup.getDefault().lookup(ProjectController.class)
                 .getCurrentWorkspace()
         );
-    }
-
-    @Override
-    protected void componentDeactivated() {
-        super.componentDeactivated();
-        java.awt.Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-    }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
-    }
-
-    void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 }
