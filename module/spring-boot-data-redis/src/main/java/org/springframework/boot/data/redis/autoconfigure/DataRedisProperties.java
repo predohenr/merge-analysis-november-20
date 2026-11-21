@@ -107,7 +107,7 @@ public class DataRedisProperties {
 
 	public int getDatabase() {
 		return this.database;
-	}
+				}
 
 	public void setDatabase(int database) {
 		this.database = database;
