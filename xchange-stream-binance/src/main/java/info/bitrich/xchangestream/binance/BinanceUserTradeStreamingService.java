@@ -29,15 +29,15 @@ import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.MarketOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.regex.Pattern;
+import static info.bitrich.xchangestream.binance.dto.trade.BinanceWebsocketOrderCancelAndReplacePayload.CancelReplaceMode.STOP_ON_FAILURE;
+import java.time.Duration;
 
 public class BinanceUserTradeStreamingService extends JsonNettyStreamingService {
 
