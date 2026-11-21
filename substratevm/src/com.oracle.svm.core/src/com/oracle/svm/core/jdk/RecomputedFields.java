@@ -255,6 +255,13 @@ final class Target_java_util_concurrent_ForkJoinPool {
  * This class is also a convenient place to handle the initialization of "common" and
  * "commonParallelism", which can unfortunately be accessed independently.
  */
+
+/**
+ * An injected field to replace ForkJoinPool.common.
+ *
+ * This class is also a convenient place to handle the initialization of "common" and
+ * "commonParallelism", which can unfortunately be accessed independently.
+ */
 class ForkJoinPoolCommonAccessor {
 
     /**
