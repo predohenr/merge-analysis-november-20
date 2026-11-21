@@ -150,6 +150,19 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	}
 
 	/**
+	 * Applies a {@link SecurityConfigurer} to this {@link SecurityBuilder} overriding any
+	 * {@link SecurityConfigurer} of the exact same class. Note that object hierarchies
+	 * are not considered.
+	 * @param configurer
+	 * @return the {@link SecurityConfigurerAdapter} for further customizations
+	 * @throws Exception
+	 */
+	public <C extends SecurityConfigurer<O, B>> C apply(C configurer) throws Exception {
+		add(configurer);
+		return configurer;
+	}
+
+	/**
 	 * Applies a {@link SecurityConfigurerAdapter} to this {@link SecurityBuilder} and
 	 * invokes {@link SecurityConfigurerAdapter#setBuilder(SecurityBuilder)}.
 	 * @param configurer
@@ -374,9 +387,9 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 			List<SecurityConfigurer<O, B>> toInit = this.configurersAddedInInitializing;
 			this.configurersAddedInInitializing = new ArrayList<>();
 			for (SecurityConfigurer<O, B> configurer : toInit) {
-				configurer.init((B) this);
-			}
+			configurer.init((B) this);
 		}
+	}
 	}
 
 	@SuppressWarnings("unchecked")
