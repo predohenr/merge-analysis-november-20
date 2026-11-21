@@ -56,6 +56,12 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
  *
  * @author Andy Wilkinson
  */
+
+/**
+ * Tests for generating documentation describing the {@link InfoEndpoint}.
+ *
+ * @author Andy Wilkinson
+ */
 class InfoEndpointDocumentationTests extends MockMvcEndpointDocumentationTests {
 
 	@Test
