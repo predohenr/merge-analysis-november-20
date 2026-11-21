@@ -373,7 +373,7 @@ public class SelectStatement implements CQLStatement.SingleKeyspaceCqlStatement,
 
         cl.validateForRead();
         if (Guardrails.readConsistencyLevels.enabled(state.getClientState())) // to avoid EnumSet allocation
-            Guardrails.readConsistencyLevels.guard(EnumSet.of(cl), state.getClientState());
+        Guardrails.readConsistencyLevels.guard(EnumSet.of(cl), state.getClientState());
 
         long nowInSec = options.getNowInSeconds(state);
         int userLimit = getLimit(options);
