@@ -45,6 +45,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Sources for observation-components.adoc
  */
+
+/**
+ * Sources for observation-components.adoc
+ */
 class ObservationHandlerTests {
 
     @Test
@@ -376,6 +380,8 @@ class ObservationHandlerTests {
     }
 
     // Interface for an ObservationConvention related to calculating Tax
+
+    // Interface for an ObservationConvention related to calculating Tax
     interface TaxObservationConvention extends ObservationConvention<TaxContext> {
 
         @Override
@@ -407,6 +413,13 @@ class ObservationHandlerTests {
         }
 
     }
+
+    /**
+     * If micrometer-docs-generator is used, we will automatically generate documentation
+     * for your observations. Check this URL
+     * https://github.com/micrometer-metrics/micrometer-docs-generator#documentation for
+     * setup example and read the {@link ObservationDocumentation} javadocs.
+     */
 
     /**
      * If micrometer-docs-generator is used, we will automatically generate documentation
