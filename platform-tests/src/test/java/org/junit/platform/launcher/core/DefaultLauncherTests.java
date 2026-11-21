@@ -88,6 +88,10 @@ import org.mockito.InOrder;
 /**
  * @since 1.0
  */
+
+/**
+ * @since 1.0
+ */
 class DefaultLauncherTests {
 
 	private static final String FOO = DefaultLauncherTests.class.getSimpleName() + ".foo";
