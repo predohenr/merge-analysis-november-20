@@ -52,6 +52,13 @@ import static org.assertj.core.api.Assertions.*;
  * @author Jon Schneider
  * @author Johnny Lim
  */
+
+/**
+ * Tests for {@link StatsdMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ */
 class StatsdMeterRegistryTest {
 
     private final MockClock clock = new MockClock();
