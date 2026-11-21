@@ -66,6 +66,15 @@ import static org.springframework.aot.hint.predicate.RuntimeHintsPredicates.refl
  * @author Stephane Nicoll
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link BeanRegistrationsAotContribution}.
+ *
+ * @author Phillip Webb
+ * @author Sebastien Deleuze
+ * @author Stephane Nicoll
+ * @author Brian Clozel
+ */
 class BeanRegistrationsAotContributionTests {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
