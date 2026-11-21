@@ -25,9 +25,10 @@ import org.axonframework.common.TypeReference;
 import org.axonframework.common.infra.ComponentDescriptor;
 import org.axonframework.common.jdbc.PersistenceExceptionResolver;
 import org.axonframework.common.jpa.EntityManagerProvider;
+import org.axonframework.conversion.Converter;
 import org.axonframework.eventsourcing.eventstore.AggregateBasedConsistencyMarker;
 import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils;
-import org.axonframework.conversion.Converter;
+import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.*;
 import org.axonframework.eventsourcing.eventstore.AggregateSequenceNumberPosition;
 import org.axonframework.eventsourcing.eventstore.AppendCondition;
 import org.axonframework.eventsourcing.eventstore.ConsistencyMarker;
@@ -49,14 +50,13 @@ import org.axonframework.messaging.eventhandling.EventMessage;
 import org.axonframework.messaging.eventhandling.GenericEventMessage;
 import org.axonframework.messaging.eventhandling.TerminalEventMessage;
 import org.axonframework.messaging.eventhandling.conversion.EventConverter;
-import org.axonframework.messaging.eventhandling.processing.streaming.token.GapAwareTrackingToken;
-import org.axonframework.messaging.eventhandling.processing.streaming.token.TrackingToken;
+import org.axonframework.messaging.eventhandling.processors.streaming.token.GapAwareTrackingToken;
+import org.axonframework.messaging.eventhandling.processors.streaming.token.TrackingToken;
 import org.axonframework.messaging.eventstreaming.EventCriterion;
 import org.axonframework.messaging.eventstreaming.StreamingCondition;
 import org.axonframework.messaging.eventstreaming.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,10 +76,25 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
 import static java.util.Objects.requireNonNull;
 import static org.axonframework.common.DateTimeUtils.formatInstant;
 import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.*;
+import org.axonframework.messaging.core.unitofwork.transaction.TransactionManager;
+import org.axonframework.messaging.eventhandling.EventMessage;
+import org.axonframework.messaging.eventhandling.GenericEventMessage;
+import org.axonframework.messaging.eventhandling.TerminalEventMessage;
+import org.axonframework.messaging.eventhandling.conversion.EventConverter;
+import org.axonframework.messaging.eventhandling.processing.streaming.token.GapAwareTrackingToken;
+import org.axonframework.messaging.eventhandling.processing.streaming.token.TrackingToken;
+import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.AggregateSequencer;
+import org.axonframework.messaging.core.LegacyResources;
+import org.axonframework.messaging.eventstreaming.EventCriterion;
+import org.axonframework.messaging.eventstreaming.StreamingCondition;
+import org.axonframework.messaging.eventstreaming.Tag;
+import org.axonframework.conversion.Converter;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.assertValidTags;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.resolveAggregateIdentifier;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.resolveAggregateType;
 
 
 /**
