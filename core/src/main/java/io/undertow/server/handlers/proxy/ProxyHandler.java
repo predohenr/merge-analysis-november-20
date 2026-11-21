@@ -584,7 +584,7 @@ public final class ProxyHandler implements HttpHandler {
                 if(targetAddress.getAddress() instanceof Inet6Address) {
                     request.getRequestHeaders().put(Headers.HOST, NetworkUtils.formatPossibleIpv6Address(targetAddress.getHostString()) + ":" + targetAddress.getPort());
                 } else {
-                    request.getRequestHeaders().put(Headers.HOST, targetAddress.getHostString() + ":" + targetAddress.getPort());
+                request.getRequestHeaders().put(Headers.HOST, targetAddress.getHostString() + ":" + targetAddress.getPort());
                 }
                 request.getRequestHeaders().put(Headers.X_FORWARDED_HOST, exchange.getRequestHeaders().getFirst(Headers.HOST));
             }
