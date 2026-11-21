@@ -1,4 +1,4 @@
-/*
+/**
  * BSD-style license; for more info see http://pmd.sourceforge.net/license.html
  */
 
@@ -140,7 +140,7 @@ public final class ASTImportDeclaration extends AbstractJavaNode implements ASTT
      * @see <a href="https://openjdk.org/jeps/511">JEP 511: Module Import Declarations</a> (Java 25)
      * @since 7.16.0
      */
-    public boolean isModuleImport() {
+        public boolean isModuleImport() {
         return moduleImport;
     }
 }
