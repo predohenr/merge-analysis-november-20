@@ -351,6 +351,16 @@ public class PrePostReactiveMethodSecurityConfigurationTests {
 	}
 
 	@Test
+	@WithMockUser(authorities = "airplane:read")
+	public void findByIdWhenAuthorizedResultThenAuthorizes() {
+		this.spring.register(AuthorizeResultConfig.class).autowire();
+		FlightRepository flights = this.spring.getContext().getBean(FlightRepository.class);
+		Flight flight = flights.findById("1").block();
+		assertThatNoException().isThrownBy(flight::getAltitude);
+		assertThatNoException().isThrownBy(flight::getSeats);
+	}
+
+	@Test
 	@WithMockUser(authorities = "seating:read")
 	public void findByIdWhenUnauthorizedResultThenDenies() {
 		this.spring.register(AuthorizeResultConfig.class).autowire();
@@ -595,44 +605,62 @@ public class PrePostReactiveMethodSecurityConfigurationTests {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@PreAuthorize("hasRole({role})")
-	@interface RequireRole {
+	@PreAuthorize("hasRole({idPath})")
+	@interface RestrictedAccess {
 
-		String role();
+		String idPath() default "#id";
 
-	}
+		Class<?> entityClass();
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@PreAuthorize("hasAuthority('SCOPE_{claim}') || hasAnyRole({roles})")
-	@interface HasClaim {
-
-		String claim();
-
-		String[] roles() default {};
+		String[] recipes() default {};
 
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@PostAuthorize("returnObject.startsWith('{value}')")
-	@interface ResultStartsWith {
+	@PreAuthorize("hasRole({idPath})")
+	@interface RestrictedAccess {
 
-		String value();
+		String idPath() default "#id";
 
-	}
+		Class<?> entityClass();
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@PreFilter("filterObject.contains('{value}')")
-	@interface ParameterContains {
-
-		String value();
+		String[] recipes() default {};
 
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@PostFilter("filterObject.contains('{value}')")
-	@interface ResultContains {
+	@PreAuthorize("hasRole({idPath})")
+	@interface RestrictedAccess {
 
-		String value();
+		String idPath() default "#id";
+
+		Class<?> entityClass();
+
+		String[] recipes() default {};
+
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@PreAuthorize("hasRole({idPath})")
+	@interface RestrictedAccess {
+
+		String idPath() default "#id";
+
+		Class<?> entityClass();
+
+		String[] recipes() default {};
+
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@PreAuthorize("hasRole({idPath})")
+	@interface RestrictedAccess {
+
+		String idPath() default "#id";
+
+		Class<?> entityClass();
+
+		String[] recipes() default {};
 
 	}
 
