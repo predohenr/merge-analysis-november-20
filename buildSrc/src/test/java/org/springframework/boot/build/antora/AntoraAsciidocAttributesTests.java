@@ -43,6 +43,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Phillip Webb
  * @author Stephane Nicoll
  */
+
+/**
+ * Tests for {@link AntoraAsciidocAttributes}.
+ *
+ * @author Phillip Webb
+ * @author Stephane Nicoll
+ */
 class AntoraAsciidocAttributesTests {
 
 	@Test
