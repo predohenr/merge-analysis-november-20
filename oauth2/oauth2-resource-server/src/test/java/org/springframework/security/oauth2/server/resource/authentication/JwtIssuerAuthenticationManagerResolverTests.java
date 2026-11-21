@@ -41,10 +41,10 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.jose.TestKeys;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.TestJwts;
-import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -70,15 +70,15 @@ public class JwtIssuerAuthenticationManagerResolverTests {
 	public void resolveWhenUsingFromTrustedIssuersThenReturnsAuthenticationManager() throws Exception {
 		String issuer = "https://idp.example";
 
-		// @formatter:on
-		JWSObject jws = new JWSObject(new JWSHeader(JWSAlgorithm.RS256),
-				new Payload(new JSONObject(Collections.singletonMap(JwtClaimNames.ISS, issuer))));
-		jws.sign(new RSASSASigner(TestKeys.DEFAULT_PRIVATE_KEY));
-		JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
-			.fromTrustedIssuers(issuer);
-		Authentication token = withBearerToken(jws.serialize());
-		AuthenticationManager authenticationManager = authenticationManagerResolver.resolve(null);
-		assertThat(authenticationManager).isNotNull();
+			// @formatter:on
+			JWSObject jws = new JWSObject(new JWSHeader(JWSAlgorithm.RS256),
+					new Payload(new JSONObject(Collections.singletonMap(JwtClaimNames.ISS, issuer))));
+			jws.sign(new RSASSASigner(TestKeys.DEFAULT_PRIVATE_KEY));
+			JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
+				.fromTrustedIssuers(issuer);
+			Authentication token = withBearerToken(jws.serialize());
+			AuthenticationManager authenticationManager = authenticationManagerResolver.resolve(null);
+			assertThat(authenticationManager).isNotNull();
 		JwtDecoder decoder = mock(JwtDecoder.class);
 		Jwt jwt = TestJwts.user();
 		given(decoder.decode(token.getName())).willReturn(jwt);
@@ -93,13 +93,13 @@ public class JwtIssuerAuthenticationManagerResolverTests {
 	public void resolveWhenUsingFromTrustedIssuersPredicateThenReturnsAuthenticationManager() throws Exception {
 		String issuer = "https://idp.example";
 
-		// @formatter:on
-		JWSObject jws = new JWSObject(new JWSHeader(JWSAlgorithm.RS256),
-				new Payload(new JSONObject(Collections.singletonMap(JwtClaimNames.ISS, issuer))));
-		jws.sign(new RSASSASigner(TestKeys.DEFAULT_PRIVATE_KEY));
-		JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
-			.fromTrustedIssuers(issuer::equals);
-		Authentication token = withBearerToken(jws.serialize());
+			// @formatter:on
+			JWSObject jws = new JWSObject(new JWSHeader(JWSAlgorithm.RS256),
+					new Payload(new JSONObject(Collections.singletonMap(JwtClaimNames.ISS, issuer))));
+			jws.sign(new RSASSASigner(TestKeys.DEFAULT_PRIVATE_KEY));
+			JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
+				.fromTrustedIssuers(issuer::equals);
+			Authentication token = withBearerToken(jws.serialize());
 		JwtDecoder decoder = mock(JwtDecoder.class);
 		Jwt jwt = TestJwts.user();
 		given(decoder.decode(token.getName())).willReturn(jwt);
