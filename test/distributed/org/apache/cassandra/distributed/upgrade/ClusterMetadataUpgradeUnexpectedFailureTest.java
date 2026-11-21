@@ -78,7 +78,7 @@ public class ClusterMetadataUpgradeUnexpectedFailureTest extends UpgradeTestBase
             .nodesToUpgrade(1, 2, 3)
             .withConfig((cfg) -> cfg.with(Feature.NETWORK, Feature.GOSSIP)
                                     .set(Constants.KEY_DTEST_FULL_STARTUP, true))
-            .singleUpgradeToCurrentFrom(v50)
+            .singleUpgradeToCurrentFrom(v41)
             .withBuilder(builderUpdater)
             .setup((cluster) -> {
                 BBState.failBeforePreInitialize.set(failBeforePreInit);
