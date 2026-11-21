@@ -42,6 +42,18 @@ import com.oracle.svm.core.configure.RuntimeDynamicAccessMetadata;
 /// consult rich class metadata that exists at runtime.  In Native Image, metadata is much
 /// more controlled and often precomputed. This interface is an internal contract for objects
 /// that know how to provide that reflection data for a class represented as a [DynamicHub].
+
+/// Internal interface that abstracts the reflection-related metadata for a class in Native Image.
+///
+/// In normal HotSpot JVM execution, APIs like:
+/// - [Class#getDeclaredFields]
+/// - [Class#getDeclaredMethods]
+/// - [Class#getDeclaredConstructors]
+/// - etc
+///
+/// consult rich class metadata that exists at runtime.  In Native Image, metadata is much
+/// more controlled and often precomputed. This interface is an internal contract for objects
+/// that know how to provide that reflection data for a class represented as a [DynamicHub].
 interface ReflectionMetadata {
     int getClassFlags();
 
