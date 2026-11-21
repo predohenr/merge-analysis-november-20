@@ -141,23 +141,23 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
                 ));
             }
             return chain.proceed(message, context).onErrorContinue(error -> {
-                      if (!expectedResultType.isInstance(error)) {
-                          return MessageStream.failed(error);
-                      }
-                      return ResultParameterResolverFactory.callWithResult(
-                              error,
-                              context,
-                              pc -> {
-                                  if (super.canHandle(message, pc)) {
-                                      //noinspection unchecked
-                                      return super.handle(message, pc, target)
-                                                  .map(r -> (Entry<Message>) r);
-                                  }
-                                  return MessageStream.failed(error);
-                              }
-                      ).cast();
-                  });
-       }
+                                                               if (!expectedResultType.isInstance(error)) {
+                                                                   return MessageStream.failed(error);
+                                                               }
+                                                               return ResultParameterResolverFactory.callWithResult(
+                                                                       error,
+                                                                       context,
+                                                                       pc -> {
+                                                                           if (super.canHandle(message, pc)) {
+                                                                               //noinspection unchecked
+                                                                               return super.handle(message, pc, target)
+                                                                                           .map(r -> (Entry<Message>) r);
+                                                                           }
+                                                                           return MessageStream.failed(error);
+                                                                       }
+                                                               ).cast();
+                                                           });
+        }
     }
 
     private static class InterceptedMessageHandlingMember<T>
