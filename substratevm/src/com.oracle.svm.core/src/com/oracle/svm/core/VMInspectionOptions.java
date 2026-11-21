@@ -177,7 +177,7 @@ public final class VMInspectionOptions {
      * name.
      */
     @LayeredCompilationBehavior(LayeredCompilationBehavior.Behavior.FULLY_DELAYED_TO_APPLICATION_LAYER)
-    static String determineHeapDumpPath() {
+static String determineHeapDumpPath() {
         return HeapDumping.getHeapDumpPath(SubstrateOptions.Name.getValue() + ".hprof");
     }
 
