@@ -730,8 +730,8 @@ class PathPatternTests {
 		PathPatternParser ppp = new PathPatternParser();
 		PathPattern pathPattern = ppp.parse("/web/{id:foo(bar)?}_{goo}");
 		assertThatIllegalArgumentException().isThrownBy(() ->
-				matchAndExtract(pathPattern,"/web/foobar_goo"))
-			.withMessageContaining("The number of capturing groups in the pattern");
+						matchAndExtract(pathPattern,"/web/foobar_goo"))
+				.withMessageContaining("The number of capturing groups in the pattern");
 	}
 
 	@Test
@@ -833,8 +833,8 @@ class PathPatternTests {
 				parse("/hotels/{hotel}/booking"))).isEqualTo(1);
 
 		assertThat(comparator.compare(
-						parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"),
-						parse("/**"))).isEqualTo(-1);
+				parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"),
+				parse("/**"))).isEqualTo(-1);
 		assertThat(comparator.compare(parse("/**"),
 				parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"))).isEqualTo(1);
 		assertThat(comparator.compare(parse("/**"), parse("/**"))).isEqualTo(0);
@@ -851,8 +851,8 @@ class PathPatternTests {
 
 		// SPR-6741
 		assertThat(comparator.compare(
-						parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"),
-						parse("/hotels/**"))).isEqualTo(-1);
+				parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"),
+				parse("/hotels/**"))).isEqualTo(-1);
 		assertThat(comparator.compare(parse("/hotels/**"),
 				parse("/hotels/{hotel}/bookings/{booking}/cutomers/{customer}"))).isEqualTo(1);
 		assertThat(comparator.compare(parse("/hotels/foo/bar/**"),
