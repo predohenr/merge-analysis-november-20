@@ -70,21 +70,21 @@ public class PollingSecretsChangeDetector extends ConfigurationChangeDetector {
 	private void init() {
 		if (monitorSecrets) {
 			LOG.info(() -> "Kubernetes polling secrets change detector activated");
-			PeriodicTrigger trigger = new PeriodicTrigger(Duration.ofMillis(period));
-			trigger.setInitialDelay(Duration.ofMillis(period));
-			taskExecutor.schedule(this::executeCycle, trigger);
-		}
+		PeriodicTrigger trigger = new PeriodicTrigger(Duration.ofMillis(period));
+		trigger.setInitialDelay(Duration.ofMillis(period));
+		taskExecutor.schedule(this::executeCycle, trigger);
+	}
 		else {
 			LOG.info(() -> "Kubernetes polling secrets change detector disabled");
 		}
 	}
 
 	private void executeCycle() {
-		boolean changedSecrets = ConfigReloadUtil.reload(propertySourceLocator, environment, propertySourceClass);
-		if (changedSecrets) {
+			boolean changedSecrets = ConfigReloadUtil.reload(propertySourceLocator, environment, propertySourceClass);
+			if (changedSecrets) {
 			LOG.info(() -> "Detected change in secrets");
-			reloadProperties();
+				reloadProperties();
+			}
 		}
-	}
 
 }

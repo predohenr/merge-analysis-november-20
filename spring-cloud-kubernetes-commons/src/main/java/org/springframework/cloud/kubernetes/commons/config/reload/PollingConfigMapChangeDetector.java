@@ -70,21 +70,21 @@ public class PollingConfigMapChangeDetector extends ConfigurationChangeDetector 
 	private void init() {
 		if (monitorConfigMaps) {
 			LOG.info(() -> "Kubernetes polling configMap change detector activated");
-			PeriodicTrigger trigger = new PeriodicTrigger(Duration.ofMillis(period));
-			trigger.setInitialDelay(Duration.ofMillis(period));
-			taskExecutor.schedule(this::executeCycle, trigger);
-		}
+		PeriodicTrigger trigger = new PeriodicTrigger(Duration.ofMillis(period));
+		trigger.setInitialDelay(Duration.ofMillis(period));
+		taskExecutor.schedule(this::executeCycle, trigger);
+	}
 		else {
 			LOG.debug(() -> "Kubernetes polling configMap change detector disabled");
 		}
 	}
 
 	private void executeCycle() {
-		boolean changedConfigMap = ConfigReloadUtil.reload(propertySourceLocator, environment, propertySourceClass);
-		if (changedConfigMap) {
+			boolean changedConfigMap = ConfigReloadUtil.reload(propertySourceLocator, environment, propertySourceClass);
+			if (changedConfigMap) {
 			LOG.info(() -> "Detected change in config maps");
-			reloadProperties();
+				reloadProperties();
+			}
 		}
-	}
 
 }
