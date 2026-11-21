@@ -19,7 +19,6 @@ package org.axonframework.integrationtests.queryhandling;
 import org.axonframework.axonserver.connector.AxonServerConfigurationEnhancer;
 import org.axonframework.common.configuration.Configuration;
 import org.axonframework.messaging.configuration.MessagingConfigurer;
-import org.axonframework.common.configuration.MessagingConfigurer;
 import org.axonframework.messaging.MessageStream;
 import org.axonframework.queryhandling.GenericQueryMessage;
 import org.axonframework.queryhandling.QueryBus;
