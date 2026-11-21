@@ -139,6 +139,15 @@ interface MachORelocationType {
  * For examples of how these symbols are used, see the linked file above and <a href=
  * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/reloc.h">EXTERNAL_HEADERS/mach-o/reloc.h</a>.
  */
+
+/**
+ * These are defined as an enum in <a href=
+ * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/x86_64/reloc.h#L173">EXTERNAL_HEADERS/mach-o/x86_64/reloc.h#L173</a>
+ * which we reproduce. Of course, take care to preserve the order!
+ *
+ * For examples of how these symbols are used, see the linked file above and <a href=
+ * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/reloc.h">EXTERNAL_HEADERS/mach-o/reloc.h</a>.
+ */
 enum X86_64Reloc implements MachORelocationType {
     UNSIGNED(0), // for absolute addresses
     SIGNED(1, true), // for signed 32-bit displacement
@@ -174,6 +183,17 @@ enum X86_64Reloc implements MachORelocationType {
         return value;
     }
 }
+
+/**
+ * These are defined as an enum in <a href=
+ * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/arm64/reloc.h#L26">EXTERNAL_HEADERS/mach-o/arm64/reloc.h#L26</a>,
+ * which we reproduce. Of course, take care to preserve the order!
+ *
+ * For examples of how these symbols are used, see <a href=
+ * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/arm/reloc.h">EXTERNAL_HEADERS/mach-o/arm/reloc.h</a>
+ * (for AArch32 information, but does provide some insight) and <a href=
+ * "https://github.com/apple/darwin-xnu/blob/2ff845c2e033bd0ff64b5b6aa6063a1f8f65aa32/EXTERNAL_HEADERS/mach-o/reloc.h">EXTERNAL_HEADERS/mach-o/reloc.h</a>.
+ */
 
 /**
  * These are defined as an enum in <a href=
