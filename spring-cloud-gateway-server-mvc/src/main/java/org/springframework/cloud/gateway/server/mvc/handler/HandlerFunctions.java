@@ -54,8 +54,6 @@ public abstract class HandlerFunctions {
 	private HandlerFunctions() {
 
 	}
-
-	// for properties
 	public static HandlerFunction<ServerResponse> fn(RouteProperties routeProperties) {
 		// fn:fnName
 		return fn(routeProperties.getUri().getSchemeSpecificPart());
@@ -106,8 +104,6 @@ public abstract class HandlerFunctions {
 			return ServerResponse.notFound().build();
 		};
 	}
-
-	// for properties
 	public static HandlerFunction<ServerResponse> stream(RouteProperties routeProperties) {
 		// stream:bindingName
 		return stream(routeProperties.getUri().getSchemeSpecificPart());
@@ -129,8 +125,6 @@ public abstract class HandlerFunctions {
 			return ServerResponse.badRequest().build();
 		};
 	}
-
-	// for properties
 	public static HandlerFunction<ServerResponse> forward(RouteProperties routeProperties) {
 		return forward(routeProperties.getUri().getPath());
 	}
@@ -151,9 +145,6 @@ public abstract class HandlerFunctions {
 			}
 		});
 	}
-
-	// TODO: current discovery only goes by method name
-	// so last one wins, so put parameterless last
 	@Deprecated
 	public static HandlerFunction<ServerResponse> http(String uri) {
 		return http(URI.create(uri));
@@ -180,6 +171,15 @@ public abstract class HandlerFunctions {
 	public static HandlerFunction<ServerResponse> no() {
 		return http();
 	}
+
+	// for properties
+
+	// for properties
+
+	// for properties
+
+	// TODO: current discovery only goes by method name
+	// so last one wins, so put parameterless last
 
 	static class LookupProxyExchangeHandlerFunction implements HandlerFunction<ServerResponse> {
 
