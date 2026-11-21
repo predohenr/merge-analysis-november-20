@@ -140,7 +140,7 @@ public class UberJarBuilder extends AbstractJarBuilder<JarBuildItem> {
                 .setMainPath(runnerJar);
         for (ResolvedDependency dep : curateOutcome.getApplicationModel().getDependencies()) {
             manifestConfig.addComponent(dep, null, treeShakeResult.computePedigree(dep.getKey()));
-        }
+            }
         return new JarBuildItem(runnerJar, originalJar, null, UBER_JAR,
                 suffixToClassifier(packageConfig.computedRunnerSuffix()), manifestConfig);
     }
