@@ -254,7 +254,7 @@ public class OkexAdapters {
     return (order.getInstrument() instanceof FuturesContract)
         ? order
             .getOriginalAmount()
-            .divide(metaData.getContractValue(), 20, RoundingMode.HALF_DOWN)
+            .divide(metaData.getContractValue(),20, RoundingMode.HALF_DOWN)
             .stripTrailingZeros()
             .toPlainString()
         : order.getOriginalAmount().toString();
@@ -300,7 +300,7 @@ public class OkexAdapters {
   }
 
   private static String getSide(Order order) {
-    String side = "";
+    String side= "";
     switch (order.getType()) {
       case BID:
         side = "buy";
