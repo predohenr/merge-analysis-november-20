@@ -44,6 +44,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Jon Schneider
  * @author Johnny Lim
  */
+
+/**
+ * Tests for {@link SimpleMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ */
 class SimpleMeterRegistryTest {
 
     private MockClock clock = new MockClock();
