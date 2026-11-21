@@ -142,17 +142,17 @@ public abstract class CheckAutoConfigurationClasses extends AutoConfigurationImp
 		List<File> classFiles = new ArrayList<>();
 		for (File root : this.classpath.getFiles()) {
 			if (root.exists()) {
-				try (Stream<Path> files = Files.walk(root.toPath())) {
-					files.forEach((file) -> {
-						if (Files.isRegularFile(file) && file.getFileName().toString().endsWith(".class")) {
-							classFiles.add(file.toFile());
-						}
-					});
-				}
-				catch (IOException ex) {
-					throw new UncheckedIOException(ex);
-				}
+			try (Stream<Path> files = Files.walk(root.toPath())) {
+				files.forEach((file) -> {
+					if (Files.isRegularFile(file) && file.getFileName().toString().endsWith(".class")) {
+						classFiles.add(file.toFile());
+					}
+				});
 			}
+			catch (IOException ex) {
+				throw new UncheckedIOException(ex);
+			}
+		}
 		}
 		return classFiles;
 	}
