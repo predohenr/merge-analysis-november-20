@@ -53,6 +53,10 @@ import static org.mockito.Mockito.mock;
 /**
  * @author Tadaya Tsuyukubo
  */
+
+/**
+ * @author Tadaya Tsuyukubo
+ */
 class GrpcAsyncTest {
 
     private static final Metadata.Key<String> REQUEST_ID_KEY = Metadata.Key.of("request-id",
