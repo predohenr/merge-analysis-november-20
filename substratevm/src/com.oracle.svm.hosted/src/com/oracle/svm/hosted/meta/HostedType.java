@@ -65,6 +65,20 @@ public abstract class HostedType extends HostedElement implements SharedType, Wr
 
     boolean loadedFromPriorLayer;
     protected int typeID;
+
+    // endregion open-world only fields
+
+    /**
+     * The unique implementor of this type that can replace it in stamps as an exact type.
+     * <p>
+     * A {@code null} value means there is no unique implementor that can replace this type. The
+     * field is set to this type itself if it has no instantiated subtypes to enable its usage as an
+     * exact type, e.g., in places where the original stamp was non-exact.
+     * <p>
+     * In open-world analysis the field is set to {@code null} for non-leaf types since we have to
+     * assume that there may be some instantiated subtypes that we haven't seen yet.
+     */
+    protected HostedType uniqueConcreteImplementation;
     protected HostedMethod[] allDeclaredMethods;
 
     // region closed-world only fields
@@ -135,20 +149,6 @@ public abstract class HostedType extends HostedElement implements SharedType, Wr
     protected int[] openTypeWorldTypeCheckSlots;
 
     protected int interfaceID;
-
-    // endregion open-world only fields
-
-    /**
-     * The unique implementor of this type that can replace it in stamps as an exact type.
-     * <p>
-     * A {@code null} value means there is no unique implementor that can replace this type. The
-     * field is set to this type itself if it has no instantiated subtypes to enable its usage as an
-     * exact type, e.g., in places where the original stamp was non-exact.
-     * <p>
-     * In open-world analysis the field is set to {@code null} for non-leaf types since we have to
-     * assume that there may be some instantiated subtypes that we haven't seen yet.
-     */
-    protected HostedType uniqueConcreteImplementation;
 
     /**
      * A more precise subtype that can replace this type as the declared type of values.
