@@ -40,6 +40,13 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  * @author Andy Clement
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link PathPattern}.
+ *
+ * @author Andy Clement
+ * @author Brian Clozel
+ */
 class PathPatternTests {
 
 	@Nested
@@ -1085,7 +1092,7 @@ class PathPatternTests {
 		return parse(pattern).matchAndExtract(PathPatternTests.toPathContainer(path));
 	}
 
-	private PathPattern parse(String path) {
+		private PathPattern parse(String path) {
 		PathPatternParser pp = new PathPatternParser();
 		return pp.parse(path);
 	}
@@ -1097,7 +1104,7 @@ class PathPatternTests {
 		return PathContainer.parsePath(path);
 	}
 
-	private void checkMatches(String uriTemplate, String path) {
+		private void checkMatches(String uriTemplate, String path) {
 		PathPatternParser parser = new PathPatternParser();
 		PathPattern p = parser.parse(uriTemplate);
 		PathContainer pc = toPathContainer(path);
