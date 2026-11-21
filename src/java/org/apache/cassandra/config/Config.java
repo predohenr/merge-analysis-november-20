@@ -1348,7 +1348,7 @@ public class Config
         stop,
         stop_commit,
         ignore,
-        die,
+        die
     }
 
     public enum UserFunctionTimeoutPolicy
