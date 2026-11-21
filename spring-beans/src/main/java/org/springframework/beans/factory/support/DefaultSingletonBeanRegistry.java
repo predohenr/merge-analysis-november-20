@@ -365,10 +365,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					singletonObject = this.singletonObjects.get(beanName);
 					if (singletonObject == null) {
 						this.currentCreationThreads.put(beanName, currentThread);
-						try {
-							singletonObject = singletonFactory.getObject();
-						}
-						finally {
+							try {
+								singletonObject = singletonFactory.getObject();
+							}
+							finally {
 							this.currentCreationThreads.remove(beanName);
 						}
 						newSingleton = true;
@@ -740,15 +740,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				removeSingleton(beanName);
 			}
 			else {
-				this.singletonLock.lock();
-				try {
-					removeSingleton(beanName);
-				}
-				finally {
-					this.singletonLock.unlock();
-				}
+			this.singletonLock.lock();
+			try {
+				removeSingleton(beanName);
+			}
+			finally {
+				this.singletonLock.unlock();
 			}
 		}
+	}
 	}
 
 	/**
