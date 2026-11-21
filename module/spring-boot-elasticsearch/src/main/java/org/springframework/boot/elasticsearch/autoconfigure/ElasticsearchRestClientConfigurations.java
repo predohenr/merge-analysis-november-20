@@ -71,6 +71,17 @@ import org.springframework.util.StringUtils;
  * @author Phillip Webb
  * @author Laura Trotta
  */
+
+/**
+ * Elasticsearch rest client configurations.
+ *
+ * @author Stephane Nicoll
+ * @author Filip Hrisafov
+ * @author Moritz Halbritter
+ * @author Andy Wilkinson
+ * @author Phillip Webb
+ * @author Laura Trotta
+ */
 class ElasticsearchRestClientConfigurations {
 
 	@Configuration(proxyBeanMethods = false)
