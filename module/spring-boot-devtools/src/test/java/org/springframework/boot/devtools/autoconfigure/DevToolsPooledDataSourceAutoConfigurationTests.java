@@ -49,6 +49,12 @@ import static org.mockito.Mockito.never;
  *
  * @author Andy Wilkinson
  */
+
+/**
+ * Tests for {@link DevToolsDataSourceAutoConfiguration} with a pooled data source.
+ *
+ * @author Andy Wilkinson
+ */
 class DevToolsPooledDataSourceAutoConfigurationTests extends AbstractDevToolsDataSourceAutoConfigurationTests {
 
 	@BeforeEach
