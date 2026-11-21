@@ -197,11 +197,6 @@ public class GatewayServerMvcAutoConfiguration {
 		return new XForwardedRequestHeadersFilterProperties();
 	}
 
-	@Bean
-	static GatewayMvcRuntimeHintsProcessor gatewayMvcRuntimeHintsProcessor() {
-		return new GatewayMvcRuntimeHintsProcessor();
-	}
-
 	static class GatewayHttpClientEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
 		static final boolean APACHE = ClassUtils.isPresent("org.apache.hc.client5.http.impl.classic.HttpClients", null);
@@ -242,6 +237,11 @@ public class GatewayServerMvcAutoConfiguration {
 			}
 		}
 
+	}
+
+	@Bean
+	static GatewayMvcRuntimeHintsProcessor gatewayMvcRuntimeHintsProcessor() {
+		return new GatewayMvcRuntimeHintsProcessor();
 	}
 
 }
