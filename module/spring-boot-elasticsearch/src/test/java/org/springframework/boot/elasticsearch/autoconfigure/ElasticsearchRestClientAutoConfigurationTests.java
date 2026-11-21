@@ -67,6 +67,19 @@ import static org.mockito.Mockito.mock;
  * @author Phillip Webb
  * @author Laura Trotta
  */
+
+/**
+ * Tests for {@link ElasticsearchRestClientAutoConfiguration}.
+ *
+ * @author Brian Clozel
+ * @author Vedran Pavic
+ * @author Evgeniy Cheban
+ * @author Filip Hrisafov
+ * @author Andy Wilkinson
+ * @author Moritz Halbritter
+ * @author Phillip Webb
+ * @author Laura Trotta
+ */
 class ElasticsearchRestClientAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(
