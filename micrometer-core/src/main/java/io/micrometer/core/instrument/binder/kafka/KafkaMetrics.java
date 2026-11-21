@@ -368,10 +368,10 @@ class KafkaMetrics implements MeterBinder, AutoCloseable {
         }
 
         if (registry != null) {
-            for (Meter.Id id : registeredMeterIds) {
-                registry.remove(id);
-            }
+        for (Meter.Id id : registeredMeterIds) {
+            registry.remove(id);
         }
+    }
     }
 
 }

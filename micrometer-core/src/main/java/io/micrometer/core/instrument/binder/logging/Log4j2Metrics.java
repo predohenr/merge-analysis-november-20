@@ -175,7 +175,7 @@ public class Log4j2Metrics implements MeterBinder, AutoCloseable {
             });
     }
 
-    static class MetricsFilter extends AbstractFilter {
+        static class MetricsFilter extends AbstractFilter {
 
         private final Counter fatalCounter;
 

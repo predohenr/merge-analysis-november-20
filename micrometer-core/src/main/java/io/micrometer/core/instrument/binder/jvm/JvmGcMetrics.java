@@ -88,18 +88,18 @@ public class JvmGcMetrics implements MeterBinder, AutoCloseable {
     private final List<Runnable> notificationListenerCleanUpRunnables = new CopyOnWriteArrayList<>();
 
     @SuppressWarnings("NullAway.Init")
-    private Counter allocatedBytes;
+private Counter allocatedBytes;
 
     private @Nullable Counter promotedBytes;
 
     @SuppressWarnings("NullAway.Init")
-    private AtomicLong allocationPoolSizeAfter;
+private AtomicLong allocationPoolSizeAfter;
 
     @SuppressWarnings("NullAway.Init")
-    private AtomicLong liveDataSize;
+private AtomicLong liveDataSize;
 
     @SuppressWarnings("NullAway.Init")
-    private AtomicLong maxDataSize;
+private AtomicLong maxDataSize;
 
     public JvmGcMetrics() {
         this(emptyList());
@@ -120,7 +120,7 @@ public class JvmGcMetrics implements MeterBinder, AutoCloseable {
 
     @SuppressWarnings("NullAway.Init")
     // VisibleForTesting
-    GcMetricsNotificationListener gcNotificationListener;
+GcMetricsNotificationListener gcNotificationListener;
 
     @Override
     public void bindTo(MeterRegistry registry) {
@@ -358,6 +358,11 @@ public class JvmGcMetrics implements MeterBinder, AutoCloseable {
     public void close() {
         notificationListenerCleanUpRunnables.forEach(Runnable::run);
     }
+
+    /**
+     * Generalization of which parts of the heap are considered "young" or "old" for
+     * multiple GC implementations
+     */
 
     /**
      * Generalization of which parts of the heap are considered "young" or "old" for
