@@ -52,6 +52,14 @@ import static org.assertj.core.api.Assertions.*;
  * @author Johnny Lim
  * @author Jonatan Ivanov
  */
+
+/**
+ * Tests for {@link PrometheusMeterRegistry}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ * @author Jonatan Ivanov
+ */
 class PrometheusMeterRegistryTest {
 
     private final PrometheusRegistry prometheusRegistry = new PrometheusRegistry();
