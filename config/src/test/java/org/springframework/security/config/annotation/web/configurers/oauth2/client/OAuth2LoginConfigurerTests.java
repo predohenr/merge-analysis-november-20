@@ -46,8 +46,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.ObjectPostProcessor;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityContextChangedListenerConfig;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -146,20 +146,13 @@ public class OAuth2LoginConfigurerTests {
 			.clientId("clientId")
 			.clientSecret("clientSecret")
 			.build();
-	// @formatter:on
-
-	// @formatter:off
 	private static final ClientRegistration GITHUB_CLIENT_REGISTRATION = CommonOAuth2Provider.GITHUB
 			.getBuilder("github")
 			.clientId("clientId")
 			.clientSecret("clientSecret")
 			.build();
-	// @formatter:on
-
-	// @formatter:off
 	private static final ClientRegistration CLIENT_CREDENTIALS_REGISTRATION = TestClientRegistrations.clientCredentials()
 			.build();
-	// @formatter:on
 
 	private ConfigurableApplicationContext context;
 
@@ -182,6 +175,13 @@ public class OAuth2LoginConfigurerTests {
 	private MockHttpServletResponse response;
 
 	private MockFilterChain filterChain;
+	// @formatter:on
+
+	// @formatter:off
+	// @formatter:on
+
+	// @formatter:off
+	// @formatter:on
 
 	@BeforeEach
 	public void setup() {
@@ -257,8 +257,6 @@ public class OAuth2LoginConfigurerTests {
 			.isInstanceOf(OAuth2UserAuthority.class)
 			.hasToString("OAUTH2_USER");
 	}
-
-	// gh-6009
 	@Test
 	public void oauth2LoginWhenSuccessThenAuthenticationSuccessEventPublished() throws Exception {
 		// setup application context
@@ -339,8 +337,6 @@ public class OAuth2LoginConfigurerTests {
 		assertThat(authentication.getAuthorities()).first().hasToString("OAUTH2_USER");
 		assertThat(authentication.getAuthorities()).last().hasToString("ROLE_OAUTH2_USER");
 	}
-
-	// gh-5488
 	@Test
 	public void oauth2LoginConfigLoginProcessingUrl() throws Exception {
 		// setup application context
@@ -363,8 +359,6 @@ public class OAuth2LoginConfigurerTests {
 			.isInstanceOf(OAuth2UserAuthority.class)
 			.hasToString("OAUTH2_USER");
 	}
-
-	// gh-5521
 	@Test
 	public void oauth2LoginWithCustomAuthorizationRequestParameters() throws Exception {
 		loadConfig(OAuth2LoginConfigCustomAuthorizationRequestResolver.class);
@@ -450,8 +444,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		then(redirectStrategy).should().sendRedirect(any(), any(), anyString());
 	}
-
-	// gh-5347
 	@Test
 	public void oauth2LoginWithOneClientConfiguredThenRedirectForAuthorization() throws Exception {
 		loadConfig(OAuth2LoginConfig.class);
@@ -461,8 +453,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		assertThat(this.response.getRedirectedUrl()).matches("http://localhost/oauth2/authorization/google");
 	}
-
-	// gh-6802
 	@Test
 	public void oauth2LoginWithOneClientConfiguredAndFormLoginThenRedirectDefaultLoginPage() throws Exception {
 		loadConfig(OAuth2LoginConfigFormLogin.class);
@@ -472,8 +462,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		assertThat(this.response.getRedirectedUrl()).matches("http://localhost/login");
 	}
-
-	// gh-5347
 	@Test
 	public void oauth2LoginWithOneClientConfiguredAndRequestFaviconNotAuthenticatedThenRedirectDefaultLoginPage()
 			throws Exception {
@@ -485,8 +473,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		assertThat(this.response.getRedirectedUrl()).matches("http://localhost/login");
 	}
-
-	// gh-5347
 	@Test
 	public void oauth2LoginWithMultipleClientsConfiguredThenRedirectDefaultLoginPage() throws Exception {
 		loadConfig(OAuth2LoginConfigMultipleClients.class);
@@ -496,8 +482,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		assertThat(this.response.getRedirectedUrl()).matches("http://localhost/login");
 	}
-
-	// gh-6812
 	@Test
 	public void oauth2LoginWithOneClientConfiguredAndRequestXHRNotAuthenticatedThenDoesNotRedirectForAuthorization()
 			throws Exception {
@@ -533,8 +517,6 @@ public class OAuth2LoginConfigurerTests {
 		this.springSecurityFilterChain.doFilter(this.request, this.response, this.filterChain);
 		assertThat(this.response.getStatus()).isEqualTo(401);
 	}
-
-	// gh-9457
 	@Test
 	public void oauth2LoginWithOneAuthorizationCodeClientAndOtherClientsConfiguredThenRedirectForAuthorization()
 			throws Exception {
@@ -678,8 +660,6 @@ public class OAuth2LoginConfigurerTests {
 		this.spring.getContext().publishEvent(new HttpSessionDestroyedEvent(this.request.getSession()));
 		verify(registry).removeSessionInformation(this.request.getSession().getId());
 	}
-
-	// gh-14558
 	@Test
 	public void oauth2LoginWhenDefaultsThenNoOidcSessionRegistry() {
 		this.spring.register(OAuth2LoginConfig.class).autowire();
@@ -714,8 +694,6 @@ public class OAuth2LoginConfigurerTests {
 			.getBean(OAuth2AuthorizedClientRepository.class);
 		verifyNoInteractions(clientRegistrationRepository, authorizedClientRepository);
 	}
-
-	// gh-17175
 	@Test
 	public void oauth2LoginWhenAuthenticationProviderPostProcessorThenUses() throws Exception {
 		loadConfig(OAuth2LoginConfigCustomWithPostProcessor.class);
@@ -790,6 +768,28 @@ public class OAuth2LoginConfigurerTests {
 			return mappedAuthorities;
 		};
 	}
+
+	// gh-6009
+
+	// gh-5488
+
+	// gh-5521
+
+	// gh-5347
+
+	// gh-6802
+
+	// gh-5347
+
+	// gh-5347
+
+	// gh-6812
+
+	// gh-9457
+
+	// gh-14558
+
+	// gh-17175
 
 	@Configuration
 	@EnableWebSecurity
