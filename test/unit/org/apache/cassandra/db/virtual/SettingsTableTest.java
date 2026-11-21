@@ -25,32 +25,33 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.introspector.Property;
+
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 
 import org.apache.cassandra.config.CassandraRelevantProperties;
 import org.apache.cassandra.config.Config;
+import org.apache.cassandra.config.Redacted;
 import org.apache.cassandra.config.DefaultLoader;
 import org.apache.cassandra.config.DurationSpec;
 import org.apache.cassandra.config.EncryptionOptions.ServerEncryptionOptions.Builder;
 import org.apache.cassandra.config.EncryptionOptions.ServerEncryptionOptions.InternodeEncryption;
 import org.apache.cassandra.config.JMXServerOptions;
 import org.apache.cassandra.config.ParameterizedClass;
-import org.apache.cassandra.config.Redacted;
 import org.apache.cassandra.config.TransparentDataEncryptionOptions;
 import org.apache.cassandra.cql3.CQLTester;
 import org.apache.cassandra.distributed.shared.WithProperties;
 import org.apache.cassandra.security.SSLFactory;
 import org.apache.cassandra.utils.JsonUtils;
+import org.apache.cassandra.service.StartupChecks.StartupCheckType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.introspector.Property;
 
 import static java.util.stream.Collectors.toMap;
 import static org.apache.cassandra.config.EncryptionOptions.ClientEncryptionOptions.ClientAuth.REQUIRED;
@@ -133,6 +134,17 @@ public class SettingsTableTest extends CQLTester
     {
         String q = "SELECT * FROM vts.settings WHERE name = 'EMPTY'";
         assertRowsNet(executeNet(q));
+    }
+
+    @Test
+    public void testStartupChecksWithEnumKeys() throws Throwable
+    {
+        Map<String, Object> checkDataResurrection = new LinkedHashMap<>();
+        checkDataResurrection.put("enabled", true);
+        config.startup_checks.put(StartupCheckType.check_data_resurrection, checkDataResurrection);
+
+        check("startup_checks", "{check_data_resurrection={enabled=true}}");
+        Assert.assertFalse(executeNet("SELECT * FROM vts.settings").all().isEmpty());
     }
 
     @Test
@@ -392,12 +404,12 @@ public class SettingsTableTest extends CQLTester
 
         // we are not setting property here to true, we expect it to be true by default
 
-        table = new SettingsTable("json_true", config);
-        VirtualKeyspaceRegistry.instance.register(new VirtualKeyspace("json_true", ImmutableList.of(table)));
+            table = new SettingsTable("json_true", config);
+            VirtualKeyspaceRegistry.instance.register(new VirtualKeyspace("json_true", ImmutableList.of(table)));
 
-        check("json_true.settings", "data_file_directories", "[\"/my/data/directory\",\"/another/data/directory\"]");
-        check("json_true.settings", "seed_provider.parameters", "{\"seeds\":\"127.0.0.1:7000\"}");
-    }
+            check("json_true.settings", "data_file_directories", "[\"/my/data/directory\",\"/another/data/directory\"]");
+            check("json_true.settings", "seed_provider.parameters", "{\"seeds\":\"127.0.0.1:7000\"}");
+        }
 
     @Test
     public void testOldBehaviourForComplexSettingsFormatProperty()
@@ -409,11 +421,11 @@ public class SettingsTableTest extends CQLTester
         // Test set property to false (collection not as JSON)
         try (WithProperties properties = new WithProperties().set(CassandraRelevantProperties.VIRTUAL_TABLE_COMPLEX_SETTINGS_FORMAT_JSON, "false"))
         {
-            table = new SettingsTable("json_false", config);
-            VirtualKeyspaceRegistry.instance.register(new VirtualKeyspace("json_false", ImmutableList.of(table)));
+        table = new SettingsTable("json_false", config);
+        VirtualKeyspaceRegistry.instance.register(new VirtualKeyspace("json_false", ImmutableList.of(table)));
 
-            check("json_false.settings", "data_file_directories", "[/my/data/directory, /another/data/directory]");
-            check("json_false.settings", "seed_provider.parameters", "{seeds=127.0.0.1:7000}");
-        }
+        check("json_false.settings", "data_file_directories", "[/my/data/directory, /another/data/directory]");
+        check("json_false.settings", "seed_provider.parameters", "{seeds=127.0.0.1:7000}");
+    }
     }
 }
