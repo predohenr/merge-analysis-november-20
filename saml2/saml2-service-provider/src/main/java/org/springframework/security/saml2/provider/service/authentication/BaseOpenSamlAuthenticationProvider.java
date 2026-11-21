@@ -379,7 +379,7 @@ class BaseOpenSamlAuthenticationProvider implements AuthenticationProvider {
 			return;
 		}
 		if (this.logger.isTraceEnabled()) {
-			this.logger.trace("Found " + errors.size() + " validation errors in SAML response [" + response.getID()
+			this.logger.debug("Found " + errors.size() + " validation errors in SAML response [" + response.getID()
 					+ "]: " + errors);
 		}
 		else if (this.logger.isDebugEnabled()) {
