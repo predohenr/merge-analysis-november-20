@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-present the original author or authors.
+ * Copyright 2013-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,9 +176,9 @@ public class EncryptionController {
 
 		if (data.endsWith("=") && !type.equals(MediaType.TEXT_PLAIN)) {
 			data = URLDecoder.decode(data, StandardCharsets.UTF_8);
-			if (cipher) {
-				data = data.replace(" ", "+");
-			}
+				if (cipher) {
+					data = data.replace(" ", "+");
+				}
 			String candidate = data.substring(0, data.length() - 1);
 			if (cipher) {
 				if (data.endsWith("=")) {
