@@ -212,7 +212,7 @@ public class GatewayAutoConfiguration {
 	 * {@link org.springframework.cloud.gateway.support.config.KeyValueConverter}
 	 */
 	@Deprecated
-	@Bean
+@Bean
 	public org.springframework.cloud.gateway.support.KeyValueConverter deprecatedKeyValueConverter() {
 		return new org.springframework.cloud.gateway.support.KeyValueConverter();
 	}
