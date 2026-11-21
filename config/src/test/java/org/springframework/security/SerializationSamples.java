@@ -263,8 +263,8 @@ import org.springframework.security.web.webauthn.api.AuthenticationExtensionsCli
 import org.springframework.security.web.webauthn.api.AuthenticationExtensionsClientOutputs;
 import org.springframework.security.web.webauthn.api.AuthenticatorAssertionResponse;
 import org.springframework.security.web.webauthn.api.AuthenticatorAttachment;
-import org.springframework.security.web.webauthn.api.AuthenticatorAttestationResponse;
 import org.springframework.security.web.webauthn.api.AuthenticatorSelectionCriteria;
+import org.springframework.security.web.webauthn.api.AuthenticatorAttestationResponse;
 import org.springframework.security.web.webauthn.api.AuthenticatorTransport;
 import org.springframework.security.web.webauthn.api.Bytes;
 import org.springframework.security.web.webauthn.api.COSEAlgorithmIdentifier;

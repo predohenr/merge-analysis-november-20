@@ -61,7 +61,7 @@ public final class OAuth2AccessTokenGenerator implements OAuth2TokenGenerator<OA
 
 	private Clock clock = Clock.systemUTC();
 
-	@Override
+		@Override
 	public @Nullable OAuth2AccessToken generate(OAuth2TokenContext context) {
 		// @formatter:off
 		if (!OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType()) ||
@@ -156,7 +156,7 @@ public final class OAuth2AccessTokenGenerator implements OAuth2TokenGenerator<OA
 	}
 
 	@SuppressWarnings("serial")
-	private static final class OAuth2AccessTokenClaims extends OAuth2AccessToken implements ClaimAccessor {
+private static final class OAuth2AccessTokenClaims extends OAuth2AccessToken implements ClaimAccessor {
 
 		private final Map<String, Object> claims;
 

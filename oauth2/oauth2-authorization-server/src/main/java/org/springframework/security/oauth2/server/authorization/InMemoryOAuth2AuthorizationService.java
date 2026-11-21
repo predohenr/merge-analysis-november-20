@@ -126,14 +126,14 @@ public final class InMemoryOAuth2AuthorizationService implements OAuth2Authoriza
 		}
 	}
 
-	@Override
+		@Override
 	public @Nullable OAuth2Authorization findById(String id) {
 		Assert.hasText(id, "id cannot be empty");
 		OAuth2Authorization authorization = this.authorizations.get(id);
 		return (authorization != null) ? authorization : this.initializedAuthorizations.get(id);
 	}
 
-	@Override
+		@Override
 	public @Nullable OAuth2Authorization findByToken(String token, @Nullable OAuth2TokenType tokenType) {
 		Assert.hasText(token, "token cannot be empty");
 		for (OAuth2Authorization authorization : this.authorizations.values()) {
@@ -226,7 +226,7 @@ public final class InMemoryOAuth2AuthorizationService implements OAuth2Authoriza
 	}
 
 	@SuppressWarnings("serial")
-	private static final class MaxSizeHashMap<K, V> extends LinkedHashMap<K, V> {
+private static final class MaxSizeHashMap<K, V> extends LinkedHashMap<K, V> {
 
 		private final int maxSize;
 

@@ -241,15 +241,15 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 			AuthenticationException ex) throws IOException {
 		Throwable cause = ex.getCause();
 		if (cause != null) {
-			LogMessage message = LogMessage.format("Authorization Request failed: %s", cause);
-			if (InvalidClientRegistrationIdException.class.isAssignableFrom(cause.getClass())) {
-				// Log an invalid registrationId at WARN level to allow these errors to be
-				// tuned separately from other errors
-				this.logger.warn(message, ex);
-			}
-			else {
-				this.logger.error(message, ex);
-			}
+		LogMessage message = LogMessage.format("Authorization Request failed: %s", cause);
+		if (InvalidClientRegistrationIdException.class.isAssignableFrom(cause.getClass())) {
+			// Log an invalid registrationId at WARN level to allow these errors to be
+			// tuned separately from other errors
+			this.logger.warn(message, ex);
+		}
+		else {
+			this.logger.error(message, ex);
+		}
 		}
 		response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 				HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -269,7 +269,7 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 	}
 
 	@SuppressWarnings("serial")
-	private static final class OAuth2AuthorizationRequestException extends AuthenticationException {
+private static final class OAuth2AuthorizationRequestException extends AuthenticationException {
 
 		OAuth2AuthorizationRequestException(Throwable cause) {
 			super(cause.getMessage(), cause);
