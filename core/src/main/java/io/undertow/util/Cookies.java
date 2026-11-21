@@ -219,7 +219,7 @@ public class Cookies {
     }
 
     @Deprecated(since="2.4.0", forRemoval=true)
-    public static void parseRequestCookies(int maxCookies, boolean allowEqualInValue, List<String> cookies, Set<Cookie> parsedCookies) {
+public static void parseRequestCookies(int maxCookies, boolean allowEqualInValue, List<String> cookies, Set<Cookie> parsedCookies) {
         parseRequestCookies(maxCookies, allowEqualInValue, cookies, parsedCookies, LegacyCookieSupport.COMMA_IS_SEPARATOR, LegacyCookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0);
     }
 
@@ -244,7 +244,7 @@ public class Cookies {
     * @deprecated use {@link #parseRequestCookies(int, boolean, List, MultiValueHashListStorage, boolean, boolean, boolean)}
     */
     @Deprecated(since="2.4.0", forRemoval=true)
-    static Map<String, Cookie> parseRequestCookies(int maxCookies, boolean allowEqualInValue, List<String> cookies, boolean commaIsSeperator, boolean allowHttpSepartorsV0) {
+static Map<String, Cookie> parseRequestCookies(int maxCookies, boolean allowEqualInValue, List<String> cookies, boolean commaIsSeperator, boolean allowHttpSepartorsV0) {
         return parseRequestCookies(maxCookies, allowEqualInValue, cookies, commaIsSeperator, allowHttpSepartorsV0, true);
     }
 
@@ -278,9 +278,9 @@ public class Cookies {
     */
    @Deprecated(since="2.4.0", forRemoval=true)
     static void parseRequestCookies(int maxCookies, boolean allowEqualInValue, List<String> cookies, Set<Cookie> retVal, boolean commaIsSeperator, boolean allowHttpSepartorsV0) {
-       if (cookies != null) {
+        if (cookies != null) {
            final MultiValueHashListStorage<String, Cookie> parsedCookies = new MultiValueHashListStorage<>();
-           for (String cookie : cookies) {
+            for (String cookie : cookies) {
                 parseCookie(cookie, parsedCookies, maxCookies, allowEqualInValue, commaIsSeperator, allowHttpSepartorsV0, isObsoleteCookie(cookie));
             }
            for(String key:parsedCookies.keySet()) {
