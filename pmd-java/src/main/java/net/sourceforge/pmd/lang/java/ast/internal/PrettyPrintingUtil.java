@@ -379,7 +379,7 @@ public final class PrettyPrintingUtil {
         public Void visit(ASTUnaryExpression node, StringBuilder sb) {
             boolean prefix = node.getOperator().isPrefix();
             if (prefix) {
-                sb.append(node.getOperator());
+            sb.append(node.getOperator());
             }
             printWithParensIfNecessary(node.getOperand(), sb, node);
             if (!prefix) {
