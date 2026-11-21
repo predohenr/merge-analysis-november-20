@@ -47,13 +47,13 @@ public final class ClientUpgradeRequest implements UpgradeRequest
      * @deprecated use {@link #ClientUpgradeRequest(URI)} instead.
      */
     @Deprecated(forRemoval = true, since = "12.1.0")
-    public ClientUpgradeRequest()
+public ClientUpgradeRequest()
     {
         /* anonymous, no requestURI, upgrade request */
         this.requestURI = null;
     }
 
-    public ClientUpgradeRequest(URI uri)
+        public ClientUpgradeRequest(URI uri)
     {
         this.requestURI = uri;
         String scheme = uri.getScheme();
@@ -111,6 +111,22 @@ public final class ClientUpgradeRequest implements UpgradeRequest
     public String getHost()
     {
         return (requestURI == null) ? null : requestURI.getHost();
+    }
+
+    @Override
+    public String getHttpVersion()
+    {
+        return httpVersion;
+    }
+
+    /**
+     * Set the HTTP Version to use for the websocket upgrade.
+     *
+     * @param httpVersion the HTTP version to use.
+     */
+    public void setHttpVersion(String httpVersion)
+    {
+        this.httpVersion = httpVersion;
     }
 
     @Override
@@ -286,22 +302,6 @@ public final class ClientUpgradeRequest implements UpgradeRequest
             List<String> values = entry.getValue();
             setHeader(name, values);
         }
-    }
-
-    @Override
-    public String getHttpVersion()
-    {
-        return httpVersion;
-    }
-
-    /**
-     * Set the HTTP Version to use for the websocket upgrade.
-     *
-     * @param httpVersion the HTTP version to use.
-     */
-    public void setHttpVersion(String httpVersion)
-    {
-        this.httpVersion = httpVersion;
     }
 
     /**
