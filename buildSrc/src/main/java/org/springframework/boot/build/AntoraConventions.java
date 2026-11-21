@@ -225,14 +225,14 @@ public class AntoraConventions {
 	}
 
 	private String getUiBundleUrl(Project project) {
-		File packageJson = project.getRootProject().file("antora/package.json");
+			File packageJson = project.getRootProject().file("antora/package.json");
 		JsonMapper jsonMapper = new JsonMapper();
 		Map<?, ?> json = jsonMapper.readerFor(Map.class).readValue(packageJson);
-		Map<?, ?> config = (json != null) ? (Map<?, ?>) json.get("config") : null;
-		String url = (config != null) ? (String) config.get("ui-bundle-url") : null;
-		Assert.state(StringUtils.hasText(url.toString()), "package.json has not ui-bundle-url config");
-		return url;
-	}
+			Map<?, ?> config = (json != null) ? (Map<?, ?>) json.get("config") : null;
+			String url = (config != null) ? (String) config.get("ui-bundle-url") : null;
+			Assert.state(StringUtils.hasText(url.toString()), "package.json has not ui-bundle-url config");
+			return url;
+		}
 
 	private void configureNodeExtension(Project project, NodeExtension nodeExtension) {
 		nodeExtension.getWorkDir().set(project.getLayout().getBuildDirectory().dir(".gradle/nodejs"));
