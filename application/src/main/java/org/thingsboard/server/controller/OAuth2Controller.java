@@ -120,15 +120,15 @@ public class OAuth2Controller extends BaseController {
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/oauth2/client/infos")
     public PageData<OAuth2ClientInfo> findOAuth2ClientInfos(@Parameter(description = PAGE_SIZE_DESCRIPTION, required = true)
-                                                            @RequestParam int pageSize,
-                                                            @Parameter(description = PAGE_NUMBER_DESCRIPTION, required = true)
-                                                            @RequestParam int page,
-                                                            @Parameter(description = "Case-insensitive 'substring' filter based on client's title")
-                                                            @RequestParam(required = false) String textSearch,
-                                                            @Parameter(description = SORT_PROPERTY_DESCRIPTION)
-                                                            @RequestParam(required = false) String sortProperty,
-                                                            @Parameter(description = SORT_ORDER_DESCRIPTION)
-                                                            @RequestParam(required = false) String sortOrder) throws ThingsboardException {
+                                                                  @RequestParam int pageSize,
+                                                                  @Parameter(description = PAGE_NUMBER_DESCRIPTION, required = true)
+                                                                  @RequestParam int page,
+                                                                  @Parameter(description = "Case-insensitive 'substring' filter based on client's title")
+                                                                  @RequestParam(required = false) String textSearch,
+                                                                  @Parameter(description = SORT_PROPERTY_DESCRIPTION)
+                                                                  @RequestParam(required = false) String sortProperty,
+                                                                  @Parameter(description = SORT_ORDER_DESCRIPTION)
+                                                                  @RequestParam(required = false) String sortOrder) throws ThingsboardException {
         PageLink pageLink = createPageLink(pageSize, page, textSearch, sortProperty, sortOrder);
         return oAuth2ClientService.findOAuth2ClientInfosByTenantId(getTenantId(), pageLink);
     }
