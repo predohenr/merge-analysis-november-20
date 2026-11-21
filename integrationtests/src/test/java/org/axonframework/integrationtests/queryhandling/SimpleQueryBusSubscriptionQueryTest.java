@@ -29,6 +29,7 @@ import org.axonframework.queryhandling.SubscriptionQueryAlreadyRegisteredExcepti
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 /**
  * An {@link AbstractSubscriptionQueryTestSuite} implementation validating the {@link SimpleQueryBus}.
