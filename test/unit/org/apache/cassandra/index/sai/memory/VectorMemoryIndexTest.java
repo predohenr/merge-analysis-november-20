@@ -86,20 +86,14 @@ import org.apache.cassandra.tcm.ClusterMetadata;
 import org.apache.cassandra.utils.CloseableIterator;
 import org.apache.cassandra.utils.FBUtilities;
 
-import static org.apache.cassandra.config.CassandraRelevantProperties.MEMTABLE_SHARD_COUNT;
-import static org.apache.cassandra.config.CassandraRelevantProperties.ORG_APACHE_CASSANDRA_DISABLE_MBEAN_REGISTRATION;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/**
- * Randomized tests around the functionality of {@link VectorMemoryIndex}.
- * <p>
- * Note that the multithreaded tests here have been ported to use the simulator in
- * {@link org.apache.cassandra.simulator.test.VectorMemoryIndexSimulationTest}. Although they should catch many of
- * the same kinds of bugs, this test persists partially as an example of how this porting can be done.
- */
+import static org.apache.cassandra.config.CassandraRelevantProperties.MEMTABLE_SHARD_COUNT;
+import static org.apache.cassandra.config.CassandraRelevantProperties.ORG_APACHE_CASSANDRA_DISABLE_MBEAN_REGISTRATION;
+
 public class VectorMemoryIndexTest extends SAITester
 {
     private static final Injections.Counter indexSearchCounter = Injections.newCounter("IndexSearchCounter")
@@ -150,6 +144,10 @@ public class VectorMemoryIndexTest extends SAITester
         rowMap = new HashMap<>();
 
         Injections.inject(indexSearchCounter);
+    }
+
+    public static void reassignLocalTokens()
+    {
     }
 
     @Test
