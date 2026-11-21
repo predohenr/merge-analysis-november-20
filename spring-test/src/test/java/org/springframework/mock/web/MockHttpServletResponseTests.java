@@ -52,6 +52,19 @@ import static org.assertj.core.api.InstanceOfAssertFactories.type;
  * @author Sebastien Deleuze
  * @author Vedran Pavic
  */
+
+/**
+ * Tests for {@link MockHttpServletResponse}.
+ *
+ * @author Juergen Hoeller
+ * @author Rick Evans
+ * @author Rossen Stoyanchev
+ * @author Rob Winch
+ * @author Sam Brannen
+ * @author Brian Clozel
+ * @author Sebastien Deleuze
+ * @author Vedran Pavic
+ */
 class MockHttpServletResponseTests {
 
 	private MockHttpServletResponse response = new MockHttpServletResponse();
@@ -99,11 +112,11 @@ class MockHttpServletResponseTests {
 		@Test
 		void shouldSetEncodingWithContentType() {
 			String contentType = "text/plain;charset=UTF-8";
-			response.setContentType(contentType);
+		response.setContentType(contentType);
 			assertThat(response.isCharset()).isTrue();
-			assertThat(response.getContentType()).isEqualTo(contentType);
+		assertThat(response.getContentType()).isEqualTo(contentType);
 			assertThat(response.getCharacterEncoding()).isEqualTo("UTF-8");
-		}
+	}
 
 		@Test
 		void shouldSetUtf8EncodingForJson() {
@@ -153,32 +166,32 @@ class MockHttpServletResponseTests {
 			assertThat(response.getCharacterEncoding()).isEqualTo(WebUtils.DEFAULT_CHARACTER_ENCODING);
 		}
 
-		@Test // gh-25501
+		@Test  // gh-25501
 		void resetResponseShouldResetCharset() {
-			assertThat(response.getContentType()).isNull();
+		assertThat(response.getContentType()).isNull();
 			assertThat(response.getCharacterEncoding()).isEqualTo(WebUtils.DEFAULT_CHARACTER_ENCODING);
-			assertThat(response.isCharset()).isFalse();
-			response.setCharacterEncoding("UTF-8");
-			assertThat(response.isCharset()).isTrue();
-			assertThat(response.getCharacterEncoding()).isEqualTo("UTF-8");
-			response.setContentType("text/plain");
-			assertThat(response.getContentType()).isEqualTo("text/plain;charset=UTF-8");
+		assertThat(response.isCharset()).isFalse();
+		response.setCharacterEncoding("UTF-8");
+		assertThat(response.isCharset()).isTrue();
+		assertThat(response.getCharacterEncoding()).isEqualTo("UTF-8");
+		response.setContentType("text/plain");
+		assertThat(response.getContentType()).isEqualTo("text/plain;charset=UTF-8");
 			String contentTypeHeader = response.getHeader(HttpHeaders.CONTENT_TYPE);
-			assertThat(contentTypeHeader).isEqualTo("text/plain;charset=UTF-8");
+		assertThat(contentTypeHeader).isEqualTo("text/plain;charset=UTF-8");
 
-			response.reset();
+		response.reset();
 
-			assertThat(response.getContentType()).isNull();
+		assertThat(response.getContentType()).isNull();
 			assertThat(response.getCharacterEncoding()).isEqualTo(WebUtils.DEFAULT_CHARACTER_ENCODING);
-			assertThat(response.isCharset()).isFalse();
-			// Do not invoke setCharacterEncoding() since that sets the charset flag to true.
-			// response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/plain");
-			assertThat(response.isCharset()).isFalse(); // should still be false
-			assertThat(response.getContentType()).isEqualTo("text/plain");
+		assertThat(response.isCharset()).isFalse();
+		// Do not invoke setCharacterEncoding() since that sets the charset flag to true.
+		// response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/plain");
+		assertThat(response.isCharset()).isFalse(); // should still be false
+		assertThat(response.getContentType()).isEqualTo("text/plain");
 			contentTypeHeader = response.getHeader(HttpHeaders.CONTENT_TYPE);
-			assertThat(contentTypeHeader).isEqualTo("text/plain");
-		}
+		assertThat(contentTypeHeader).isEqualTo("text/plain");
+	}
 
 	}
 
@@ -187,17 +200,17 @@ class MockHttpServletResponseTests {
 	class HeadersTests {
 
 		@ParameterizedTest  // gh-26488
-		@ValueSource(strings = {
+	@ValueSource(strings = {
 				HttpHeaders.CONTENT_TYPE,
 				HttpHeaders.CONTENT_LENGTH,
 				HttpHeaders.CONTENT_LANGUAGE,
 				HttpHeaders.SET_COOKIE,
 				"X-Test"
-		})
+	})
 		void addHeaderWithNullValueShouldHaveNoEffect(String headerName) {
-			response.addHeader(headerName, null);
-			assertThat(response.containsHeader(headerName)).isFalse();
-		}
+		response.addHeader(headerName, null);
+		assertThat(response.containsHeader(headerName)).isFalse();
+	}
 
 		@Test
 		void addHeaderWithNullNameShouldHaveNoEffect() {
@@ -206,37 +219,37 @@ class MockHttpServletResponseTests {
 		}
 
 		@ParameterizedTest  // gh-26488
-		@ValueSource(strings = {
+	@ValueSource(strings = {
 				HttpHeaders.CONTENT_TYPE,
 				HttpHeaders.CONTENT_LENGTH,
 				HttpHeaders.CONTENT_LANGUAGE,
 				HttpHeaders.SET_COOKIE,
 				"X-Test"
-		})
+	})
 		void setHeaderWithNullValueShouldHaveNoEffect(String headerName) {
-			response.setHeader(headerName, null);
-			assertThat(response.containsHeader(headerName)).isFalse();
-		}
+		response.setHeader(headerName, null);
+		assertThat(response.containsHeader(headerName)).isFalse();
+	}
 
 		@ParameterizedTest
-		@ValueSource(strings = {
+	@ValueSource(strings = {
 				HttpHeaders.CONTENT_LANGUAGE,
-				"X-Test-Header"
-		})
+			"X-Test-Header"
+	})
 		void setHeaderWithNullValueShouldRemoveHeader(String headerName) {
-			response.addHeader(headerName, "test");
-			response.setHeader(headerName, null);
-			assertThat(response.containsHeader(headerName)).isFalse();
-		}
+		response.addHeader(headerName, "test");
+		response.setHeader(headerName, null);
+		assertThat(response.containsHeader(headerName)).isFalse();
+	}
 
 		@Test
 		void shouldSetContentType() {
 			String contentType = "text/plain";
-			response.setContentType(contentType);
-			assertThat(response.getContentType()).isEqualTo(contentType);
+		response.setContentType(contentType);
+		assertThat(response.getContentType()).isEqualTo(contentType);
 			assertThat(response.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo(contentType);
-			assertThat(response.getCharacterEncoding()).isEqualTo(WebUtils.DEFAULT_CHARACTER_ENCODING);
-		}
+		assertThat(response.getCharacterEncoding()).isEqualTo(WebUtils.DEFAULT_CHARACTER_ENCODING);
+	}
 
 		@Test
 		void shouldSetContentTypeHeader() {
@@ -290,20 +303,12 @@ class MockHttpServletResponseTests {
 			assertThat(response.getLocale()).isEqualTo(Locale.ITALIAN);
 		}
 
-		@Test // gh-34488
-		void shouldAddMultipleContentLanguage() {
-			response.addHeader(HttpHeaders.CONTENT_LANGUAGE, "en");
-			response.addHeader(HttpHeaders.CONTENT_LANGUAGE, "fr");
-			assertThat(response.getHeaders(HttpHeaders.CONTENT_LANGUAGE)).contains("en", "fr");
-			assertThat(response.getLocale()).isEqualTo(Locale.ENGLISH);
-		}
-
 		@Test
 		void contentLengthSetsHeader() {
 			response.setContentLength(66);
-			assertThat(response.getContentLength()).isEqualTo(66);
+		assertThat(response.getContentLength()).isEqualTo(66);
 			assertThat(response.getHeader(HttpHeaders.CONTENT_LENGTH)).isEqualTo("66");
-		}
+	}
 
 		@Test
 		void contentLengthHeaderSetsLength() {
@@ -679,5 +684,14 @@ class MockHttpServletResponseTests {
 		}
 
 	}
+
+	@Test // gh-34488
+	void shouldAddMultipleContentLanguage() {
+		response.addHeader("Content-Language", "en");
+		response.addHeader("Content-Language", "fr");
+		assertThat(response.getHeaders("Content-Language")).contains("en", "fr");
+		assertThat(response.getLocale()).isEqualTo(Locale.ENGLISH);
+	}
+
 
 }
