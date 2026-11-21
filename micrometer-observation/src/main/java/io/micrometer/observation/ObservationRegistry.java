@@ -41,11 +41,19 @@ public interface ObservationRegistry {
     static ObservationRegistry create() {
         return new SimpleObservationRegistry();
     }
+    @Nullable Observation getCurrentObservation();
+    Observation.@Nullable Scope getCurrentObservationScope();
+    void setCurrentObservationScope(Observation.@Nullable Scope current);
+    ObservationConfig observationConfig();
+    default boolean isNoop() {
+        return this == NOOP;
+    }
 
     /**
      * No-op implementation of {@link ObservationRegistry}.
      */
     // intentionally anonymous to avoid introducing circular initialization issues
+    @SuppressWarnings("ClassInitializationDeadlock")
     ObservationRegistry NOOP = new ObservationRegistry() {
         @Override
         public @Nullable Observation getCurrentObservation() {
@@ -76,7 +84,6 @@ public interface ObservationRegistry {
      * method will return the current present {@link Observation} within the scope.
      * @return current observation or {@code null} if it's not present
      */
-    @Nullable Observation getCurrentObservation();
 
     /**
      * When previously set will allow to retrieve the {@link Observation.Scope} at any
@@ -86,27 +93,21 @@ public interface ObservationRegistry {
      * method will return the current present {@link Observation.Scope}.
      * @return current observation scope or {@code null} if it's not present
      */
-    Observation.@Nullable Scope getCurrentObservationScope();
 
     /**
      * Sets the observation scope as current.
      * @param current observation scope
      */
-    void setCurrentObservationScope(Observation.@Nullable Scope current);
 
     /**
      * Configuration options for this registry.
      * @return observation configuration
      */
-    ObservationConfig observationConfig();
 
     /**
      * Checks whether this {@link ObservationRegistry} is no-op.
      * @return {@code true} when this is a no-op observation registry
      */
-    default boolean isNoop() {
-        return this == NOOP;
-    }
 
     /**
      * Access to configuration options for this registry.
@@ -130,52 +131,18 @@ public interface ObservationRegistry {
             this.observationHandlers.add(handler);
             return this;
         }
-
-        /**
-         * Register a predicate to define whether {@link Observation observation} should
-         * be created or a no-op Observation instead.
-         * @param predicate predicate
-         * @return This configuration instance
-         */
         public ObservationConfig observationPredicate(ObservationPredicate predicate) {
             this.observationPredicates.add(predicate);
             return this;
         }
-
-        /**
-         * Register an observation filter for the {@link Observation observations}.
-         * @param observationFilter an observation filter to add to the current
-         * configuration
-         * @return This configuration instance
-         */
         public ObservationConfig observationFilter(ObservationFilter observationFilter) {
             this.observationFilters.add(observationFilter);
             return this;
         }
-
-        /**
-         * Register an {@link ObservationConvention}.
-         * <p>
-         * Please check the javadoc of
-         * {@link Observation#createNotStarted(ObservationConvention, ObservationConvention, Supplier, ObservationRegistry)}
-         * method for the logic of choosing the convention.
-         * </p>
-         * @param observationConvention observation convention
-         * @return This configuration instance
-         */
         public ObservationConfig observationConvention(GlobalObservationConvention<?> observationConvention) {
             this.observationConventions.add(observationConvention);
             return this;
         }
-
-        /**
-         * Finds an {@link ObservationConvention} for the given
-         * {@link Observation.Context}.
-         * @param context context
-         * @param defaultConvention default convention if none found
-         * @return matching {@link ObservationConvention} or default when no matching
-         * found
-         */
         @SuppressWarnings("unchecked")
         <T extends Observation.Context> ObservationConvention<T> getObservationConvention(T context,
                 ObservationConvention<T> defaultConvention) {
@@ -186,14 +153,6 @@ public interface ObservationRegistry {
             }
             return Objects.requireNonNull(defaultConvention, "Default ObservationConvention must not be null");
         }
-
-        /**
-         * Check to assert whether {@link Observation} should be created or a no-op
-         * Observation instead.
-         * @param name observation technical name
-         * @param context context
-         * @return {@code true} when observation is enabled
-         */
         boolean isObservationEnabled(@Nullable String name, Observation.@Nullable Context context) {
             for (ObservationPredicate predicate : this.observationPredicates) {
                 if (!predicate.test(name, context)) {
@@ -202,8 +161,6 @@ public interface ObservationRegistry {
             }
             return true;
         }
-
-        // package-private for minimal visibility
         Collection<ObservationHandler<?>> getObservationHandlers() {
             return observationHandlers;
         }
@@ -215,6 +172,50 @@ public interface ObservationRegistry {
         Collection<ObservationConvention<?>> getObservationConventions() {
             return observationConventions;
         }
+
+        /**
+         * Register a predicate to define whether {@link Observation observation} should
+         * be created or a no-op Observation instead.
+         * @param predicate predicate
+         * @return This configuration instance
+         */
+
+        /**
+         * Register an observation filter for the {@link Observation observations}.
+         * @param observationFilter an observation filter to add to the current
+         * configuration
+         * @return This configuration instance
+         */
+
+        /**
+         * Register an {@link ObservationConvention}.
+         * <p>
+         * Please check the javadoc of
+         * {@link Observation#createNotStarted(ObservationConvention, ObservationConvention, Supplier, ObservationRegistry)}
+         * method for the logic of choosing the convention.
+         * </p>
+         * @param observationConvention observation convention
+         * @return This configuration instance
+         */
+
+        /**
+         * Finds an {@link ObservationConvention} for the given
+         * {@link Observation.Context}.
+         * @param context context
+         * @param defaultConvention default convention if none found
+         * @return matching {@link ObservationConvention} or default when no matching
+         * found
+         */
+
+        /**
+         * Check to assert whether {@link Observation} should be created or a no-op
+         * Observation instead.
+         * @param name observation technical name
+         * @param context context
+         * @return {@code true} when observation is enabled
+         */
+
+        // package-private for minimal visibility
 
     }
 
