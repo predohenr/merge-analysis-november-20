@@ -55,6 +55,13 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @author Tommy Ludwig
  * @author Johnny Lim
  */
+
+/**
+ * Tests {@link StatsdMeterRegistry} metrics publishing functionality.
+ *
+ * @author Tommy Ludwig
+ * @author Johnny Lim
+ */
 class StatsdMeterRegistryPublishTest {
 
     private static final String UDS_DATAGRAM_SOCKET_PATH = "/tmp/test-server.sock";
