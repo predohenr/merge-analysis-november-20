@@ -62,8 +62,8 @@ public abstract class AbstractIteratorAssert<SELF extends AbstractIteratorAssert
    */
   public SELF hasNext() {
     return executeAssertion(() -> {
-      isNotNull();
-      assertHasNext();
+    isNotNull();
+    assertHasNext();
     });
   }
 
@@ -85,8 +85,8 @@ public abstract class AbstractIteratorAssert<SELF extends AbstractIteratorAssert
    */
   public SELF isExhausted() {
     return executeAssertion(() -> {
-      isNotNull();
-      assertIsExhausted();
+    isNotNull();
+    assertIsExhausted();
     });
   }
 
@@ -133,8 +133,8 @@ public abstract class AbstractIteratorAssert<SELF extends AbstractIteratorAssert
   @Beta
   public SELF isUnmodifiable() {
     return executeAssertion(() -> {
-      isNotNull();
-      assertIsUnmodifiable();
+    isNotNull();
+    assertIsUnmodifiable();
     });
   }
 
