@@ -25,10 +25,16 @@ import org.axonframework.common.TypeReference;
 import org.axonframework.common.infra.ComponentDescriptor;
 import org.axonframework.common.jdbc.PersistenceExceptionResolver;
 import org.axonframework.common.jpa.EntityManagerProvider;
-import org.axonframework.conversion.Converter;
+import org.axonframework.messaging.core.unitofwork.transaction.TransactionManager;
+import org.axonframework.messaging.eventhandling.EventMessage;
+import org.axonframework.messaging.eventhandling.GenericEventMessage;
+import org.axonframework.messaging.eventhandling.TerminalEventMessage;
+import org.axonframework.messaging.eventhandling.conversion.EventConverter;
+import org.axonframework.messaging.eventhandling.processors.streaming.token.GapAwareTrackingToken;
+import org.axonframework.messaging.eventhandling.processors.streaming.token.TrackingToken;
 import org.axonframework.eventsourcing.eventstore.AggregateBasedConsistencyMarker;
 import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils;
-import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.*;
+import org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.AggregateSequencer;
 import org.axonframework.eventsourcing.eventstore.AggregateSequenceNumberPosition;
 import org.axonframework.eventsourcing.eventstore.AppendCondition;
 import org.axonframework.eventsourcing.eventstore.ConsistencyMarker;
@@ -39,22 +45,17 @@ import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.SourcingCondition;
 import org.axonframework.eventsourcing.eventstore.StreamSpliterator;
 import org.axonframework.eventsourcing.eventstore.TaggedEventMessage;
-import org.axonframework.messaging.core.Context;
+import org.axonframework.messaging.LegacyResources;
+import org.axonframework.messaging.SimpleEntry;
 import org.axonframework.messaging.core.LegacyResources;
-import org.axonframework.messaging.core.MessageStream;
-import org.axonframework.messaging.core.MessageType;
-import org.axonframework.messaging.core.SimpleEntry;
-import org.axonframework.messaging.core.unitofwork.ProcessingContext;
-import org.axonframework.messaging.core.unitofwork.transaction.TransactionManager;
-import org.axonframework.messaging.eventhandling.EventMessage;
-import org.axonframework.messaging.eventhandling.GenericEventMessage;
-import org.axonframework.messaging.eventhandling.TerminalEventMessage;
-import org.axonframework.messaging.eventhandling.conversion.EventConverter;
-import org.axonframework.messaging.eventhandling.processors.streaming.token.GapAwareTrackingToken;
-import org.axonframework.messaging.eventhandling.processors.streaming.token.TrackingToken;
 import org.axonframework.messaging.eventstreaming.EventCriterion;
 import org.axonframework.messaging.eventstreaming.StreamingCondition;
 import org.axonframework.messaging.eventstreaming.Tag;
+import org.axonframework.messaging.core.Context;
+import org.axonframework.messaging.core.MessageStream;
+import org.axonframework.messaging.core.MessageType;
+import org.axonframework.messaging.core.unitofwork.ProcessingContext;
+import org.axonframework.conversion.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,9 @@ import java.util.stream.StreamSupport;
 
 import static java.util.Objects.requireNonNull;
 import static org.axonframework.common.DateTimeUtils.formatInstant;
-import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.*;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.assertValidTags;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.resolveAggregateIdentifier;
+import static org.axonframework.eventsourcing.eventstore.AggregateBasedEventStorageEngineUtils.resolveAggregateType;
 
 
 /**
@@ -143,13 +146,14 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
     private final long lowestGlobalSequence;
 
     private final GapAwareTrackingTokenOperations tokenOperations;
-
-    /**
-     * Tracks runnables for callbacks attached to streams for when new events may have become available.
-     */
     private final Map<Object, Runnable> streamCallbacks = new ConcurrentHashMap<>();
 
     private EventCoordinator.Handle eventCoordinatorHandle;
+
+    /**
+     * Tracks runnables for callbacks attached to streams for when new events may
+     * have become available.
+     */
 
     /**
      * Constructs an {@code AggregateBasedJpaEventStorageEngine} with the given parameters.
@@ -183,14 +187,6 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
         this.tokenOperations = new GapAwareTrackingTokenOperations(config.gapTimeout(), logger);
         this.eventCoordinatorHandle = config.eventCoordinator().startCoordination(this::onAppendDetected);
     }
-
-    /**
-     * Returns an {@link EntityManager} from the {@link EntityManagerProvider}.
-     * <p>
-     * Internal use only.
-     *
-     * @return An {@link EntityManager} from the {@link EntityManagerProvider}.
-     */
     private EntityManager entityManager() {
         return entityManagerProvider.getEntityManager();
     }
@@ -242,8 +238,7 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
             }
 
             @Override
-            public CompletableFuture<ConsistencyMarker> afterCommit(@Nonnull AggregateBasedConsistencyMarker marker,
-                                                                    @Nullable ProcessingContext context) {
+            public CompletableFuture<ConsistencyMarker> afterCommit(@Nonnull AggregateBasedConsistencyMarker marker, @Nullable ProcessingContext context) {
                 return CompletableFuture.completedFuture(marker);
             }
 
@@ -291,8 +286,7 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
     }
 
     @Override
-    public MessageStream<EventMessage> source(@Nonnull SourcingCondition condition,
-                                              @Nullable ProcessingContext processingContext) {
+    public MessageStream<EventMessage> source(@Nonnull SourcingCondition condition, @Nullable ProcessingContext processingContext) {
         CompletableFuture<Void> endOfStreams = new CompletableFuture<>();
         List<AggregateSource> aggregateSources = condition.criteria()
                                                           .flatten()
@@ -370,18 +364,17 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
     }
 
     @Override
-    public MessageStream<EventMessage> stream(@Nonnull StreamingCondition condition,
-                                              @Nullable ProcessingContext processingContext) {
+    public MessageStream<EventMessage> stream(@Nonnull StreamingCondition condition, @Nullable ProcessingContext processingContext) {
         GapAwareTrackingToken trackingToken = tokenOperations.assertGapAwareTrackingToken(condition.position());
 
         return new ContinuousMessageStream<TokenAndEvent>(
-                last -> queryTokensAndEventsBy(last == null ? trackingToken : last.token),
-                tae -> new SimpleEntry<>(convertToEventMessage(tae.event), buildTrackedContext(tae)),
-                (ms, r) -> {
-                    streamCallbacks.put(ms, r);
+            last -> queryTokensAndEventsBy(last == null ? trackingToken : last.token),
+            tae -> new SimpleEntry<>(convertToEventMessage(tae.event), buildTrackedContext(tae)),
+            (ms, r) -> {
+                streamCallbacks.put(ms, r);
 
-                    return () -> streamCallbacks.remove(ms) != null;
-                }
+                return () -> streamCallbacks.remove(ms) != null;
+            }
         );
     }
 
@@ -500,8 +493,7 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
     }
 
     @Override
-    public CompletableFuture<TrackingToken> tokenAt(@Nonnull Instant at,
-                                                    @Nullable ProcessingContext processingContext) {
+    public CompletableFuture<TrackingToken> tokenAt(@Nonnull Instant at, @Nullable ProcessingContext processingContext) {
         try (EntityManager entityManager = entityManager()) {
             long position = entityManager.createQuery(TOKEN_AT_QUERY, Long.class)
                                          .setParameter("dateTime", formatInstant(at))
@@ -518,10 +510,6 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
         descriptor.describeProperty("persistenceExceptionResolver", persistenceExceptionResolver);
         descriptor.describeProperty("tokenOperations", tokenOperations);
     }
-
-    /**
-     * Releases any resources associated with this engine.
-     */
     public void close() {
         if (eventCoordinatorHandle != null) {
             eventCoordinatorHandle.terminate();
@@ -534,6 +522,18 @@ public class AggregateBasedJpaEventStorageEngine implements EventStorageEngine {
             callback.run();
         }
     }
+
+    /**
+     * Returns an {@link EntityManager} from the {@link EntityManagerProvider}.
+     * <p>
+     * Internal use only.
+     *
+     * @return An {@link EntityManager} from the {@link EntityManagerProvider}.
+     */
+
+    /**
+     * Releases any resources associated with this engine.
+     */
 
     /**
      * A tuple of an {@link AtomicReference} to an {@link AggregateBasedConsistencyMarker} and a {@link MessageStream},
