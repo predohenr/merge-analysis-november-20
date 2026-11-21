@@ -42,6 +42,13 @@ import static org.mockito.Mockito.mock;
  * @author Jon Schneider
  * @author Johnny Lim
  */
+
+/**
+ * Tests for {@link MetricsDSLContext}.
+ *
+ * @author Jon Schneider
+ * @author Johnny Lim
+ */
 class MetricsDSLContextTest {
 
     private MeterRegistry meterRegistry = new SimpleMeterRegistry();

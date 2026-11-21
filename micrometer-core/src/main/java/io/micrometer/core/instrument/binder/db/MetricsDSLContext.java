@@ -19,8 +19,8 @@ import io.micrometer.core.annotation.Incubating;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.jooq.impl.DefaultDSLContext;
 
 import java.util.Arrays;
@@ -55,7 +55,7 @@ public class MetricsDSLContext extends DefaultDSLContext {
     private static final ThreadLocal<Iterable<Tag>> contextTags = new ThreadLocal<>();
 
     @SuppressWarnings("NullAway.Init")
-    private static ExecuteListenerProvider defaultExecuteListenerProvider;
+private static ExecuteListenerProvider defaultExecuteListenerProvider;
 
     public static MetricsDSLContext withMetrics(DSLContext jooq, MeterRegistry registry, Iterable<Tag> tags) {
         defaultExecuteListenerProvider = () -> new JooqExecuteListener(registry, tags, () -> {
