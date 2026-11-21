@@ -137,7 +137,7 @@ public class LanguageLevelChecker<T> {
          * @see <a href="https://openjdk.org/jeps/495">JEP 495: Simple Source Files and Instance Main Methods (Fourth Preview)</a> (Java 24)
          * @see <a href="https://openjdk.org/jeps/512">JEP 512: Compact Source Files and Instance Main Methods</a> (Java 25)
          */
-        COMPACT_SOURCE_FILES_AND_INSTANCE_MAIN_METHODS(22, 24, true),
+        COMPACT_SOURCE_FILES_AND_INSTANCE_MAIN_METHODS(22, 24, true),,
 
         /**
          * Flexible Constructor Bodies
@@ -162,9 +162,7 @@ public class LanguageLevelChecker<T> {
          * @see <a href="https://openjdk.org/jeps/488">JEP 488: Primitive Types in Patterns, instanceof, and switch (Second Preview)</a> (Java 24)
          * @see <a href="https://openjdk.org/jeps/507">JEP 507: Primitive Types in Patterns, instanceof, and switch (Third Preview)</a> (Java 25)
          */
-        PRIMITIVE_TYPES_IN_PATTERNS_INSTANCEOF_AND_SWITCH(23, 25, false),
-
-        ;  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
+        PRIMITIVE_TYPES_IN_PATTERNS_INSTANCEOF_AND_SWITCH(23, 25, false);  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
 
 
         private final int minPreviewVersion;
@@ -243,9 +241,7 @@ public class LanguageLevelChecker<T> {
         /**
          * ContextualKeyword since Java 15 Preview.
          */
-        PERMITS_AS_A_TYPE_NAME(15, "permits"),
-
-        ;  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
+        PERMITS_AS_A_TYPE_NAME(15, "permits");  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
 
         private final int maxJdkVersion;
         private final String reserved;
@@ -401,9 +397,7 @@ public class LanguageLevelChecker<T> {
          * @see <a href="https://openjdk.org/jeps/443">JEP 443: Unnamed patterns and variables (Preview)</a> (Java 21)
          * @see <a href="https://openjdk.org/jeps/456">JEP 456: Unnamed Variables & Patterns</a> (Java 22)
          */
-        UNNAMED_VARIABLES_AND_PATTERNS(22),
-
-        ;  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
+        UNNAMED_VARIABLES_AND_PATTERNS(22);  // SUPPRESS CHECKSTYLE enum trailing semi is awesome
 
         private final int minJdkLevel;
 

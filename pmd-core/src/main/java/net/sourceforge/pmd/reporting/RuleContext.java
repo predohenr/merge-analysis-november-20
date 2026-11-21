@@ -1,4 +1,4 @@
-/*
+/**
  * BSD-style license; for more info see http://pmd.sourceforge.net/license.html
  */
 
@@ -45,8 +45,8 @@ public final class RuleContext {
 
     private static final Object[] NO_ARGS = new Object[0];
     static final List<ViolationSuppressor> DEFAULT_SUPPRESSORS = listOf(ViolationSuppressor.NOPMD_COMMENT_SUPPRESSOR,
-                                                                        ViolationSuppressor.REGEX_SUPPRESSOR,
-                                                                        ViolationSuppressor.XPATH_SUPPRESSOR);
+                                                                                ViolationSuppressor.REGEX_SUPPRESSOR,
+                                                                                ViolationSuppressor.XPATH_SUPPRESSOR);
 
     private final FileAnalysisListener listener;
     private final Rule rule;
