@@ -203,13 +203,13 @@ public interface BoundBlogMapper {
 
   // @formatter:off
   @Select("SELECT * FROM blog "
-         + "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
+          + "WHERE id = #{id} AND title = #{nonExistentParam,jdbcType=VARCHAR}")
   // @formatter:on
   Blog selectBlogByNonExistentParam(@Param("id") int id);
 
   // @formatter:off
   @Select("SELECT * FROM blog "
-         + "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
+          + "WHERE id = #{id} AND title = #{params.nonExistentParam,jdbcType=VARCHAR}")
   // @formatter:on
   Blog selectBlogByNonExistentNestedParam(@Param("id") int id, @Param("params") Map<String, Object> params);
 
@@ -220,13 +220,13 @@ public interface BoundBlogMapper {
 
   // @formatter:off
   @Select("SELECT * FROM blog "
-         + "WHERE id = #{0} AND title = #{1}")
+      + "WHERE id = #{0} AND title = #{1}")
   // @formatter:on
   Blog selectBlogByDefault30ParamNames(int id, String title);
 
   // @formatter:off
   @Select("SELECT * FROM blog "
-         + "WHERE id = #{param1} AND title = #{param2}")
+      + "WHERE id = #{param1} AND title = #{param2}")
   // @formatter:on
   Blog selectBlogByDefault31ParamNames(int id, String title);
 
@@ -234,7 +234,7 @@ public interface BoundBlogMapper {
 
   // @formatter:off
   @Select("SELECT * FROM blog "
-         + "WHERE ${column} = #{id} AND title = #{value}")
+      + "WHERE ${column} = #{id} AND title = #{value}")
   // @formatter:on
   Blog selectBlogWithAParamNamedValue(@Param("column") String column, @Param("id") int id,
       @Param("value") String title);
@@ -244,7 +244,7 @@ public interface BoundBlogMapper {
   // @formatter:off
   @Select({
       "SELECT *",
-        "FROM blog"
+      "FROM blog"
   })
   @Results({
       @Result(property = "author", column = "author_id", one = @One(select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor")),
@@ -256,7 +256,7 @@ public interface BoundBlogMapper {
   // @formatter:off
   @Select({
       "SELECT *",
-        "FROM blog"
+      "FROM blog"
   })
   @Results({
       @Result(property = "author", column = "author_id", one = @One(select = "org.apache.ibatis.binding.BoundAuthorMapper.selectAuthor", fetchType = FetchType.EAGER)),

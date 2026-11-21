@@ -399,7 +399,7 @@ class BindingTest {
     }
   }
 
-  @Test // issue #480 and #101
+    @Test // issue #480 and #101
   void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
