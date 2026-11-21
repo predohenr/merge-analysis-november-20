@@ -50,6 +50,26 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile;
  *
  * @author Andy Wilkinson
  */
+
+/**
+ * Conventions that are applied in the presence of the {@code org.jetbrains.kotlin.jvm}
+ * plugin. When the plugin is applied:
+ *
+ * <ul>
+ * <li>{@link KotlinCompile} tasks are configured to:
+ * <ul>
+ * <li>Use {@code apiVersion} and {@code languageVersion} 1.7.
+ * <li>Use {@code jvmTarget} 17.
+ * <li>Treat all warnings as errors
+ * <li>Suppress version warnings
+ * </ul>
+ * <li>Detekt plugin is applied to perform static analysis of Kotlin code
+ * </ul>
+ *
+ * <p/>
+ *
+ * @author Andy Wilkinson
+ */
 class KotlinConventions {
 
 	private static final JvmTarget JVM_TARGET = JvmTarget.JVM_17;
