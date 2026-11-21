@@ -275,7 +275,7 @@ abstract class AbstractFormatter implements Formatter {
         }
 
         if (configProperty.isEscapeDefaultValue()) {
-            return escapeDefaultValue(defaultValue);
+        return escapeDefaultValue(defaultValue);
         } else {
             return defaultValue;
         }
