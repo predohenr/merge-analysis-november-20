@@ -8,6 +8,7 @@ import cn.iocoder.yudao.module.promotion.dal.dataobject.coupon.CouponTemplateDO;
 import cn.iocoder.yudao.module.promotion.enums.coupon.CouponTakeTypeEnum;
 
 import jakarta.validation.Valid;
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,6 +26,19 @@ public interface CouponTemplateService {
      * @return 是否不限制
      */
     boolean isTakeLimitCountUnlimited(Integer takeLimitCount);
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    boolean isTotalCountUnlimited(Integer totalCount);
+    Long createCouponTemplate(@Valid CouponTemplateCreateReqVO createReqVO);
+    void updateCouponTemplate(@Valid CouponTemplateUpdateReqVO updateReqVO);
+    void updateCouponTemplateStatus(Long id, Integer status);
+    void deleteCouponTemplate(Long id);
+    CouponTemplateDO getCouponTemplate(Long id);
+    PageResult<CouponTemplateDO> getCouponTemplatePage(CouponTemplatePageReqVO pageReqVO);
+    void updateCouponTemplateTakeCount(Long id, int incrCount);
+    List<CouponTemplateDO> getCouponTemplateListByTakeType(CouponTakeTypeEnum takeType);
+    List<CouponTemplateDO> getCouponTemplateList(List<Integer> canTakeTypes, Integer productScope,
+                                                 Long productScopeValue, Integer count);
+    List<CouponTemplateDO> getCouponTemplateList(Collection<Long> ids);
 
     /**
      * 判断是否不限制总发放数量
@@ -32,8 +46,6 @@ public interface CouponTemplateService {
      * @param totalCount 发放数量
      * @return 是否不限制
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean isTotalCountUnlimited(Integer totalCount);
 
     /**
      * 创建优惠劵模板
@@ -41,14 +53,12 @@ public interface CouponTemplateService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createCouponTemplate(@Valid CouponTemplateCreateReqVO createReqVO);
 
     /**
      * 更新优惠劵模板
      *
      * @param updateReqVO 更新信息
      */
-    void updateCouponTemplate(@Valid CouponTemplateUpdateReqVO updateReqVO);
 
     /**
      * 更新优惠劵模板的状态
@@ -56,14 +66,12 @@ public interface CouponTemplateService {
      * @param id     编号
      * @param status 状态
      */
-    void updateCouponTemplateStatus(Long id, Integer status);
 
     /**
      * 删除优惠劵模板
      *
      * @param id 编号
      */
-    void deleteCouponTemplate(Long id);
 
     /**
      * 获得优惠劵模板
@@ -71,7 +79,6 @@ public interface CouponTemplateService {
      * @param id 编号
      * @return 优惠劵模板
      */
-    CouponTemplateDO getCouponTemplate(Long id);
 
     /**
      * 获得优惠劵模板分页
@@ -79,7 +86,6 @@ public interface CouponTemplateService {
      * @param pageReqVO 分页查询
      * @return 优惠劵模板分页
      */
-    PageResult<CouponTemplateDO> getCouponTemplatePage(CouponTemplatePageReqVO pageReqVO);
 
     /**
      * 更新优惠劵模板的领取数量
@@ -87,7 +93,6 @@ public interface CouponTemplateService {
      * @param id        优惠劵模板编号
      * @param incrCount 增加数量
      */
-    void updateCouponTemplateTakeCount(Long id, int incrCount);
 
     /**
      * 获得指定领取方式的优惠券模板
@@ -95,7 +100,6 @@ public interface CouponTemplateService {
      * @param takeType 领取方式
      * @return 优惠券模板列表
      */
-    List<CouponTemplateDO> getCouponTemplateListByTakeType(CouponTakeTypeEnum takeType);
 
     /**
      * 获得优惠券模板列表
@@ -106,8 +110,6 @@ public interface CouponTemplateService {
      * @param count             查询数量
      * @return 优惠券模板列表
      */
-    List<CouponTemplateDO> getCouponTemplateList(List<Integer> canTakeTypes, Integer productScope,
-                                                 Long productScopeValue, Integer count);
 
     /**
      * 获得优惠券模版列表
@@ -115,6 +117,5 @@ public interface CouponTemplateService {
      * @param ids 优惠券模版编号
      * @return 优惠券模版列表
      */
-    List<CouponTemplateDO> getCouponTemplateList(Collection<Long> ids);
 
 }

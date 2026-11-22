@@ -11,8 +11,6 @@ import cn.iocoder.yudao.module.system.dal.dataobject.mail.MailTemplateDO;
 import cn.iocoder.yudao.module.system.dal.mysql.mail.MailTemplateMapper;
 import cn.iocoder.yudao.module.system.dal.redis.RedisKeyConstants;
 import com.google.common.annotations.VisibleForTesting;
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
+import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -162,13 +162,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
         matcher.appendTail(sb);
         return sb.toString();
     }
-
-    /**
-     * 反转义 HTML 特殊字符
-     *
-     * @param input 输入字符串
-     * @return 反转义后的字符串
-     */
     private String unescapeHtml(String input) {
         if (StrUtil.isEmpty(input)) {
             return input;
@@ -181,13 +174,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
                 .replace("&#39;", "'")
                 .replace("&nbsp;", " ");
     }
-
-    /**
-     * 格式化 HTML 中的代码块
-     *
-     * @param content 邮件内容
-     * @return 格式化后的邮件内容
-     */
     private String formatHtmlCodeBlocks(String content) {
         // 匹配 <pre><code> 标签的代码块
         Pattern codeBlockPattern = Pattern.compile("<pre\\s*.*?><code\\s*.*?>(.*?)</code></pre>", Pattern.DOTALL);
@@ -208,10 +194,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     public long getMailTemplateCountByAccountId(Long accountId) {
         return mailTemplateMapper.selectCountByAccountId(accountId);
     }
-
-    /**
-     * 解析标题和内容中的参数
-     */
     @VisibleForTesting
     public List<String> parseTemplateTitleAndContentParams(String title, String content) {
         List<String> titleParams = ReUtil.findAllGroup1(PATTERN_PARAMS, title);
@@ -225,6 +207,27 @@ public class MailTemplateServiceImpl implements MailTemplateService {
         }
         return allParams;
     }
+    List<String> parseTemplateContentParams(String content) {
+        return ReUtil.findAllGroup1(PATTERN_PARAMS, content);
+    }
+
+    /**
+     * 反转义 HTML 特殊字符
+     *
+     * @param input 输入字符串
+     * @return 反转义后的字符串
+     */
+
+    /**
+     * 格式化 HTML 中的代码块
+     *
+     * @param content 邮件内容
+     * @return 格式化后的邮件内容
+     */
+
+    /**
+     * 解析标题和内容中的参数
+     */
 
     /**
      * 获得邮件模板中的参数，形如 {key}
@@ -232,8 +235,5 @@ public class MailTemplateServiceImpl implements MailTemplateService {
      * @param content 内容
      * @return 参数列表
      */
-    List<String> parseTemplateContentParams(String content) {
-        return ReUtil.findAllGroup1(PATTERN_PARAMS, content);
-    }
 
 }
