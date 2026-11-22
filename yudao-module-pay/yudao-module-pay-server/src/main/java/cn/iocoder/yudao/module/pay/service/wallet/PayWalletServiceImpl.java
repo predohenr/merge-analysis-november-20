@@ -68,7 +68,7 @@ public class PayWalletServiceImpl implements PayWalletService {
                 PayWalletDO newWallet = walletMapper.selectByUserIdAndType(userId, userType);
                 if (newWallet == null) {
                     newWallet = new PayWalletDO().setUserId(userId).setUserType(userType)
-                            .setBalance(0).setTotalExpense(0).setTotalRecharge(0);
+                    .setBalance(0).setTotalExpense(0).setTotalRecharge(0);
                     newWallet.setCreateTime(LocalDateTime.now());
                     walletMapper.insert(newWallet);
                 }
