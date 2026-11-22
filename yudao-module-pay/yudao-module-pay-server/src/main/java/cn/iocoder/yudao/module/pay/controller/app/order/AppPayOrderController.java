@@ -61,7 +61,7 @@ public class AppPayOrderController {
         if (ObjUtil.isNull(order) && ObjUtil.isNotNull(id)) {
             order = payOrderService.getOrder(id);
         }
-        if (order == null) {
+        if (order== null) {
             return success(null);
         }
         // 重要：校验订单是否是当前用户，避免越权
