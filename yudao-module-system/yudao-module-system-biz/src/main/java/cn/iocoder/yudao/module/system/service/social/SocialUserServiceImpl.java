@@ -12,14 +12,15 @@ import cn.iocoder.yudao.module.system.dal.dataobject.social.SocialUserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.social.SocialUserBindMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.social.SocialUserMapper;
 import cn.iocoder.yudao.module.system.enums.social.SocialTypeEnum;
-import jakarta.annotation.Resource;
-import jakarta.validation.constraints.NotNull;
+import com.xingyuv.jushauth.model.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,17 +119,6 @@ public class SocialUserServiceImpl implements SocialUserService {
         return new SocialUserRespDTO(socialUser.getOpenid(), socialUser.getNickname(), socialUser.getAvatar(),
                 socialUserBind != null ? socialUserBind.getUserId() : null);
     }
-
-    /**
-     * 授权获得对应的社交用户
-     * 如果授权失败，则会抛出 {@link ServiceException} 异常
-     *
-     * @param socialType 社交平台的类型 {@link SocialTypeEnum}
-     * @param userType 用户类型
-     * @param code     授权码
-     * @param state    state
-     * @return 授权用户
-     */
     @NotNull
     public SocialUserDO authSocialUser(Integer socialType, Integer userType, String code, String state) {
         // 优先从 DB 中获取，因为 code 有且可以使用一次。
@@ -158,8 +148,6 @@ public class SocialUserServiceImpl implements SocialUserService {
         return socialUser;
     }
 
-    // ==================== 社交用户 CRUD ====================
-
     @Override
     public SocialUserDO getSocialUser(Long id) {
         return socialUserMapper.selectById(id);
@@ -169,5 +157,18 @@ public class SocialUserServiceImpl implements SocialUserService {
     public PageResult<SocialUserDO> getSocialUserPage(SocialUserPageReqVO pageReqVO) {
         return socialUserMapper.selectPage(pageReqVO);
     }
+
+    /**
+     * 授权获得对应的社交用户
+     * 如果授权失败，则会抛出 {@link ServiceException} 异常
+     *
+     * @param socialType 社交平台的类型 {@link SocialTypeEnum}
+     * @param userType 用户类型
+     * @param code     授权码
+     * @param state    state
+     * @return 授权用户
+     */
+
+    // ==================== 社交用户 CRUD ====================
 
 }

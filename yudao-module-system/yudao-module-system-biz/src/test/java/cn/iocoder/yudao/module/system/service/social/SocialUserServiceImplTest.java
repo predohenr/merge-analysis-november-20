@@ -16,7 +16,8 @@ import me.zhyd.oauth.model.AuthUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-
+import com.xingyuv.jushauth.model.AuthUser;
+import javax.annotation.Resource;
 import java.util.List;
 
 import static cn.hutool.core.util.RandomUtil.randomEle;

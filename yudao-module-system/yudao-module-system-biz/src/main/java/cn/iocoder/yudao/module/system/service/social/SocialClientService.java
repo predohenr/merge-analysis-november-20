@@ -8,12 +8,14 @@ import cn.iocoder.yudao.module.system.controller.admin.socail.vo.client.SocialCl
 import cn.iocoder.yudao.module.system.controller.admin.socail.vo.client.SocialClientSaveReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.social.SocialClientDO;
 import cn.iocoder.yudao.module.system.enums.social.SocialTypeEnum;
-import jakarta.validation.Valid;
+import com.xingyuv.jushauth.model.AuthUser;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.bean.subscribemsg.TemplateInfo;
 import me.zhyd.oauth.model.AuthUser;
 
 import java.util.List;
+
+import javax.validation.Valid;
 
 /**
  * 社交应用 Service 接口
@@ -31,6 +33,17 @@ public interface SocialClientService {
      * @return 社交平台的授权 URL
      */
     String getAuthorizeUrl(Integer socialType, Integer userType, String redirectUri);
+    AuthUser getAuthUser(Integer socialType, Integer userType, String code, String state);
+    WxJsapiSignature createWxMpJsapiSignature(Integer userType, String url);
+    WxMaPhoneNumberInfo getWxMaPhoneNumberInfo(Integer userType, String phoneCode);
+    byte[] getWxaQrcode(SocialWxQrcodeReqDTO reqVO);
+    List<TemplateInfo> getSubscribeTemplateList(Integer userType);
+    void sendSubscribeMessage(SocialWxaSubscribeMessageSendReqDTO reqDTO, String templateId, String openId);
+    Long createSocialClient(@Valid SocialClientSaveReqVO createReqVO);
+    void updateSocialClient(@Valid SocialClientSaveReqVO updateReqVO);
+    void deleteSocialClient(Long id);
+    SocialClientDO getSocialClient(Long id);
+    PageResult<SocialClientDO> getSocialClientPage(SocialClientPageReqVO pageReqVO);
 
     /**
      * 请求社交平台，获得授权的用户
@@ -41,7 +54,6 @@ public interface SocialClientService {
      * @param state      授权 state
      * @return 授权的用户
      */
-    AuthUser getAuthUser(Integer socialType, Integer userType, String code, String state);
 
     // =================== 微信公众号独有 ===================
 
@@ -52,7 +64,6 @@ public interface SocialClientService {
      * @param url      访问的 URL 地址
      * @return 签名
      */
-    WxJsapiSignature createWxMpJsapiSignature(Integer userType, String url);
 
     // =================== 微信小程序独有 ===================
 
@@ -63,7 +74,6 @@ public interface SocialClientService {
      * @param phoneCode 手机授权码
      * @return 手机信息
      */
-    WxMaPhoneNumberInfo getWxMaPhoneNumberInfo(Integer userType, String phoneCode);
 
     /**
      * 获得小程序二维码
@@ -71,7 +81,6 @@ public interface SocialClientService {
      * @param reqVO 请求信息
      * @return 小程序二维码
      */
-    byte[] getWxaQrcode(SocialWxQrcodeReqDTO reqVO);
 
     /**
      * 获得微信小程订阅模板
@@ -81,7 +90,6 @@ public interface SocialClientService {
      * @param userType 用户类型
      * @return 微信小程订阅模板
      */
-    List<TemplateInfo> getSubscribeTemplateList(Integer userType);
 
     /**
      * 发送微信小程序订阅消息
@@ -90,7 +98,6 @@ public interface SocialClientService {
      * @param templateId 模版编号
      * @param openId     会员 openId
      */
-    void sendSubscribeMessage(SocialWxaSubscribeMessageSendReqDTO reqDTO, String templateId, String openId);
 
     // =================== 客户端管理 ===================
 
@@ -100,21 +107,18 @@ public interface SocialClientService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createSocialClient(@Valid SocialClientSaveReqVO createReqVO);
 
     /**
      * 更新社交客户端
      *
      * @param updateReqVO 更新信息
      */
-    void updateSocialClient(@Valid SocialClientSaveReqVO updateReqVO);
 
     /**
      * 删除社交客户端
      *
      * @param id 编号
      */
-    void deleteSocialClient(Long id);
 
     /**
      * 获得社交客户端
@@ -122,7 +126,6 @@ public interface SocialClientService {
      * @param id 编号
      * @return 社交客户端
      */
-    SocialClientDO getSocialClient(Long id);
 
     /**
      * 获得社交客户端分页
@@ -130,6 +133,5 @@ public interface SocialClientService {
      * @param pageReqVO 分页查询
      * @return 社交客户端分页
      */
-    PageResult<SocialClientDO> getSocialClientPage(SocialClientPageReqVO pageReqVO);
 
 }
