@@ -55,7 +55,7 @@ public class JobThread extends Thread{
      * new trigger to queue
      */
 	public Response<String> pushTriggerQueue(TriggerRequest triggerParam) {
-        // avoid repeat
+		// avoid repeat
 		if (!triggerLogIdSet.add(triggerParam.getLogId())) {
 			logger.info(">>>>>>>>>>> repeate trigger job, logId:{}", triggerParam.getLogId());
 			return Response.of(XxlJobContext.HANDLE_CODE_FAIL, "repeate trigger job, logId:" + triggerParam.getLogId());
@@ -117,7 +117,7 @@ public class JobThread extends Thread{
 							triggerParam.getExecutorParams(),
                             triggerParam.getLogId(),
                             triggerParam.getLogDateTime(),
-                            logFileName,
+							logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 
