@@ -36,10 +36,10 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.id.UserId;
 import org.thingsboard.server.dao.tenant.TbTenantProfileCache;
-import org.thingsboard.server.service.security.auth.jwt.JwtAuthenticationProvider;
-import org.thingsboard.server.service.security.auth.pat.ApiKeyAuthenticationProvider;
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.UserPrincipal;
+import org.thingsboard.server.service.security.auth.jwt.JwtAuthenticationProvider;
+import org.thingsboard.server.service.security.auth.pat.ApiKeyAuthenticationProvider;
 import org.thingsboard.server.service.ws.WebSocketService;
 import org.thingsboard.server.service.ws.WebSocketSessionRef;
 import org.thingsboard.server.service.ws.WebSocketSessionType;
@@ -199,10 +199,6 @@ class TbWebSocketHandlerTest {
 
         assertThat(msgs).map(Integer::parseInt).doesNotHaveDuplicates().hasSize(100);
     }
-
-    // Regression test for the bug where publicUserSessionsMap was keyed by UserId(NULL_UUID),
-    // making maxWsSessionsPerPublicUser a global limit shared across all tenants.
-    // The limit is now scoped per-tenant.
     @Test
     void checkLimits_publicUserSessions_limitIsPerTenantNotGlobal() throws Exception {
         TbTenantProfileCache tenantProfileCache = mock(TbTenantProfileCache.class);
@@ -354,6 +350,10 @@ class TbWebSocketHandlerTest {
         assertThat(method.invoke(handler, "other=value", "token")).isNull();
         assertThat(method.invoke(handler, "tokenExtra=value", "token")).isNull();
     }
+
+    // Regression test for the bug where publicUserSessionsMap was keyed by UserId(NULL_UUID),
+    // making maxWsSessionsPerPublicUser a global limit shared across all tenants.
+    // The limit is now scoped per-tenant.
 
     private record AuthTestFixture(
             TbWebSocketHandler handler,
