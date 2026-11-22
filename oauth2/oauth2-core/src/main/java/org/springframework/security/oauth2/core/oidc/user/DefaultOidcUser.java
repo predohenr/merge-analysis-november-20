@@ -19,9 +19,9 @@ package org.springframework.security.oauth2.core.oidc.user;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
+import java.util.Objects;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
