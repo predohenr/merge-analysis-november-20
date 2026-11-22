@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -31,6 +31,7 @@ public class HttpUtils {
      * @param value 参数
      * @return 编码后的参数
      */
+
     public static String encodeUtf8(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
@@ -50,18 +51,6 @@ public class HttpUtils {
     private String append(String base, Map<String, ?> query, boolean fragment) {
         return append(base, query, null, fragment);
     }
-
-    /**
-     * 拼接 URL
-     *
-     * copy from Spring Security OAuth2 的 AuthorizationEndpoint 类的 append 方法
-     *
-     * @param base 基础 URL
-     * @param query 查询参数
-     * @param keys query 的 key，对应的原本的 key 的映射。例如说 query 里有个 key 是 xx，实际它的 key 是 extra_xx，则通过 keys 里添加这个映射
-     * @param fragment URL 的 fragment，即拼接到 # 中
-     * @return 拼接后的 URL
-     */
     public static String append(String base, Map<String, ?> query, Map<String, String> keys, boolean fragment) {
         UriComponentsBuilder template = UriComponentsBuilder.newInstance();
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base);
@@ -135,6 +124,33 @@ public class HttpUtils {
         }
         return null;
     }
+    public static String post(String url, Map<String, String> headers, String requestBody) {
+        try (HttpResponse response = HttpRequest.post(url)
+                .addHeaders(headers)
+                .body(requestBody)
+                .execute()) {
+            return response.body();
+        }
+    }
+    public static String get(String url, Map<String, String> headers) {
+        try (HttpResponse response = HttpRequest.get(url)
+                .addHeaders(headers)
+                .execute()) {
+            return response.body();
+        }
+    }
+
+    /**
+ * 拼接 URL
+ *
+ * copy from Spring Security OAuth2 的 AuthorizationEndpoint 类的 append 方法
+ *
+ * @param base 基础 URL
+ * @param query 查询参数
+ * @param keys query 的 key，对应的原本的 key 的映射。例如说 query 里有个 key 是 xx，实际它的 key 是 extra_xx，则通过 keys 里添加这个映射
+ * @param fragment URL 的 fragment，即拼接到 # 中
+ * @return 拼接后的 URL
+ */
 
     /**
      * HTTP post 请求，基于 {@link cn.hutool.http.HttpUtil} 实现
@@ -146,14 +162,6 @@ public class HttpUtils {
      * @param requestBody 请求体
      * @return 请求结果
      */
-    public static String post(String url, Map<String, String> headers, String requestBody) {
-        try (HttpResponse response = HttpRequest.post(url)
-                .addHeaders(headers)
-                .body(requestBody)
-                .execute()) {
-            return response.body();
-        }
-    }
 
     /**
      * HTTP get 请求，基于 {@link cn.hutool.http.HttpUtil} 实现
@@ -164,12 +172,5 @@ public class HttpUtils {
      * @param headers 请求头
      * @return 请求结果
      */
-    public static String get(String url, Map<String, String> headers) {
-        try (HttpResponse response = HttpRequest.get(url)
-                .addHeaders(headers)
-                .execute()) {
-            return response.body();
-        }
-    }
 
 }
