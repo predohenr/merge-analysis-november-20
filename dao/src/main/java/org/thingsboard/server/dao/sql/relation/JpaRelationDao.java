@@ -62,15 +62,15 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
     private static final String RETURNING = "RETURNING from_id, from_type, to_id, to_type, relation_type, relation_type_group, nextval('relation_version_seq') as version";
     private static final String DELETE_QUERY = "DELETE FROM relation WHERE from_id = ? AND from_type = ? AND to_id = ? AND to_type = ? AND relation_type = ? AND relation_type_group = ? " + RETURNING;
 
-    static {
-        Arrays.stream(RelationTypeGroup.values()).map(RelationTypeGroup::name).forEach(ALL_TYPE_GROUP_NAMES::add);
-    }
-
     @Autowired
     private RelationRepository relationRepository;
 
     @Autowired
     private RelationInsertRepository relationInsertRepository;
+
+    static {
+        Arrays.stream(RelationTypeGroup.values()).map(RelationTypeGroup::name).forEach(ALL_TYPE_GROUP_NAMES::add);
+    }
 
     @Override
     public List<EntityRelation> findAllByFrom(TenantId tenantId, EntityId from, RelationTypeGroup typeGroup) {
