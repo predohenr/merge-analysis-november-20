@@ -1,13 +1,10 @@
 package cn.iocoder.yudao.module.mp.service.handler.user;
 
-import cn.hutool.core.util.ObjUtil;
 import cn.iocoder.yudao.module.mp.framework.mp.core.context.MpContextHolder;
 import cn.iocoder.yudao.module.mp.service.message.MpAutoReplyService;
 import cn.iocoder.yudao.module.mp.service.user.MpUserService;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.common.error.WxMpErrorMsgEnum;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -15,7 +12,10 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.stereotype.Component;
-
+import javax.annotation.Resource;
+import cn.hutool.core.util.ObjUtil;
+import jakarta.annotation.Resource;
+import me.chanjar.weixin.common.error.WxMpErrorMsgEnum;
 import java.util.Map;
 
 /**
