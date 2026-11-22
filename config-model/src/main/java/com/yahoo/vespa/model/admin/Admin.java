@@ -11,7 +11,7 @@ import com.yahoo.config.model.deploy.DeployState;
 import com.yahoo.config.model.producer.AnyConfigProducer;
 import com.yahoo.config.model.producer.TreeConfigProducer;
 import com.yahoo.config.provision.ClusterSpec;
-import com.yahoo.config.provision.TelemetryExporterConfiguration;
+import com.yahoo.config.provision.TelemetryExportConfig;
 import com.yahoo.container.logging.LevelsModSpec;
 import com.yahoo.vespa.model.AbstractService;
 import com.yahoo.vespa.model.ConfigProxy;
@@ -26,6 +26,11 @@ import com.yahoo.vespa.model.admin.metricsproxy.MetricsProxyContainerCluster;
 import com.yahoo.vespa.model.admin.monitoring.MetricsConsumer;
 import com.yahoo.vespa.model.admin.monitoring.Monitoring;
 import com.yahoo.vespa.model.admin.monitoring.builder.Metrics;
+import com.yahoo.config.provision.TelemetryExporterConfiguration;
+import com.yahoo.vespa.model.admin.telemetry.TelemetryAuth;
+import com.yahoo.vespa.model.admin.telemetry.TelemetryExport;
+import com.yahoo.vespa.model.admin.telemetry.TelemetryExporter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +61,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
 
     private final List<Slobrok> slobroks = new ArrayList<>();
     private Configserver defaultConfigserver;
-
-    /** The log server, or null if none */
     private Logserver logserver;
 
     private LogForwarder.Config logForwarderConfig = null;
@@ -66,6 +69,16 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     private TelemetryExporterConfiguration telemetryExport = null;
 
     private final ApplicationType applicationType;
+
+    private final List<LogctlSpec> logctlSpecs = new ArrayList<>();
+    private ClusterControllerContainerCluster clusterControllers;
+    private Optional<LogserverContainerCluster> logServerContainerCluster = Optional.empty();
+
+    private ZooKeepersConfigProvider zooKeepersConfigProvider;
+    private final boolean multitenant;
+    private final FeatureFlags featureFlags;
+
+    /** The log server, or null if none */
 
     public void setLogForwarderConfig(LogForwarder.Config cfg, boolean includeAdmin) {
         this.logForwarderConfig = cfg;
@@ -79,21 +92,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     public Optional<TelemetryExporterConfiguration> getTelemetryExport() {
         return Optional.ofNullable(telemetryExport);
     }
-
-    private final List<LogctlSpec> logctlSpecs = new ArrayList<>();
-
-    /**
-     * The single cluster controller cluster shared by all content clusters by default when not multitenant.
-     * If multitenant, this is null.
-     */
-    private ClusterControllerContainerCluster clusterControllers;
-
-     // Cluster of logserver containers. If enabled, exactly one container is running on each logserver host.
-    private Optional<LogserverContainerCluster> logServerContainerCluster = Optional.empty();
-
-    private ZooKeepersConfigProvider zooKeepersConfigProvider;
-    private final boolean multitenant;
-    private final FeatureFlags featureFlags;
 
     public Admin(TreeConfigProducer<AnyConfigProducer> parent,
                  Monitoring monitoring,
@@ -113,8 +111,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     }
 
     public Configserver getConfigserver() { return defaultConfigserver; }
-
-    /** Returns the configured monitoring endpoint, or null if not configured */
     public Monitoring getMonitoring() {
         return monitoring;
     }
@@ -124,8 +120,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     public MetricsProxyContainerCluster getMetricsProxyCluster() {
         return metricsProxyCluster;
     }
-
-    /** Used by model amenders */
     public void setAdditionalDefaultMetrics(MetricSet additionalDefaultMetrics) {
         if (additionalDefaultMetrics == null) return;
         this.additionalDefaultMetrics = additionalDefaultMetrics;
@@ -143,18 +137,12 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     public Set<MetricsConsumer> getAmendedMetricsConsumers() {
         return amendedMetricsConsumers;
     }
-
-    /** Returns a list of all config servers */
     public List<Configserver> getConfigservers() {
         return configservers;
     }
-
-    /** Returns an immutable list of the slobroks in this */
     public List<Slobrok> getSlobroks() { return Collections.unmodifiableList(slobroks); }
 
     public void setLogserver(Logserver logserver) { this.logserver = logserver; }
-
-    /** Returns the log server for this, or null if none */
     public Logserver getLogserver() { return logserver; }
 
     public void addConfigservers(List<Configserver> configservers) {
@@ -234,10 +222,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
     public void getConfig(ZookeepersConfig.Builder builder) {
         zooKeepersConfigProvider.getConfig(builder);
     }
-
-    /**
-     * Adds services to all hosts in the system.
-     */
     public void addPerHostServices(List<HostResource> hosts, DeployState deployState) {
         if (slobroks.isEmpty()) // TODO: Move to caller
             slobroks.addAll(createDefaultSlobrokSetup(deployState));
@@ -307,8 +291,6 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
         service.setHostResource(host);
         service.initService(deployState);
     }
-
-    // If not configured by user: Use default setup: max 3 slobroks, 1 on the default configserver host
     private List<Slobrok> createDefaultSlobrokSetup(DeployState deployState) {
         List<HostResource> hosts = hostSystem().getHosts();
         List<Slobrok> slobs = new ArrayList<>();
@@ -364,17 +346,62 @@ public class Admin extends TreeConfigProducer<AnyConfigProducer> implements Seri
         return levelSpec;
     }
 
-    public TelemetryExporterConfiguration toTelemetryExporterConfiguration() {
+    public TelemetryExportConfig toTelemetryExportConfig() {
         return getTelemetryExport()
-                .map(Admin::toTelemetryExporterConfiguration)
-                .orElse(TelemetryExporterConfiguration.empty());
+                .map(Admin::toTelemetryExportConfig)
+                .orElse(TelemetryExportConfig.empty());
     }
 
-    private static TelemetryExporterConfiguration  toTelemetryExporterConfiguration(TelemetryExporterConfiguration telemetryExporterConfiguration) {
-        var exporters = telemetryExporterConfiguration.exporters()
-                                                      .stream()
-                                                      .toList();
-        return new TelemetryExporterConfiguration(exporters);
+    private static TelemetryExportConfig toTelemetryExportConfig(TelemetryExport telemetryExport) {
+        var exporters = telemetryExport.exporters()
+                                       .stream()
+                                       .map(Admin::toExporter)
+                                       .toList();
+        return new TelemetryExportConfig(exporters);
     }
+
+    private static TelemetryExportConfig.Exporter toExporter(TelemetryExporter e) {
+        return new TelemetryExportConfig.Exporter(
+                e.id(),
+                e.type().name(),
+                e.endpoint().orElse(null),
+                e.project().orElse(null),
+                e.auth().map(Admin::toAuth).orElse(null),
+                e.metricSets(),
+                e.logFileTypes());
+    }
+
+    private static TelemetryExportConfig.Auth toAuth(TelemetryAuth a) {
+        return new TelemetryExportConfig.Auth(
+                a.type().name(),
+                a.vault(),
+                a.secretName().orElse(null),
+                a.header().orElse(null),
+                a.usernameSecretName().orElse(null),
+                a.passwordSecretName().orElse(null));
+    }
+
+    /**
+     * The single cluster controller cluster shared by all content clusters by default when not multitenant.
+     * If multitenant, this is null.
+     */
+
+     // Cluster of logserver containers. If enabled, exactly one container is running on each logserver host.
+
+    /** Returns the configured monitoring endpoint, or null if not configured */
+
+    /** Used by model amenders */
+
+    /** Returns a list of all config servers */
+
+    /** Returns an immutable list of the slobroks in this */
+
+    /** Returns the log server for this, or null if none */
+
+    /**
+     * Adds services to all hosts in the system.
+     */
+
+    // If not configured by user: Use default setup: max 3 slobroks, 1 on the default configserver host
 
 }
