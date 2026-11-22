@@ -19,11 +19,11 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertList;
+import javax.annotation.Resource;
+import javax.validation.Valid;
 import static cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId;
 
 @Tag(name = "管理后台 - 社交用户")
@@ -59,8 +59,6 @@ public class SocialUserController {
                 .setNickname(socialUser.getNickname()).setAvatar(socialUser.getNickname())));
     }
 
-    // ==================== 社交用户 CRUD ====================
-
     @GetMapping("/get")
     @Operation(summary = "获得社交用户")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
@@ -77,5 +75,7 @@ public class SocialUserController {
         PageResult<SocialUserDO> pageResult = socialUserService.getSocialUserPage(pageVO);
         return success(BeanUtils.toBean(pageResult, SocialUserRespVO.class));
     }
+
+    // ==================== 社交用户 CRUD ====================
 
 }
