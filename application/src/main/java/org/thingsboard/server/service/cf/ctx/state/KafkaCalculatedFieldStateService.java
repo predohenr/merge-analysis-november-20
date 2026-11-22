@@ -110,8 +110,8 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
             putStateId(msg.getHeaders(), stateId);
         }
         stateProducer.send(tpi, stateId.toKey(), msg, null);
-        callback.onSuccess();
-    }
+                    callback.onSuccess();
+                }
 
     @Override
     protected void doRemove(CalculatedFieldEntityCtxId stateId, TbCallback callback) {

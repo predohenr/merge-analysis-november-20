@@ -320,7 +320,7 @@ public class ActorSystemContext {
     @Getter
     private TbEntityViewService tbEntityViewService;
 
-    @Autowired
+        @Autowired
     @Getter
     private TelemetrySubscriptionService tsSubService;
 
@@ -538,15 +538,15 @@ public class ActorSystemContext {
     @Getter
     private EntityService entityService;
 
-    @Autowired(required = false)
+        @Autowired(required = false)
     @Getter
     private CalculatedFieldProcessingService calculatedFieldProcessingService;
 
-    @Autowired(required = false)
+        @Autowired(required = false)
     @Getter
     private CalculatedFieldStateService calculatedFieldStateService;
 
-    @Autowired(required = false)
+        @Autowired(required = false)
     @Getter
     private CalculatedFieldQueueService calculatedFieldQueueService;
 
