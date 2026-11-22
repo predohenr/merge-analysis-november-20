@@ -17,6 +17,10 @@ public record BlockWindow(boolean revision, boolean version, boolean maintenance
                           List<DayOfWeek> days, List<Integer> hours, ZoneId zone,
                           Optional<LocalDate> fromDate, Optional<LocalDate> toDate) {
 
+    public BlockWindow(boolean revision, boolean version, List<DayOfWeek> days, List<Integer> hours, ZoneId zone) {
+        this(revision, version, false, days, hours, zone, Optional.empty(), Optional.empty());
+    }
+
     public BlockWindow(boolean revision, boolean version, boolean maintenance, List<DayOfWeek> days, List<Integer> hours, ZoneId zone) {
         this(revision, version, maintenance, days, hours, zone, Optional.empty(), Optional.empty());
     }
@@ -33,18 +37,12 @@ public record BlockWindow(boolean revision, boolean version, boolean maintenance
         this.fromDate    = fromDate;
         this.toDate      = toDate;
     }
-
-    /** Returns whether this window is currently blocking platform (Vespa version) upgrades */
     public boolean blocksPlatformAt(Instant instant) {
         return version && isWithin(instant);
     }
-
-    /** Returns whether this window is currently blocking revision (application package) deployments */
     public boolean blocksRevisionAt(Instant instant) {
         return revision && isWithin(instant);
     }
-
-    /** Returns whether this window is currently blocking maintenance operations */
     public boolean blocksMaintenanceAt(Instant instant) {
         return maintenance && isWithin(instant);
     }
@@ -58,5 +56,11 @@ public record BlockWindow(boolean revision, boolean version, boolean maintenance
         if (toDate.isPresent() && date.isAfter(toDate.get())) return false;
         return true;
     }
+
+    /** Returns whether this window is currently blocking platform (Vespa version) upgrades */
+
+    /** Returns whether this window is currently blocking revision (application package) deployments */
+
+    /** Returns whether this window is currently blocking maintenance operations */
 
 }
