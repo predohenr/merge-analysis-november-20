@@ -210,7 +210,6 @@ import org.thingsboard.server.common.data.widget.WidgetType;
 import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
 import org.thingsboard.server.common.data.widget.WidgetTypeInfo;
 import org.thingsboard.server.common.data.widget.WidgetsBundle;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
@@ -227,7 +226,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.joining;
 import static org.thingsboard.server.common.data.StringUtils.isEmpty;
 
