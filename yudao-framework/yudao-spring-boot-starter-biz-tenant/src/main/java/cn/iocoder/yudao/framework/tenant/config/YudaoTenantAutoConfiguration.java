@@ -22,7 +22,6 @@ import cn.iocoder.yudao.framework.web.config.WebProperties;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
-import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -46,6 +45,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.util.pattern.PathPattern;
 
 import java.util.HashSet;
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -72,14 +72,10 @@ public class YudaoTenantAutoConfiguration {
         return new TenantFrameworkServiceImpl(tenantApi);
     }
 
-    // ========== AOP ==========
-
     @Bean
     public TenantIgnoreAspect tenantIgnoreAspect() {
         return new TenantIgnoreAspect();
     }
-
-    // ========== DB ==========
 
     @Bean
     public TenantLineInnerInterceptor tenantLineInnerInterceptor(TenantProperties properties,
@@ -90,8 +86,6 @@ public class YudaoTenantAutoConfiguration {
         MyBatisUtils.addInterceptor(interceptor, inner, 0);
         return inner;
     }
-
-    // ========== WEB ==========
 
     @Bean
     public FilterRegistrationBean<TenantContextWebFilter> tenantContextWebFilter() {
@@ -120,8 +114,6 @@ public class YudaoTenantAutoConfiguration {
         };
     }
 
-    // ========== Security ==========
-
     @Bean
     public FilterRegistrationBean<TenantSecurityWebFilter> tenantSecurityWebFilter(TenantProperties tenantProperties,
                                                                                    WebProperties webProperties,
@@ -133,12 +125,6 @@ public class YudaoTenantAutoConfiguration {
         registrationBean.setOrder(WebFilterOrderEnum.TENANT_SECURITY_FILTER);
         return registrationBean;
     }
-
-    /**
-     * 如果 Controller 接口上，有 {@link TenantIgnore} 注解，则添加到忽略租户的 URL 集合中
-     *
-     * @return 忽略租户的 URL 集合
-     */
     private Set<String> getTenantIgnoreUrls() {
         Set<String> ignoreUrls = new HashSet<>();
         // 获得接口对应的 HandlerMethod 集合
@@ -164,6 +150,46 @@ public class YudaoTenantAutoConfiguration {
         return ignoreUrls;
     }
 
+    @Bean
+    @ConditionalOnClass(name = "org.springframework.amqp.rabbit.core.RabbitTemplate")
+    public TenantRabbitMQInitializer tenantRabbitMQInitializer() {
+        return new TenantRabbitMQInitializer();
+    }
+
+    @Bean
+    @ConditionalOnClass(name = "org.apache.rocketmq.spring.core.RocketMQTemplate")
+    public TenantRocketMQInitializer tenantRocketMQInitializer() {
+        return new TenantRocketMQInitializer();
+    }
+
+    @Bean
+    @Primary // 引入租户时，tenantRedisCacheManager 为主 Bean
+    public RedisCacheManager tenantRedisCacheManager(RedisTemplate<String, Object> redisTemplate,
+                                                     RedisCacheConfiguration redisCacheConfiguration,
+                                                     YudaoCacheProperties yudaoCacheProperties,
+                                                     TenantProperties tenantProperties) {
+        // 创建 RedisCacheWriter 对象
+        RedisConnectionFactory connectionFactory = Objects.requireNonNull(redisTemplate.getConnectionFactory());
+        RedisCacheWriter cacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory,
+                BatchStrategies.scan(yudaoCacheProperties.getRedisScanBatchSize()));
+        // 创建 TenantRedisCacheManager 对象
+        return new TenantRedisCacheManager(cacheWriter, redisCacheConfiguration, tenantProperties.getIgnoreCaches());
+    }
+
+    // ========== AOP ==========
+
+    // ========== DB ==========
+
+    // ========== WEB ==========
+
+    // ========== Security ==========
+
+    /**
+     * 如果 Controller 接口上，有 {@link TenantIgnore} 注解，则添加到忽略租户的 URL 集合中
+     *
+     * @return 忽略租户的 URL 集合
+     */
+
     // ========== MQ ==========
 
     /**
@@ -182,32 +208,6 @@ public class YudaoTenantAutoConfiguration {
 
     }
 
-    @Bean
-    @ConditionalOnClass(name = "org.springframework.amqp.rabbit.core.RabbitTemplate")
-    public TenantRabbitMQInitializer tenantRabbitMQInitializer() {
-        return new TenantRabbitMQInitializer();
-    }
-
-    @Bean
-    @ConditionalOnClass(name = "org.apache.rocketmq.spring.core.RocketMQTemplate")
-    public TenantRocketMQInitializer tenantRocketMQInitializer() {
-        return new TenantRocketMQInitializer();
-    }
-
     // ========== Redis ==========
-
-    @Bean
-    @Primary // 引入租户时，tenantRedisCacheManager 为主 Bean
-    public RedisCacheManager tenantRedisCacheManager(RedisTemplate<String, Object> redisTemplate,
-                                                     RedisCacheConfiguration redisCacheConfiguration,
-                                                     YudaoCacheProperties yudaoCacheProperties,
-                                                     TenantProperties tenantProperties) {
-        // 创建 RedisCacheWriter 对象
-        RedisConnectionFactory connectionFactory = Objects.requireNonNull(redisTemplate.getConnectionFactory());
-        RedisCacheWriter cacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory,
-                BatchStrategies.scan(yudaoCacheProperties.getRedisScanBatchSize()));
-        // 创建 TenantRedisCacheManager 对象
-        return new TenantRedisCacheManager(cacheWriter, redisCacheConfiguration, tenantProperties.getIgnoreCaches());
-    }
 
 }
