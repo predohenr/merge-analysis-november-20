@@ -14,7 +14,6 @@ import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnModelConsta
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.FlowableUtils;
 import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.common.engine.impl.db.SuspensionState;
@@ -26,6 +25,7 @@ import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -96,8 +96,8 @@ public class BpmProcessDefinitionServiceImpl implements BpmProcessDefinitionServ
 
         // 校验用户是否在允许发起的用户列表中
         if (CollUtil.isNotEmpty(processDefinition.getStartUserIds())) {
-            return processDefinition.getStartUserIds().contains(userId);
-        }
+        return processDefinition.getStartUserIds().contains(userId);
+    }
 
         // 校验用户是否在允许发起的部门列表中
         if (CollUtil.isNotEmpty(processDefinition.getStartDeptIds())) {

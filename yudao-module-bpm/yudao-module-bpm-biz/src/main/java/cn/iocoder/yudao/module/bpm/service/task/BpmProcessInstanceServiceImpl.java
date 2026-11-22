@@ -266,8 +266,8 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         List<FlowNode> nextFlowNodes = BpmnModelUtils.getNextFlowNodes(flowElement, bpmnModel, processVariables);
         List<ActivityNode> nextActivityNodes = convertList(nextFlowNodes, node -> new ActivityNode().setId(node.getId())
                 .setName(node.getName()).setNodeType(BpmSimpleModelNodeTypeEnum.APPROVE_NODE.getType())
-                .setStatus(BpmTaskStatusEnum.RUNNING.getStatus())
-                .setCandidateStrategy(BpmnModelUtils.parseCandidateStrategy(node))
+                    .setStatus(BpmTaskStatusEnum.RUNNING.getStatus())
+                    .setCandidateStrategy(BpmnModelUtils.parseCandidateStrategy(node))
                 .setCandidateUserIds(getTaskCandidateUserList(bpmnModel, node.getId(),
                         loginUserId, historicProcessInstance.getProcessDefinitionId(), processVariables)));
         if (CollUtil.isNotEmpty(nextActivityNodes)) {

@@ -41,7 +41,10 @@ public class BpmSyncHttpRequestTrigger extends BpmAbstractHttpRequestTrigger {
         // 2. 发起请求
         ProcessInstance processInstance = processInstanceService.getProcessInstance(processInstanceId);
         BpmHttpRequestUtils.executeBpmHttpRequest(processInstance,
-                setting.getUrl(), setting.getHeader(), setting.getBody(), true, setting.getResponse());
+                setting.getUrl(),
+                setting.getHeader(),
+                setting.getBody(),
+                true, setting.getResponse());
     }
 
 }
