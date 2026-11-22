@@ -32,7 +32,7 @@ public class HttpUtils {
      * @return 编码后的参数
      */
     @SneakyThrows
-    public static String encodeUtf8(String value) {
+public static String encodeUtf8(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
     }
 
@@ -45,7 +45,7 @@ public class HttpUtils {
      * @return 解码后的参数
      */
     @SneakyThrows
-    public static String decodeUtf8(String value) {
+public static String decodeUtf8(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
     }
 
@@ -58,13 +58,13 @@ public class HttpUtils {
      * @return 解码后的路径
      */
     @SneakyThrows
-    public static String decodeUrlPath(String path) {
+public static String decodeUrlPath(String path) {
         // 先将 + 替换为 %2B，避免被 URLDecoder 解码为空格
         String encoded = path.replace("+", "%2B");
         return URLDecoder.decode(encoded, StandardCharsets.UTF_8.name());
     }
 
-    public static String replaceUrlQuery(String url, String key, String value) {
+        public static String replaceUrlQuery(String url, String key, String value) {
         UrlBuilder builder = UrlBuilder.of(url, Charset.defaultCharset());
         // 先移除；再添加
         builder.getQuery().remove(key);
