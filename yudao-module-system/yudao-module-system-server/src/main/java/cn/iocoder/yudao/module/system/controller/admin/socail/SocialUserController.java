@@ -40,7 +40,7 @@ public class SocialUserController {
     public CommonResult<Boolean> socialBind(@RequestBody @Valid SocialUserBindReqVO reqVO) {
         socialUserService.bindSocialUser(new SocialUserBindReqDTO().setSocialType(reqVO.getType())
                         .setCode(reqVO.getCode()).setState(reqVO.getState())
-                        .setUserId(getLoginUserId()).setUserType(UserTypeEnum.ADMIN.getValue()));
+                .setUserId(getLoginUserId()).setUserType(UserTypeEnum.ADMIN.getValue()));
         return CommonResult.success(true);
     }
 

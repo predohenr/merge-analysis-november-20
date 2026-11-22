@@ -4,9 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotNull;
 
 @Schema(description = "用户 App - 上传文件 Request VO")
 @Data

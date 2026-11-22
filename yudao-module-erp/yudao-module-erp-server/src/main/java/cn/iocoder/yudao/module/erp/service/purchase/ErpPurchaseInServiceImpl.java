@@ -86,7 +86,7 @@ public class ErpPurchaseInServiceImpl implements ErpPurchaseInService {
 
         // 2.1 插入入库
         ErpPurchaseInDO purchaseIn = BeanUtils.toBean(createReqVO, ErpPurchaseInDO.class, in -> in
-                .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
+                        .setNo(no).setStatus(ErpAuditStatus.PROCESS.getStatus()))
                 .setOrderNo(purchaseOrder.getNo()).setSupplierId(purchaseOrder.getSupplierId());
         calculateTotalPrice(purchaseIn, purchaseInItems);
         purchaseInMapper.insert(purchaseIn);

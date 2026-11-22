@@ -97,6 +97,13 @@ public interface Demo03StudentErpService {
     void deleteDemo03Course(Long id);
 
     /**
+     * 批量删除学生
+     *
+     * @param ids 编号
+     */
+    void deleteDemo03StudentList(List<Long> ids);
+
+    /**
      * 批量删除学生课程
      *
      * @param ids 编号
@@ -143,6 +150,13 @@ public interface Demo03StudentErpService {
      * @param id 编号
      */
     void deleteDemo03Grade(Long id);
+
+    /**
+     * 批量删除学生
+     *
+     * @param ids 编号
+     */
+    void deleteDemo03StudentList(List<Long> ids);
 
     /**
      * 批量删除学生班级
