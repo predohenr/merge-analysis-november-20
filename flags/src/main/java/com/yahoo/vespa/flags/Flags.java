@@ -469,7 +469,7 @@ public class Flags {
                                                               String createdAt, String expiresAt, String description,
                                                               String modificationEffect, Predicate<T> validator, Dimension... dimensions) {
         return define((id2, defaultValue2, vector2) -> new UnboundJacksonFlag<>(id2, defaultValue2, vector2, jacksonClass, validator),
-                      flagId, defaultValue, owners, createdAt, expiresAt, description, modificationEffect, dimensions);
+                flagId, defaultValue, owners, createdAt, expiresAt, description, modificationEffect, dimensions);
     }
 
     /** WARNING: public for testing: All flags should be defined in {@link Flags}. */
