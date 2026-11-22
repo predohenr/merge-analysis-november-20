@@ -106,6 +106,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Core Protocol Response tests. */
+
+/** Core Protocol Response tests. */
 class ResponseTest extends ResponseTester {
 
     @Test
