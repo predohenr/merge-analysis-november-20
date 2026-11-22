@@ -38,9 +38,9 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
         // 转换成 CommonResult
         CommonResult<?> result = SkyWalkingTraceUtils.callWithTraceIdInMdc(exchange, () -> {
-            if (ex instanceof ResponseStatusException) {
+        if (ex instanceof ResponseStatusException) {
                 return responseStatusExceptionHandler(exchange, (ResponseStatusException) ex);
-            }
+        }
             return defaultExceptionHandler(exchange, ex);
         });
 
