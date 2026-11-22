@@ -177,7 +177,7 @@ public class AiChatMessageServiceImpl implements AiChatMessageService {
                                 convertSet(knowledgeSegments, AiKnowledgeSegmentSearchRespBO::getDocumentId)));
                 segments = BeanUtils.toBean(knowledgeSegments, AiChatMessageRespVO.KnowledgeSegment.class, segment ->  {
                     AiKnowledgeDocumentDO document = documentMap.get(segment.getDocumentId());
-                    segment.setDocumentName(document != null ? document.getName() : null);
+                            segment.setDocumentName(document != null ? document.getName() : null);
                 });
             }
             // 响应结果
@@ -221,8 +221,8 @@ public class AiChatMessageServiceImpl implements AiChatMessageService {
     }
 
     private Prompt buildPrompt(AiChatConversationDO conversation, List<AiChatMessageDO> messages,
-                               List<AiKnowledgeSegmentSearchRespBO> knowledgeSegments,
-                               AiModelDO model, AiChatMessageSendReqVO sendReqVO) {
+            List<AiKnowledgeSegmentSearchRespBO> knowledgeSegments,
+            AiModelDO model, AiChatMessageSendReqVO sendReqVO) {
         List<Message> chatMessages = new ArrayList<>();
         // 1.1 System Context 角色设定
         if (StrUtil.isNotBlank(conversation.getSystemMessage())) {
