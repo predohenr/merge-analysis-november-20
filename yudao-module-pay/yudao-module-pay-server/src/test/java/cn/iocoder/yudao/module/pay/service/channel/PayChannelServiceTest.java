@@ -13,10 +13,11 @@ import cn.iocoder.yudao.module.pay.framework.pay.core.client.PayClientFactory;
 import cn.iocoder.yudao.module.pay.framework.pay.core.client.impl.alipay.AlipayPayClientConfig;
 import cn.iocoder.yudao.module.pay.framework.pay.core.client.impl.weixin.WxPayClientConfig;
 import com.alibaba.fastjson.JSON;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
+
+import javax.annotation.Resource;
+import javax.validation.Validator;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
