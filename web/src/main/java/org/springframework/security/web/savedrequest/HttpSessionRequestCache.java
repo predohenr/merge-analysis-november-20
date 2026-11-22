@@ -101,9 +101,9 @@ public class HttpSessionRequestCache implements RequestCache {
 		if (this.matchingRequestParameterName != null) {
 			if (!StringUtils.hasText(request.getQueryString()) || !UriComponentsBuilder.newInstance()
 				.query(request.getQueryString())
-				.build()
-				.getQueryParams()
-				.containsKey(this.matchingRequestParameterName)) {
+						.build()
+						.getQueryParams()
+						.containsKey(this.matchingRequestParameterName)) {
 				this.logger.trace(
 						"matchingRequestParameterName is required for getMatchingRequest to lookup a value, but not provided");
 				return null;
