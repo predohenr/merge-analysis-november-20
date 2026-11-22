@@ -417,7 +417,7 @@ public class EntityKeyMapping {
             filters = Collections.emptyMap();
         } else {
             filters = query.getKeyFilters() != null ?
-                    query.getKeyFilters().stream().collect(Collectors.groupingBy(KeyFilter::getKey)) : Collections.emptyMap();
+                        query.getKeyFilters().stream().collect(Collectors.groupingBy(KeyFilter::getKey)) : Collections.emptyMap();
         }
         EntityDataSortOrder sortOrder = query.getPageLink().getSortOrder();
         EntityKey sortOrderKey = sortOrder != null ? sortOrder.getKey() : null;
@@ -477,7 +477,7 @@ public class EntityKeyMapping {
             mapping.setAlias(String.format("alias%s", index));
             if (operation != ComplexOperation.OR) {
                 // Under AND: assign grouped filters to matching selection mappings
-                mapping.setKeyFilters(filters.remove(mapping.entityKey));
+            mapping.setKeyFilters(filters.remove(mapping.entityKey));
             }
             if (mapping.getEntityKey().getType().equals(EntityKeyType.ENTITY_FIELD)) {
                 index++;
@@ -556,23 +556,23 @@ public class EntityKeyMapping {
             }
         } else {
             // Under AND (or null/default): group same-key filters together
-            Map<EntityKey, List<KeyFilter>> filters =
-                    query.getKeyFilters() != null ?
-                            query.getKeyFilters().stream().collect(Collectors.groupingBy(KeyFilter::getKey)) : Collections.emptyMap();
-            if (!filters.isEmpty()) {
-                for (EntityKey filterField : filters.keySet()) {
-                    EntityKeyMapping mapping = new EntityKeyMapping();
-                    mapping.setIndex(index);
-                    mapping.setAlias(String.format("alias%s", index));
-                    mapping.setKeyFilters(filters.get(filterField));
-                    mapping.setLatest(!filterField.getType().equals(EntityKeyType.ENTITY_FIELD));
-                    mapping.setEntityKey(filterField);
-                    mapping.setEntityKeyColumn(entityType, entityFilterType);
-                    mapping.setSelection(mapping.getEntityKeyColumn() == null);
-                    mappings.add(mapping);
-                    index += 1;
-                }
+        Map<EntityKey, List<KeyFilter>> filters =
+                query.getKeyFilters() != null ?
+                        query.getKeyFilters().stream().collect(Collectors.groupingBy(KeyFilter::getKey)) : Collections.emptyMap();
+        if (!filters.isEmpty()) {
+            for (EntityKey filterField : filters.keySet()) {
+                EntityKeyMapping mapping = new EntityKeyMapping();
+                mapping.setIndex(index);
+                mapping.setAlias(String.format("alias%s", index));
+                mapping.setKeyFilters(filters.get(filterField));
+                mapping.setLatest(!filterField.getType().equals(EntityKeyType.ENTITY_FIELD));
+                mapping.setEntityKey(filterField);
+                mapping.setEntityKeyColumn(entityType, entityFilterType);
+                mapping.setSelection(mapping.getEntityKeyColumn() == null);
+                mappings.add(mapping);
+                index += 1;
             }
+        }
         }
 
         return mappings;
