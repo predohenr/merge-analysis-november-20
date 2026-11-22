@@ -1,8 +1,9 @@
 package cn.iocoder.yudao.framework.common.validation;
 
+import javax.validation.Constraint;
+import javax.validation.Payload;
+
 import cn.iocoder.yudao.framework.common.core.ArrayValuable;
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
@@ -19,7 +20,7 @@ import java.lang.annotation.*;
 @Constraint(
         validatedBy = {InEnumValidator.class, InEnumCollectionValidator.class}
 )
-public @interface InEnum {
+public@interface InEnum{
 
     /**
      * @return 实现 ArrayValuable 接口的类
@@ -30,6 +31,4 @@ public @interface InEnum {
 
     Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
-
-}
+    Class<? extends Payload>[] payload() default {};}

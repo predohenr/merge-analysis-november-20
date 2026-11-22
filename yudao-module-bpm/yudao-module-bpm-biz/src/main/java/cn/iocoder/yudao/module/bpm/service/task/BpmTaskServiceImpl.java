@@ -166,7 +166,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
         // 4. 任务表单
         BpmFormDO taskForm = null;
-        if (StrUtil.isNotBlank(todoTask.getFormKey())) {
+        if (StrUtil.isNotBlank(todoTask.getFormKey())){
             taskForm = formService.getForm(NumberUtils.parseLong(todoTask.getFormKey()));
         }
 
@@ -1257,8 +1257,8 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 }
                 // 注意：需要基于 instance 设置租户编号，避免 Flowable 内部异步时，丢失租户编号
                 FlowableUtils.execute(processInstance.getTenantId(), () -> {
-                    AdminUserRespDTO startUser = adminUserApi.getUser(Long.valueOf(processInstance.getStartUserId())).getCheckedData();
-                    messageService.sendMessageWhenTaskAssigned(BpmTaskConvert.INSTANCE.convert(processInstance, startUser, task));
+                AdminUserRespDTO startUser = adminUserApi.getUser(Long.valueOf(processInstance.getStartUserId())).getCheckedData();
+                messageService.sendMessageWhenTaskAssigned(BpmTaskConvert.INSTANCE.convert(processInstance, startUser, task));
                 });
             }
 

@@ -1,9 +1,10 @@
 package cn.iocoder.yudao.framework.common.validation;
 
 import cn.hutool.core.collection.CollUtil;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import cn.iocoder.yudao.framework.common.core.ArrayValuable;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,4 +42,3 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
     }
 
 }
-

@@ -6,11 +6,11 @@ import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmTaskCandidat
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.hibernate.validator.constraints.URL;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
 import java.util.List;
 import java.util.Map;
 

@@ -52,7 +52,7 @@ public interface AdminAuthService {
      * @param reqVO 登录信息
      * @return 登录结果
      */
-    AuthLoginRespVO smsLogin(AuthSmsLoginReqVO reqVO);
+    AuthLoginRespVO smsLogin(AuthSmsLoginReqVO reqVO) ;
 
     /**
      * 社交快捷登录，使用 code 授权码

@@ -90,14 +90,6 @@ public interface BpmTaskService {
     List<HistoricTaskInstance> getTaskListByProcessInstanceId(String processInstanceId, Boolean asc);
 
     /**
-     * 获取任务
-     *
-     * @param id 任务编号
-     * @return 任务
-     */
-    Task getTask(String id);
-
-    /**
      * 获取历史任务
      *
      * @param id 任务编号
@@ -190,6 +182,14 @@ public interface BpmTaskService {
      * @param reqVO  分配请求
      */
     void transferTask(Long userId, BpmTaskTransferReqVO reqVO);
+
+    /**
+     * 获取任务
+     *
+     * @param id 任务编号
+     * @return 任务
+     */
+    Task getTask(String id);
 
     /**
      * 将指定流程实例的、进行中的流程任务，移动到结束节点
