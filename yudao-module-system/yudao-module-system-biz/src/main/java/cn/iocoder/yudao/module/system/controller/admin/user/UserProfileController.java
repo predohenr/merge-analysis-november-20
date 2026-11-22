@@ -24,7 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
+import cn.iocoder.yudao.module.system.dal.dataobject.social.SocialUserDO;
+import cn.iocoder.yudao.module.system.service.social.SocialUserService;
+import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
