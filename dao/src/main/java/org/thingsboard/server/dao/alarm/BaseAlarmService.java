@@ -97,7 +97,7 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
     private final AlarmDao alarmDao;
     private final EntityService entityService;
 
-    @Override
+        @Override
     @TransactionalEventListener
     public void handleEvictEvent(AlarmTypesCacheEvictEvent event) {
         TenantId tenantId = event.getTenantId();
