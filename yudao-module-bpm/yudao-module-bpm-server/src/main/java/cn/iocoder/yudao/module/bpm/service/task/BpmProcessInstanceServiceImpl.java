@@ -1023,13 +1023,13 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
 
                 // 流程前置通知：需要在流程启动后(事务提交后)，保证 variables 已设置
                 // 相关问题链接：https://t.zsxq.com/DF7Kq
-                if (ObjUtil.isNull(processDefinitionInfo.getProcessBeforeTriggerSetting())) {
-                    return;
-                }
-                BpmModelMetaInfoVO.HttpRequestSetting setting = processDefinitionInfo.getProcessBeforeTriggerSetting();
-                BpmHttpRequestUtils.executeBpmHttpRequest(instance,
-                        setting.getUrl(), setting.getHeader(), setting.getBody(), true, setting.getResponse());
-            }
+        if (ObjUtil.isNull(processDefinitionInfo.getProcessBeforeTriggerSetting())) {
+            return;
+        }
+        BpmModelMetaInfoVO.HttpRequestSetting setting = processDefinitionInfo.getProcessBeforeTriggerSetting();
+        BpmHttpRequestUtils.executeBpmHttpRequest(instance,
+                setting.getUrl(), setting.getHeader(), setting.getBody(), true, setting.getResponse());
+    }
 
         });
     }
