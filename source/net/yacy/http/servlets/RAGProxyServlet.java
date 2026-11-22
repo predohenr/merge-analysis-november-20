@@ -157,8 +157,8 @@ public class RAGProxyServlet extends HttpServlet {
     
             }
             
-            // write back modified bodyMap to body
-            body = bodyObject.toString();
+                // write back modified bodyMap to body
+                body = bodyObject.toString();
 
             // Open request to back-end service
             URL url = new URI(llm4Chat.llm.hoststub + "/v1/chat/completions").toURL();
