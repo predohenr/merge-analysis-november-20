@@ -33,6 +33,12 @@ public class MatchPhase implements Cloneable {
     public static final String MAX_HITS = "maxHits";
     public static final String MAX_FILTER_COVERAGE = "maxFilterCoverage";
 
+    private String attribute = null;
+    private boolean ascending = false;
+    private Long maxHits = null;
+    private Double maxFilterCoverage = 0.2;
+    private Diversity diversity = new Diversity();
+
     static {
         argumentType = new QueryProfileType(MATCH_PHASE);
         argumentType.setStrict(true);
@@ -45,44 +51,10 @@ public class MatchPhase implements Cloneable {
         argumentType.freeze();
     }
     public static QueryProfileType getArgumentType() { return argumentType; }
-
-    private String attribute = null;
-    private boolean ascending = false;
-    private Long maxHits = null;
-    private Double maxFilterCoverage = 0.2;
-    private Diversity diversity = new Diversity();
-
-    /**
-     * Sets the attribute field which will be used to decide the best matches after it has been determined
-     * during matching that this query is going to cause too many matches.
-     * Set to null (default) to disable degradation.
-     * <p>
-     * If this is set, make sure to also set the maxHits value.
-     * Otherwise, the attribute setting is ignored.
-     * <p>
-     * This attribute should have fast-search turned on.
-     */
     public void setAttribute(String attribute) { this.attribute = attribute; }
-
-    /** Returns the attribute to use for degradation, or null if none */
     public String getAttribute() { return attribute; }
-
-    /**
-     * Set to true to sort by the attribute in ascending order when this is in use during the match phase,
-     * false (default) to use descending order.
-     */
     public void setAscending(boolean ascending) { this.ascending = ascending; }
-
-    /**
-     * Returns the order to sort the attribute during the path phase when this takes effect.
-     */
     public boolean getAscending() { return ascending; }
-
-    /**
-     * Sets the max hits to aim for producing in the match phase.
-     * This must be set if an attribute value is set.
-     * It should be set to a reasonable fraction of the total documents on each partition.
-     */
     public void setMaxHits(long maxHits) { this.maxHits = maxHits; }
 
     public void setMaxFilterCoverage(double maxFilterCoverage) {
@@ -92,8 +64,6 @@ public class MatchPhase implements Cloneable {
 
         this.maxFilterCoverage = maxFilterCoverage;
     }
-
-    /** Returns the max hits to aim for producing in the match phase on each content node, or null if not set */
     public Long getMaxHits() { return maxHits; }
 
     public Double getMaxFilterCoverage() { return maxFilterCoverage; }
@@ -103,8 +73,6 @@ public class MatchPhase implements Cloneable {
     public void setDiversity(Diversity diversity) {
         this.diversity = diversity;
     }
-
-    /** Internal operation - DO NOT USE */
     public void prepare(RankProperties rankProperties) {
         if (attribute == null || maxHits == null) return;
 
@@ -146,5 +114,37 @@ public class MatchPhase implements Cloneable {
             throw new RuntimeException("Won't happen", e);
         }
     }
+
+    /**
+     * Sets the attribute field which will be used to decide the best matches after it has been determined
+     * during matching that this query is going to cause too many matches.
+     * Set to null (default) to disable degradation.
+     * <p>
+     * If this is set, make sure to also set the maxHits value.
+     * Otherwise, the attribute setting is ignored.
+     * <p>
+     * This attribute should have fast-search turned on.
+     */
+
+    /** Returns the attribute to use for degradation, or null if none */
+
+    /**
+     * Set to true to sort by the attribute in ascending order when this is in use during the match phase,
+     * false (default) to use descending order.
+     */
+
+    /**
+     * Returns the order to sort the attribute during the path phase when this takes effect.
+     */
+
+    /**
+     * Sets the max hits to aim for producing in the match phase.
+     * This must be set if an attribute value is set.
+     * It should be set to a reasonable fraction of the total documents on each partition.
+     */
+
+    /** Returns the max hits to aim for producing in the match phase on each content node, or null if not set */
+
+    /** Internal operation - DO NOT USE */
 
 }
