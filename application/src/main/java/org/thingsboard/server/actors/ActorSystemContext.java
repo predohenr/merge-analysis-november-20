@@ -146,6 +146,7 @@ import org.thingsboard.server.utils.DebugModeRateLimitsConfig;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -193,10 +194,6 @@ public class ActorSystemContext {
     };
 
     private final ConcurrentMap<TenantId, DebugTbRateLimits> debugPerTenantLimits = new ConcurrentHashMap<>();
-
-    public ConcurrentMap<TenantId, DebugTbRateLimits> getDebugPerTenantLimits() {
-        return debugPerTenantLimits;
-    }
 
     @Autowired
     @Getter
@@ -446,8 +443,6 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private ClaimDevicesService claimDevicesService;
-
-    //TODO: separate context for TbCore and TbRuleEngine
     @Autowired(required = false)
     @Getter
     private DeviceStateService deviceStateService;
@@ -477,18 +472,10 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private TbQueueCalculatedFieldSettings calculatedFieldSettings;
-
-    /**
-     * The following Service will be null if we operate in tb-core mode
-     */
     @Lazy
     @Autowired(required = false)
     @Getter
     private TbRuleEngineDeviceRpcService tbRuleEngineDeviceRpcService;
-
-    /**
-     * The following Service will be null if we operate in tb-rule-engine mode
-     */
     @Lazy
     @Autowired(required = false)
     @Getter
@@ -622,13 +609,6 @@ public class ActorSystemContext {
     @Value("${actors.rule.external.ssrf_additional_blocked_hosts:}")
     private List<String> ssrfAdditionalBlockedHosts;
 
-    @PostConstruct
-    public void init() {
-        this.localCacheType = "caffeine".equals(cacheType);
-        SsrfProtectionValidator.setEnabled(ssrfProtectionEnabled);
-        SsrfProtectionValidator.setAdditionalBlockedHosts(ssrfAdditionalBlockedHosts);
-    }
-
     @Value("${actors.tenant.create_components_on_init:true}")
     @Getter
     private boolean tenantComponentsInitEnabled;
@@ -707,6 +687,17 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private RedisTemplate<String, Object> redisTemplate;
+
+    public ConcurrentMap<TenantId, DebugTbRateLimits> getDebugPerTenantLimits() {
+        return debugPerTenantLimits;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.localCacheType = "caffeine".equals(cacheType);
+        SsrfProtectionValidator.setEnabled(ssrfProtectionEnabled);
+        SsrfProtectionValidator.setAdditionalBlockedHosts(ssrfAdditionalBlockedHosts);
+    }
 
     public ScheduledExecutorService getScheduler() {
         return actorSystem.getScheduler();
@@ -923,5 +914,15 @@ public class ActorSystemContext {
             return null;
         }
     }
+
+    //TODO: separate context for TbCore and TbRuleEngine
+
+    /**
+     * The following Service will be null if we operate in tb-core mode
+     */
+
+    /**
+     * The following Service will be null if we operate in tb-rule-engine mode
+     */
 
 }
