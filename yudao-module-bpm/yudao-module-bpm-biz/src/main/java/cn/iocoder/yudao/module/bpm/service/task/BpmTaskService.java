@@ -35,6 +35,14 @@ public interface BpmTaskService {
     PageResult<Task> getTaskTodoPage(Long userId, BpmTaskPageReqVO pageReqVO);
 
     /**
+     * 校验任务是否存在，并且是否是分配给自己的任务
+     *
+     * @param userId 用户 id
+     * @param taskId task id
+     */
+    Task validateTask(Long userId, String taskId);
+
+    /**
      * 获得用户（待办）的任务：
      * 1. 根据 taskId 查询待办任务
      * 2. 如果任务不存在（或者已审核），获取指定流程下，首个需要处理任务
@@ -91,14 +99,6 @@ public interface BpmTaskService {
      * @return 流程任务列表
      */
     List<HistoricTaskInstance> getTaskListByProcessInstanceId(String processInstanceId, Boolean asc);
-
-    /**
-     * 校验任务是否存在，并且是否是分配给自己的任务
-     *
-     * @param userId 用户 id
-     * @param taskId task id
-     */
-    Task validateTask(Long userId, String taskId);
 
     /**
      * 获取任务
@@ -203,14 +203,6 @@ public interface BpmTaskService {
     void transferTask(Long userId, BpmTaskTransferReqVO reqVO);
 
     /**
-     * 将指定流程实例的、进行中的流程任务，移动到结束节点
-     *
-     * @param processInstanceId 流程编号
-     * @param reason 原因
-     */
-    void moveTaskToEnd(String processInstanceId, String reason);
-
-    /**
      * 将任务退回到指定的 targetDefinitionKey 位置
      *
      * @param userId 用户编号
@@ -286,6 +278,14 @@ public interface BpmTaskService {
      * @param handlerType       处理类型，参见 {@link BpmUserTaskTimeoutHandlerTypeEnum}
      */
     void processTaskTimeout(String processInstanceId, String taskDefineKey, Integer handlerType);
+
+    /**
+     * 将指定流程实例的、进行中的流程任务，移动到结束节点
+     *
+     * @param processInstanceId 流程编号
+     * @param reason 原因
+     */
+    void moveTaskToEnd(String processInstanceId, String reason);
 
     /**
      * 处理 ChildProcess 子流程的审批超时事件

@@ -560,9 +560,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 2.3 校验并处理 APPROVE_USER_SELECT 当前审批人，选择下一节点审批人的逻辑
         Map<String, Object> variables = validateAndSetNextAssignees(task.getTaskDefinitionKey(), reqVO.getVariables(),
                 bpmnModel, reqVO.getNextAssignees(), instance);
-        runtimeService.setVariables(task.getProcessInstanceId(), variables);
+            runtimeService.setVariables(task.getProcessInstanceId(), variables);
         // 2.4 调用 BPM complete 去完成任务
-        taskService.complete(task.getId(), variables, true);
+            taskService.complete(task.getId(), variables, true);
 
         // 【加签专属】处理加签任务
         handleParentTaskIfSign(task.getParentTaskId());
@@ -1317,12 +1317,12 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 }
 
                 // 获取发起人节点
-                BpmnModel bpmnModel = modelService.getBpmnModelByDefinitionId(processInstance.getProcessDefinitionId());
-                if (bpmnModel == null) {
-                    log.error("[processTaskAssigned][taskId({}) 没有找到流程模型]", task.getId());
-                    return;
-                }
-                FlowElement userTaskElement = BpmnModelUtils.getFlowElementById(bpmnModel, task.getTaskDefinitionKey());
+                        BpmnModel bpmnModel = modelService.getBpmnModelByDefinitionId(processInstance.getProcessDefinitionId());
+                        if (bpmnModel == null) {
+                            log.error("[processTaskAssigned][taskId({}) 没有找到流程模型]", task.getId());
+                            return;
+                        }
+                        FlowElement userTaskElement = BpmnModelUtils.getFlowElementById(bpmnModel, task.getTaskDefinitionKey());
                 // 判断是否为退回或者驳回：如果是退回或者驳回不走这个策略
                 // TODO 芋艿：【优化】未来有没更好的判断方式？！另外，还要考虑清理机制。就是说，下次处理了之后，就移除这个标识
                 Boolean returnTaskFlag = runtimeService.getVariable(processInstance.getProcessInstanceId(),
@@ -1425,16 +1425,6 @@ public class BpmTaskServiceImpl implements BpmTaskService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void processChildProcessTimeout(String processInstanceId, String taskDefineKey) {
-        List<ActivityInstance> activityInstances = runtimeService.createActivityInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .activityId(taskDefineKey).list();
-        activityInstances.forEach(activityInstance -> FlowableUtils.execute(activityInstance.getTenantId(),
-                () -> moveTaskToEnd(activityInstance.getCalledProcessInstanceId(), BpmReasonEnum.TIMEOUT_APPROVE.getReason())));
-    }
-
-    @Override
     public void triggerTask(String processInstanceId, String taskDefineKey) {
         Execution execution = runtimeService.createExecutionQuery()
                 .processInstanceId(processInstanceId)
@@ -1448,6 +1438,16 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 若存在直接触发接收任务，执行后续节点
         FlowableUtils.execute(execution.getTenantId(),
                 () -> runtimeService.trigger(execution.getId()));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void processChildProcessTimeout(String processInstanceId, String taskDefineKey) {
+        List<ActivityInstance> activityInstances = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .activityId(taskDefineKey).list();
+        activityInstances.forEach(activityInstance -> FlowableUtils.execute(activityInstance.getTenantId(),
+                () -> moveTaskToEnd(activityInstance.getCalledProcessInstanceId(), BpmReasonEnum.TIMEOUT_APPROVE.getReason())));
     }
 
     /**

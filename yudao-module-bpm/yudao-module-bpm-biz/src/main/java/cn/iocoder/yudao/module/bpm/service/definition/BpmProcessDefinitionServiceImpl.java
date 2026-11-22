@@ -162,7 +162,7 @@ public class BpmProcessDefinitionServiceImpl implements BpmProcessDefinitionServ
         // 激活
         if (Objects.equals(SuspensionState.ACTIVE.getStateCode(), state)) {
             if (processDefinition.isSuspended()) {
-                repositoryService.activateProcessDefinitionById(id, false, null);
+            repositoryService.activateProcessDefinitionById(id, false, null);
             }
             return;
         }
@@ -171,7 +171,7 @@ public class BpmProcessDefinitionServiceImpl implements BpmProcessDefinitionServ
             // suspendProcessInstances = false，进行中的任务，不进行挂起。
             // 原因：只要新的流程不允许发起即可，老流程继续可以执行。
             if (!processDefinition.isSuspended()) {
-                repositoryService.suspendProcessDefinitionById(id, false, null);
+            repositoryService.suspendProcessDefinitionById(id, false, null);
             }
             return;
         }
