@@ -1,9 +1,7 @@
 package cn.iocoder.yudao.module.system.api.mail.dto;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
