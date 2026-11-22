@@ -55,9 +55,9 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
 
     private final CalculatedFieldService calculatedFieldService;
     private final TbelInvokeService tbelInvokeService;
-    private final ApiLimitService apiLimitService;
     @Lazy
-    private final ActorSystemContext actorSystemContext;
+private final ActorSystemContext actorSystemContext;
+    private final ApiLimitService apiLimitService;
 
     private final ConcurrentMap<CalculatedFieldId, CalculatedField> calculatedFields = new ConcurrentHashMap<>();
     private final ConcurrentMap<EntityId, List<CalculatedField>> entityIdCalculatedFields = new ConcurrentHashMap<>();
@@ -74,8 +74,8 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         PageDataIterable<CalculatedField> cfs = new PageDataIterable<>(calculatedFieldService::findAllCalculatedFields, initFetchPackSize);
         cfs.forEach(cf -> {
             if (cf != null) {
-                calculatedFields.putIfAbsent(cf.getId(), cf);
-                actorSystemContext.tell(new CalculatedFieldInitMsg(cf.getTenantId(), cf));
+            calculatedFields.putIfAbsent(cf.getId(), cf);
+            actorSystemContext.tell(new CalculatedFieldInitMsg(cf.getTenantId(), cf));
             }
         });
         calculatedFields.values().forEach(cf -> {
