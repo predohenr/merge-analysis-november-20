@@ -774,7 +774,8 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         aggMetrics.put("totalSpaces", totalSpaces);
         configuration.setMetrics(aggMetrics);
 
-        TimeSeriesOutput output = new TimeSeriesOutput();
+        Output output = new Output();
+        output.setType(OutputType.TIME_SERIES);
         output.setDecimalsByDefault(0);
         configuration.setOutput(output);
 
