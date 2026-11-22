@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.xingyuv.captcha.model.common.ResponseModel;
+import com.xingyuv.captcha.model.vo.CaptchaVO;
+import com.xingyuv.captcha.service.CaptchaService;
+import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
+import javax.servlet.http.HttpServletRequest;
 
 @Tag(name = "管理后台 - 验证码")
 @RestController("adminCaptchaController")
