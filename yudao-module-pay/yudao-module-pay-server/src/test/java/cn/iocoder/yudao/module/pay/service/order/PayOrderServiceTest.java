@@ -664,7 +664,7 @@ public class PayOrderServiceTest extends BaseDbAndRedisUnitTest {
                 "updateTime", "updater");
         // 断言，调用
         verify(notifyService).createPayNotifyTask(eq(PayNotifyTypeEnum.ORDER.getType()),
-                eq(orderExtension.getOrderId()));
+            eq(orderExtension.getOrderId()));
     }
 
     @Test

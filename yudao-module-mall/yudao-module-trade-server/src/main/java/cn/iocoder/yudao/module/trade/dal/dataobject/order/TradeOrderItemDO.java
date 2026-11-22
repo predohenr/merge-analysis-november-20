@@ -208,4 +208,3 @@ public class TradeOrderItemDO extends BaseDO {
     }
 
 }
-
