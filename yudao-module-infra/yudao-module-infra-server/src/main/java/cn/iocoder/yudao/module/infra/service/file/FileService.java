@@ -45,7 +45,7 @@ public interface FileService {
      * @return 预签名地址信息
      */
     FilePresignedUrlRespVO presignPutUrl(@NotEmpty(message = "文件名不能为空") String name,
-                                         String directory);
+                                               String directory);
     /**
      * 生成文件预签名地址信息，用于读取
      *
