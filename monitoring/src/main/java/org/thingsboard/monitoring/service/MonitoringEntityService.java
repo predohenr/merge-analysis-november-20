@@ -110,22 +110,22 @@ public class MonitoringEntityService {
         } else {
             log.info("Updating rule chain '{}' from version {} to {}", ruleChain.getName(), currentVersion, newVersion);
 
-            String metadataJson = RegexUtils.replace(ruleChainDescriptor.get("metadata").toString(),
-                    "\\$\\{MONITORING:(.+?)}", matchResult -> {
-                        String key = matchResult.group(1);
-                        String value = attributes.get(key);
-                        if (value == null) {
-                            throw new IllegalArgumentException("No attribute found for key " + key);
-                        }
-                        log.info("Using {}: {}", key, value);
-                        return value;
-                    });
-            RuleChainMetaData metaData = JacksonUtil.fromString(metadataJson, RuleChainMetaData.class);
-            metaData.setRuleChainId(ruleChainId);
-            tbClient.saveRuleChainMetaData(metaData);
-            tbClient.saveEntityAttributesV2(ruleChainId, DataConstants.SERVER_SCOPE, JacksonUtil.newObjectNode()
-                    .put("version", newVersion));
-        }
+        String metadataJson = RegexUtils.replace(ruleChainDescriptor.get("metadata").toString(),
+                "\\$\\{MONITORING:(.+?)}", matchResult -> {
+                    String key = matchResult.group(1);
+                    String value = attributes.get(key);
+                    if (value == null) {
+                        throw new IllegalArgumentException("No attribute found for key " + key);
+                    }
+                    log.info("Using {}: {}", key, value);
+                    return value;
+                });
+        RuleChainMetaData metaData = JacksonUtil.fromString(metadataJson, RuleChainMetaData.class);
+        metaData.setRuleChainId(ruleChainId);
+        tbClient.saveRuleChainMetaData(metaData);
+        tbClient.saveEntityAttributesV2(ruleChainId, DataConstants.SERVER_SCOPE, JacksonUtil.newObjectNode()
+                .put("version", newVersion));
+    }
 
         Asset asset = getOrCreateMonitoringAsset();
         Dashboard dashboard = getOrCreateMonitoringDashboard();
