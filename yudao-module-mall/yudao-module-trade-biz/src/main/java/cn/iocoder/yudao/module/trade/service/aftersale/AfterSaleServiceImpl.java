@@ -360,14 +360,14 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     }
 
     private void createPayRefund(String userIp, AfterSaleDO afterSale) {
-        // 创建退款单
-        PayRefundCreateReqDTO createReqDTO = AfterSaleConvert.INSTANCE.convert(userIp, afterSale, tradeOrderProperties)
-                .setReason(StrUtil.format("退款【{}】", afterSale.getSpuName()));
-        Long payRefundId = payRefundApi.createRefund(createReqDTO).getCheckedData();
+                // 创建退款单
+                PayRefundCreateReqDTO createReqDTO = AfterSaleConvert.INSTANCE.convert(userIp, afterSale, tradeOrderProperties)
+                        .setReason(StrUtil.format("退款【{}】", afterSale.getSpuName()));
+                Long payRefundId = payRefundApi.createRefund(createReqDTO).getCheckedData();
 
-        // 更新售后单的退款单号
-        tradeAfterSaleMapper.updateById(new AfterSaleDO().setId(afterSale.getId()).setPayRefundId(payRefundId));
-    }
+                // 更新售后单的退款单号
+                tradeAfterSaleMapper.updateById(new AfterSaleDO().setId(afterSale.getId()).setPayRefundId(payRefundId));
+            }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

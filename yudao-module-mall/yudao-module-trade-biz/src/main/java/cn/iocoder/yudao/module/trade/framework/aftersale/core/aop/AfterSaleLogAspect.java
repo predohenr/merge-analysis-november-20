@@ -9,11 +9,12 @@ import cn.iocoder.yudao.module.trade.enums.aftersale.AfterSaleOperateTypeEnum;
 import cn.iocoder.yudao.module.trade.framework.aftersale.core.annotations.AfterSaleLog;
 import cn.iocoder.yudao.module.trade.service.aftersale.AfterSaleLogService;
 import cn.iocoder.yudao.module.trade.service.aftersale.bo.AfterSaleLogCreateReqBO;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+
+import javax.annotation.Resource;
 
 import java.util.Map;
 

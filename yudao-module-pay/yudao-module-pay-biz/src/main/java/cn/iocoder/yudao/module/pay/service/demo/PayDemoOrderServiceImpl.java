@@ -184,7 +184,7 @@ public class PayDemoOrderServiceImpl implements PayDemoOrderService {
 
         // 2.1 生成退款单号
         // 一般来说，用户发起退款的时候，都会单独插入一个售后维权表，然后使用该表的 id 作为 refundId
-        //          这里我们是个简单的 demo，所以没有售后维权表，直接使用订单 id + "-refund" 来演示
+        // 这里我们是个简单的 demo，所以没有售后维权表，直接使用订单 id + "-refund" 来演示
         String refundId = order.getId() + "-refund";
         // 2.2 创建退款单
         Long payRefundId = payRefundApi.createRefund(new PayRefundCreateReqDTO()

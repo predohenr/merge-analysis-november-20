@@ -77,7 +77,7 @@ public class PayRefundController {
     @PreAuthorize("@ss.hasPermission('pay:refund:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportRefundExcel(@Valid PayRefundExportReqVO exportReqVO,
-                                  HttpServletResponse response) throws IOException {
+            HttpServletResponse response) throws IOException {
         List<PayRefundDO> list = refundService.getRefundList(exportReqVO);
 
         // 拼接返回

@@ -29,13 +29,13 @@ import cn.iocoder.yudao.module.trade.framework.order.config.TradeOrderProperties
 import cn.iocoder.yudao.module.trade.service.brokerage.bo.BrokerageWithdrawSummaryRespBO;
 import cn.iocoder.yudao.module.trade.service.config.TradeConfigService;
 import com.google.common.base.Objects;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Resource;
+import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -123,9 +123,9 @@ public class BrokerageWithdrawServiceImpl implements BrokerageWithdrawService {
         }
 
         // 情况二：非 API 转账（手动打款）
-        brokerageWithdrawMapper.updateByIdAndStatus(withdraw.getId(), BrokerageWithdrawStatusEnum.AUDIT_SUCCESS.getStatus(),
-                new BrokerageWithdrawDO().setStatus(BrokerageWithdrawStatusEnum.WITHDRAW_SUCCESS.getStatus()));
-    }
+            brokerageWithdrawMapper.updateByIdAndStatus(withdraw.getId(), BrokerageWithdrawStatusEnum.AUDIT_SUCCESS.getStatus(),
+                    new BrokerageWithdrawDO().setStatus(BrokerageWithdrawStatusEnum.WITHDRAW_SUCCESS.getStatus()));
+        }
 
     private void createPayTransfer(BrokerageWithdrawDO withdraw) {
         // 1.1 获取基础信息
