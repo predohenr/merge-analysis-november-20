@@ -11,14 +11,8 @@ import cn.iocoder.yudao.framework.security.core.LoginUser;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
 import cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils;
-import cn.iocoder.yudao.module.system.api.oauth2.OAuth2TokenApi;
-import cn.iocoder.yudao.module.system.api.oauth2.dto.OAuth2AccessTokenCheckRespDTO;
 import cn.iocoder.yudao.framework.common.biz.system.oauth2.OAuth2TokenCommonApi;
 import cn.iocoder.yudao.framework.common.biz.system.oauth2.dto.OAuth2AccessTokenCheckRespDTO;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -136,7 +130,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @SneakyThrows
-    private LoginUser buildLoginUserByHeader(HttpServletRequest request) {
+private LoginUser buildLoginUserByHeader(HttpServletRequest request) {
         String loginUserStr = request.getHeader(SecurityFrameworkUtils.LOGIN_USER_HEADER);
         if (StrUtil.isEmpty(loginUserStr)) {
             return null;
