@@ -1,9 +1,10 @@
 package cn.iocoder.yudao.framework.common.validation;
 
-import cn.iocoder.yudao.framework.common.core.ArrayValuable;
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
+import javax.validation.Constraint;
 
+import javax.validation.Payload;
+
+import cn.iocoder.yudao.framework.common.core.ArrayValuable;
 import java.lang.annotation.*;
 
 @Target({
