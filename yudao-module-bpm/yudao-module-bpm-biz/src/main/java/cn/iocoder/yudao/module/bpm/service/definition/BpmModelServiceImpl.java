@@ -21,8 +21,6 @@ import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.BpmnModelUtils;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.FlowableUtils;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.SimpleModelUtils;
 import cn.iocoder.yudao.module.bpm.service.task.BpmProcessInstanceCopyService;
-import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.impl.db.SuspensionState;
@@ -41,6 +39,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertMap;
@@ -123,13 +126,6 @@ public class BpmModelServiceImpl implements BpmModelService {
         // 3. 保存模型
         saveModel(model, updateReqVO);
     }
-
-    /**
-     * 保存模型的基本信息、流程图
-     *
-     * @param model 模型
-     * @param saveReqVO 保存信息
-     */
     private void saveModel(Model model, BpmModelSaveReqVO saveReqVO) {
         // 1. 保存模型的基础信息
         repositoryService.saveModel(model);
@@ -185,14 +181,6 @@ public class BpmModelServiceImpl implements BpmModelService {
         }
         return model;
     }
-
-    /**
-     * 校验是否有流程模型的管理权限
-     *
-     * @param id     流程模型编号
-     * @param userId 用户编号
-     * @return 流程模型
-     */
     private Model validateModelManager(String id, Long userId) {
         Model model = validateModelExists(id);
         BpmModelMetaInfoVO metaInfo = BpmModelConvert.INSTANCE.parseMetaInfo(model);
@@ -341,13 +329,6 @@ public class BpmModelServiceImpl implements BpmModelService {
         // 2.3 保存 JSON 数据
         updateModelSimpleJson(model.getId(), reqVO.getSimpleModel());
     }
-
-    /**
-     * 校验流程表单已配置
-     *
-     * @param metaInfo 流程模型元数据
-     * @return 表单配置
-     */
     private BpmFormDO validateFormConfig(BpmModelMetaInfoVO metaInfo) {
         if (metaInfo == null || metaInfo.getFormType() == null) {
             throw exception(MODEL_DEPLOY_FAIL_FORM_NOT_CONFIG);
@@ -395,14 +376,6 @@ public class BpmModelServiceImpl implements BpmModelService {
         byte[] bytes = JsonUtils.toJsonByte(node);
         repositoryService.addModelEditorSourceExtra(id, bytes);
     }
-
-    /**
-     * 挂起 deploymentId 对应的流程定义
-     * <p>
-     * 注意：这里一个 deploymentId 只关联一个流程定义
-     *
-     * @param deploymentId 流程发布Id
-     */
     private void updateProcessDefinitionSuspended(String deploymentId) {
         if (StrUtil.isEmpty(deploymentId)) {
             return;
@@ -430,5 +403,35 @@ public class BpmModelServiceImpl implements BpmModelService {
     public byte[] getModelBpmnXML(String id) {
         return repositoryService.getModelEditorSource(id);
     }
+
+    /**
+     * 保存模型的基本信息、流程图
+     *
+     * @param model 模型
+     * @param saveReqVO 保存信息
+     */
+
+    /**
+     * 校验是否有流程模型的管理权限
+     *
+     * @param id     流程模型编号
+     * @param userId 用户编号
+     * @return 流程模型
+     */
+
+    /**
+     * 校验流程表单已配置
+     *
+     * @param metaInfo 流程模型元数据
+     * @return 表单配置
+     */
+
+    /**
+     * 挂起 deploymentId 对应的流程定义
+     * <p>
+     * 注意：这里一个 deploymentId 只关联一个流程定义
+     *
+     * @param deploymentId 流程发布Id
+     */
 
 }
