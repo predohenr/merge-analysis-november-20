@@ -110,7 +110,7 @@ public class MesProAndonConfigController {
                 convertSet(list, MesProAndonConfigDO::getHandlerRoleId));
         // 2. 拼接 VO
         return BeanUtils.toBean(list, MesProAndonConfigRespVO.class, vo -> {
-            MapUtils.findAndThen(userMap, vo.getHandlerUserId(),
+                MapUtils.findAndThen(userMap, vo.getHandlerUserId(),
                     user -> vo.setHandlerUserNickname(user.getNickname()));
             MapUtils.findAndThen(roleMap, vo.getHandlerRoleId(),
                     role -> vo.setHandlerRoleName(role.getName()));
