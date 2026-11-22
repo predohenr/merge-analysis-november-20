@@ -18,8 +18,6 @@ import cn.iocoder.yudao.module.mp.service.account.MpAccountService;
 import cn.iocoder.yudao.module.mp.service.material.MpMaterialService;
 import cn.iocoder.yudao.module.mp.service.message.bo.MpMessageSendOutReqBO;
 import cn.iocoder.yudao.module.mp.service.user.MpUserService;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -32,8 +30,9 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Resource;
+import javax.validation.Validator;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.mp.enums.ErrorCodeConstants.MESSAGE_SEND_FAIL;
@@ -152,12 +151,6 @@ public class MpMessageServiceImpl implements MpMessageService {
         mpMessageMapper.insert(message);
         return message;
     }
-
-    /**
-     * 下载消息使用到的媒体文件，并上传到文件服务
-     *
-     * @param message 消息
-     */
     private void downloadMessageMedia(MpMessageDO message) {
         if (StrUtil.isNotEmpty(message.getMediaId())) {
             message.setMediaUrl(mpMaterialService.downloadMaterialUrl(message.getAccountId(),
@@ -168,5 +161,11 @@ public class MpMessageServiceImpl implements MpMessageService {
                     message.getThumbMediaId(), WxConsts.MediaFileType.THUMB));
         }
     }
+
+    /**
+     * 下载消息使用到的媒体文件，并上传到文件服务
+     *
+     * @param message 消息
+     */
 
 }
