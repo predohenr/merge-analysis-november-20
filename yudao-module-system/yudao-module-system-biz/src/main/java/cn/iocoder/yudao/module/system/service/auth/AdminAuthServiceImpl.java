@@ -28,14 +28,17 @@ import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import com.google.common.annotations.VisibleForTesting;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
+import com.xingyuv.captcha.model.common.ResponseModel;
+import com.xingyuv.captcha.model.vo.CaptchaVO;
+import com.xingyuv.captcha.service.CaptchaService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import javax.validation.Validator;
 import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -67,13 +70,13 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     private CaptchaService captchaService;
     @Resource
     private SmsCodeApi smsCodeApi;
+    @Value("${yudao.captcha.enable:true}")
+    @Setter // 为了单测：开启或者关闭验证码
+    private Boolean captchaEnable;
 
     /**
      * 验证码的开关，默认为 true
      */
-    @Value("${yudao.captcha.enable:true}")
-    @Setter // 为了单测：开启或者关闭验证码
-    private Boolean captchaEnable;
 
     @Override
     public AdminUserDO authenticate(String username, String password) {
