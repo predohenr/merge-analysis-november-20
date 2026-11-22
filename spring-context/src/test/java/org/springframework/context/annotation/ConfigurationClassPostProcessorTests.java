@@ -91,6 +91,15 @@ import static org.mockito.Mockito.verifyNoInteractions;
  * @author Sam Brannen
  * @author Stephane Nicoll
  */
+
+/**
+ * Tests for {@link ConfigurationClassPostProcessor}.
+ *
+ * @author Chris Beams
+ * @author Juergen Hoeller
+ * @author Sam Brannen
+ * @author Stephane Nicoll
+ */
 class ConfigurationClassPostProcessorTests {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
@@ -1244,19 +1253,19 @@ class ConfigurationClassPostProcessorTests {
 	}
 
 	@Test
+	void beanDefinitionRegistryPostProcessorConfig() {
+		ConfigurableApplicationContext ctx = new AnnotationConfigApplicationContext(BeanDefinitionRegistryPostProcessorConfig.class);
+		assertThat(ctx.getBean("myTestBean")).isInstanceOf(TestBean.class);
+		ctx.close();
+	}
+
+	@Test
 	void nameClashBetweenConfigurationClassAndBean() {
 		assertThatIllegalStateException()
 				.isThrownBy(() -> new AnnotationConfigApplicationContext(MyTestBean.class))
 				.withMessage("Failed to load bean definitions for configuration class '%s'", MyTestBean.class.getName())
 				.havingCause()
 					.isInstanceOf(BeanDefinitionStoreException.class);
-	}
-
-	@Test
-	void beanDefinitionRegistryPostProcessorConfig() {
-		ConfigurableApplicationContext ctx = new AnnotationConfigApplicationContext(BeanDefinitionRegistryPostProcessorConfig.class);
-		assertThat(ctx.getBean("myTestBean")).isInstanceOf(TestBean.class);
-		ctx.close();
 	}
 
 
@@ -1780,28 +1789,24 @@ class ConfigurationClassPostProcessorTests {
 		}
 	}
 
-	@Configuration
-	@ComponentScan(basePackages = "org.springframework.context.annotation.componentscan.simple")
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface ComposedConfiguration {
+	@Scope(scopeName = "prototype")
+	public @interface PrototypeScoped {
+
+		@AliasFor(annotation = Scope.class)
+		ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
 	}
 
 	@ComposedConfiguration
 	public static class ComposedConfigurationClass {
 	}
 
-	@Configuration
-	@ComponentScan
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface ComposedConfigurationWithAttributeOverrides {
+	@Scope(scopeName = "prototype")
+	public @interface PrototypeScoped {
 
-		@AliasFor(annotation = ComponentScan.class)
-		String[] basePackages() default {};
-
-		@AliasFor(annotation = ComponentScan.class)
-		ComponentScan.Filter[] excludeFilters() default {};
+		@AliasFor(annotation = Scope.class)
+		ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
 	}
 
 	@ComposedConfigurationWithAttributeOverrides(basePackages = "org.springframework.context.annotation.componentscan.simple")
@@ -1822,33 +1827,32 @@ class ConfigurationClassPostProcessorTests {
 	public static class ExtendedConfigurationWithAttributeOverrideForExcludeFilter extends BaseConfigurationWithEmptyExcludeFilters {
 	}
 
-	@ComposedConfigurationWithAttributeOverrides
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface ComposedComposedConfigurationWithAttributeOverrides {
+	@Scope(scopeName = "prototype")
+	public @interface PrototypeScoped {
 
-		@AliasFor(annotation = ComposedConfigurationWithAttributeOverrides.class)
-		String[] basePackages() default {};
+		@AliasFor(annotation = Scope.class)
+		ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
 	}
 
 	@ComposedComposedConfigurationWithAttributeOverrides(basePackages = "org.springframework.context.annotation.componentscan.simple")
 	public static class ComposedComposedConfigurationWithAttributeOverridesClass {
 	}
 
-	@ComponentScan
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface MetaComponentScan {
+	@Scope(scopeName = "prototype")
+	public @interface PrototypeScoped {
+
+		@AliasFor(annotation = Scope.class)
+		ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
 	}
 
-	@MetaComponentScan
-	@Configuration
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface MetaComponentScanConfigurationWithAttributeOverrides {
+	@Scope(scopeName = "prototype")
+	public @interface PrototypeScoped {
 
-		@AliasFor(annotation = ComponentScan.class)
-		String[] basePackages() default {};
+		@AliasFor(annotation = Scope.class)
+		ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
 	}
 
 	@MetaComponentScanConfigurationWithAttributeOverrides(basePackages = "org.springframework.context.annotation.componentscan.simple")
