@@ -241,6 +241,21 @@ import static org.assertj.core.api.Assertions.fail;
  * @see <a href="https://github.com/spring-projects/spring-security/issues/3737">GitHub
  * Issue #3737</a>
  */
+
+/**
+ * Tests that Spring Security classes that implements {@link Serializable} and have the
+ * same serial version as {@link SpringSecurityCoreVersion#SERIAL_VERSION_UID} can be
+ * deserialized from a previous minor version.
+ * <p>
+ * For example, all classes from version 6.2.x that matches the previous requirement
+ * should be serialized and saved to a folder, and then later on, in 6.3.x, it is verified
+ * if they can be deserialized
+ *
+ * @author Marcus da Coregio
+ * @since 6.2.2
+ * @see <a href="https://github.com/spring-projects/spring-security/issues/3737">GitHub
+ * Issue #3737</a>
+ */
 class SpringSecurityCoreVersionSerializableTests {
 
 	private static final Map<Class<?>, Generator<?>> generatorByClassName = new HashMap<>();
