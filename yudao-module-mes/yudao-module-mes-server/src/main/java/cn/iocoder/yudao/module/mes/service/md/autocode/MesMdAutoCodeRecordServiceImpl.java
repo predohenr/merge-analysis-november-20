@@ -68,21 +68,21 @@ public class MesMdAutoCodeRecordServiceImpl implements MesMdAutoCodeRecordServic
         // 2. 循环生成编码，跳过因 Redis 流水号落后导致的历史重复编码
         for (int i = 0; i < GENERATE_MAX_RETRY_COUNT; i++) {
             // 2.1 生成编码
-            MesMdAutoCodeContext context = new MesMdAutoCodeContext()
-                    .setRule(rule).setParts(parts).setInputChar(inputChar);
+        MesMdAutoCodeContext context = new MesMdAutoCodeContext()
+                .setRule(rule).setParts(parts).setInputChar(inputChar);
             String result = generateCode(rule, parts, context);
             // 2.2 二次校验（防止重复）
-            MesMdAutoCodeRecordDO existRecord = recordMapper.selectByResult(result);
-            if (existRecord != null) {
+        MesMdAutoCodeRecordDO existRecord = recordMapper.selectByResult(result);
+        if (existRecord != null) {
                 continue;
-            }
-            // 2.3 保存生成记录
-            MesMdAutoCodeRecordDO record = new MesMdAutoCodeRecordDO()
-                    .setRuleId(rule.getId()).setResult(result)
-                    .setSerialNo(context.getSerialNo()).setInputChar(inputChar);
-            recordMapper.insert(record);
-            return result;
         }
+            // 2.3 保存生成记录
+        MesMdAutoCodeRecordDO record = new MesMdAutoCodeRecordDO()
+                .setRuleId(rule.getId()).setResult(result)
+                .setSerialNo(context.getSerialNo()).setInputChar(inputChar);
+        recordMapper.insert(record);
+        return result;
+    }
 
         // 3. 重试多次后仍然失败，抛出异常
         throw exception(AUTO_CODE_GENERATE_FAILED);

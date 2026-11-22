@@ -9,9 +9,9 @@ import lombok.SneakyThrows;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.util.UriUtils;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -33,7 +33,7 @@ public class HttpUtils {
      * @return 编码后的参数
      */
     @SneakyThrows
-    public static String encodeUtf8(String value) {
+public static String encodeUtf8(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
     }
 
@@ -46,7 +46,7 @@ public class HttpUtils {
      * @return 解码后的参数
      */
     @SneakyThrows
-    public static String decodeUtf8(String value) {
+public static String decodeUtf8(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
     }
 
@@ -59,7 +59,7 @@ public class HttpUtils {
      * @return 解码后的路径
      */
     @SneakyThrows
-    public static String decodeUrlPath(String path) {
+public static String decodeUrlPath(String path) {
         if (StrUtil.isEmpty(path)) {
             return path;
         }
