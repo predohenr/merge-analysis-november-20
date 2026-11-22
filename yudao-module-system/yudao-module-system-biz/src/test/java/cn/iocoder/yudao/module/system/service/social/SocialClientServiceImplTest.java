@@ -31,6 +31,14 @@ import org.mockito.MockedStatic;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import com.xingyuv.jushauth.config.AuthConfig;
+import com.xingyuv.jushauth.model.AuthResponse;
+import com.xingyuv.jushauth.model.AuthUser;
+import com.xingyuv.jushauth.request.AuthDefaultRequest;
+import com.xingyuv.jushauth.request.AuthRequest;
+import com.xingyuv.jushauth.utils.AuthStateUtils;
+import com.xingyuv.justauth.AuthRequestFactory;
+import javax.annotation.Resource;
 
 import static cn.hutool.core.util.RandomUtil.randomEle;
 import static cn.iocoder.yudao.framework.common.util.object.ObjectUtils.cloneIgnoreId;
@@ -290,7 +298,7 @@ public class SocialClientServiceImplTest extends BaseDbUnitTest {
         // mock 方法
         WxMaUserService userService = mock(WxMaUserService.class);
         when(wxMaService.getUserService()).thenReturn(userService);
-        WxErrorException wxErrorException = new WxErrorException(new NullPointerException());
+        WxErrorException wxErrorException = randomPojo(WxErrorException.class);
         when(userService.getPhoneNoInfo(eq(phoneCode))).thenThrow(wxErrorException);
 
         // 调用并断言异常
