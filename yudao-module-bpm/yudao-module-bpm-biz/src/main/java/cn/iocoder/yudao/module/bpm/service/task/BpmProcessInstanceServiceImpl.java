@@ -429,7 +429,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                 Assert.notNull(approvalTaskInfo, "任务不能为空");
                 int index = CollUtil.indexOf(candidateUserIds,
                         userId -> ObjectUtils.equalsAny(userId, approvalTaskInfo.getOwner(),
-                                approvalTaskInfo.getAssignee())); // 委派或者向前加签情况，需要先比较 owner
+                        approvalTaskInfo.getAssignee())); // 委派或者向前加签情况，需要先比较 owner
                 activityNode.setCandidateUserIds(CollUtil.sub(candidateUserIds, index + 1, candidateUserIds.size()));
             }
             return activityNode;
