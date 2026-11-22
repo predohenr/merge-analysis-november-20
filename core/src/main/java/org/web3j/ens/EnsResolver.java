@@ -208,8 +208,8 @@ public class EnsResolver {
             return null;
         }
         if (!isValidEnsName(ensName, addressLength)) {
-            return ensName;
-        }
+                return ensName;
+            }
         try {
             UniversalResolver universalResolver = getUniversalResolverContract();
             byte[] dnsEncoded = Numeric.hexStringToByteArray(NameHash.dnsEncode(ensName));
