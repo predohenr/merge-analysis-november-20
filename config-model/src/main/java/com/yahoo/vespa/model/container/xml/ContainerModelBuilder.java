@@ -725,12 +725,12 @@ public class ContainerModelBuilder extends ConfigModelBuilder<ContainerModel> {
                                     .filter(c -> !c.internal())
                                     .anyMatch(c -> !c.tokens().isEmpty());
                     if (!hasTokenClients)
-                        throw new IllegalArgumentException("Client certificate authority security/clients.pem is missing - " +
-                                                                   "see: https://docs.vespa.ai/en/security/guide.html#data-plane");
+                    throw new IllegalArgumentException("Client certificate authority security/clients.pem is missing - " +
+                                                               "see: https://docs.vespa.ai/en/security/guide.html#data-plane");
                     builder.clientAuth(SslClientAuth.WANT_WITH_ENFORCER);
                 } else {
-                    builder.tlsCaCertificatesPem(X509CertificateUtils.toPem(clientCertificates))
-                            .clientAuth(SslClientAuth.WANT_WITH_ENFORCER);
+                builder.tlsCaCertificatesPem(X509CertificateUtils.toPem(clientCertificates))
+                        .clientAuth(SslClientAuth.WANT_WITH_ENFORCER);
                 }
             } else {
                 builder.tlsCaCertificatesPath("/opt/yahoo/share/ssl/certs/athenz_tw_certificate_bundle.pem");
