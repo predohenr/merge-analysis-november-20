@@ -14,6 +14,8 @@ import cn.iocoder.yudao.module.system.framework.sms.core.property.SmsChannelProp
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
+
+import javax.annotation.Resource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;

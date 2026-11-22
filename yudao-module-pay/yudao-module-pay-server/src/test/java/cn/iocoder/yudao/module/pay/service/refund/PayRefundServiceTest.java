@@ -29,6 +29,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.context.annotation.Import;
+
+import javax.annotation.Resource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;

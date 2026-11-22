@@ -15,11 +15,13 @@ import cn.iocoder.yudao.module.infra.framework.file.core.client.FileClientFactor
 import cn.iocoder.yudao.module.infra.framework.file.core.client.local.LocalFileClient;
 import cn.iocoder.yudao.module.infra.framework.file.core.client.local.LocalFileClientConfig;
 import cn.iocoder.yudao.module.infra.framework.file.core.enums.FileStorageEnum;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
+import javax.annotation.Resource;
+import javax.validation.Validator;
+import jakarta.annotation.Resource;
+import jakarta.validation.Validator;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.Serializable;

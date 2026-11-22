@@ -25,6 +25,8 @@ import org.mockito.MockedStatic;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Import;
+
+import javax.annotation.Resource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.Duration;
