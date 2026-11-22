@@ -301,23 +301,23 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					beforeSingletonCreation(beanName);
 				}
 				catch (BeanCurrentlyInCreationException ex) {
-					this.lenientCreationLock.lock();
-					try {
-						while ((singletonObject = this.singletonObjects.get(beanName)) == null) {
-							if (!this.singletonsInLenientCreation.contains(beanName)) {
+						this.lenientCreationLock.lock();
+						try {
+							while ((singletonObject = this.singletonObjects.get(beanName)) == null) {
+								if (!this.singletonsInLenientCreation.contains(beanName)) {
 								break;
-							}
-							try {
-								this.lenientCreationFinished.await();
-							}
-							catch (InterruptedException ie) {
-								Thread.currentThread().interrupt();
+								}
+								try {
+									this.lenientCreationFinished.await();
+								}
+								catch (InterruptedException ie) {
+									Thread.currentThread().interrupt();
+								}
 							}
 						}
-					}
-					finally {
-						this.lenientCreationLock.unlock();
-					}
+						finally {
+							this.lenientCreationLock.unlock();
+						}
 					if (singletonObject != null) {
 						return singletonObject;
 					}
