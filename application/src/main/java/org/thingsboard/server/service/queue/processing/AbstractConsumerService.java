@@ -227,7 +227,7 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
             } else {
                 calculatedFieldCache.evict((CalculatedFieldId) componentLifecycleMsg.getEntityId());
             }
-        } else if (EntityType.TB_RESOURCE.equals(componentLifecycleMsg.getEntityId().getEntityType())) {
+        }  else if (EntityType.TB_RESOURCE.equals(componentLifecycleMsg.getEntityId().getEntityType())) {
             tbResourceDataCache.evictResourceData(tenantId, new TbResourceId(componentLifecycleMsg.getEntityId().getId()));
             return;
         }
