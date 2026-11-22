@@ -10,7 +10,6 @@ import cn.iocoder.yudao.module.bpm.enums.definition.BpmTriggerTypeEnum;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.SimpleModelUtils;
 import cn.iocoder.yudao.module.bpm.service.task.BpmProcessInstanceService;
 import com.fasterxml.jackson.core.type.TypeReference;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.http.HttpEntity;
@@ -21,9 +20,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.Resource;
 import java.util.Map;
 
 import static cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT_ID;
@@ -99,14 +98,6 @@ public class BpmHttpRequestTrigger implements BpmTrigger {
             processInstanceService.updateProcessInstanceVariables(processInstanceId, updateVariables);
         }
     }
-
-    /**
-     * 从请求返回值获取需要更新的流程变量
-     *
-     * @param result 请求返回结果
-     * @param responseSettings 返回设置
-     * @return 需要更新的流程变量
-     */
     private Map<String, Object> getNeedUpdatedVariablesFromResponse(Map<String,Object> result,
                                                                     List<KeyValue<String, String>> responseSettings) {
         Map<String, Object> updateVariables = new HashMap<>();
@@ -120,5 +111,13 @@ public class BpmHttpRequestTrigger implements BpmTrigger {
         });
         return updateVariables;
     }
+
+    /**
+     * 从请求返回值获取需要更新的流程变量
+     *
+     * @param result 请求返回结果
+     * @param responseSettings 返回设置
+     * @return 需要更新的流程变量
+     */
 
 }
