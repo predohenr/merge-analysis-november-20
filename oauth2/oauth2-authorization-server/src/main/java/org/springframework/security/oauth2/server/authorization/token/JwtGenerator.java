@@ -26,7 +26,9 @@ import java.util.UUID;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.security.core.Authentication;
+
 import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.authority.FactorGrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
