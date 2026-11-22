@@ -147,6 +147,7 @@ public class CoreIT {
 
     @Test
     @Disabled
+    @Disabled
     public void testEthHashrate() throws Exception {
         EthHashrate ethHashrate = web3j.ethHashrate().send();
         assertEquals(1, ethHashrate.getHashrate().compareTo(BigInteger.ONE));
@@ -496,6 +497,7 @@ public class CoreIT {
     }
 
     @Test
+    @Disabled
     @Disabled
     public void testEthGetWork() throws Exception {
         EthGetWork ethGetWork = web3j.ethGetWork().send();
