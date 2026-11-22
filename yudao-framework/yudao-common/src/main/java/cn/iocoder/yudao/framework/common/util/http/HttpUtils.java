@@ -34,7 +34,7 @@ public class HttpUtils {
      * @return 编码后的参数
      */
     @SneakyThrows
-    public static String encodeUtf8(String value) {
+public static String encodeUtf8(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
     }
 
@@ -47,7 +47,7 @@ public class HttpUtils {
      * @return 解码后的参数
      */
     @SneakyThrows
-    public static String decodeUtf8(String value) {
+public static String decodeUtf8(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
     }
 
