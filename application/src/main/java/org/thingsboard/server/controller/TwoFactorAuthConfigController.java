@@ -256,7 +256,7 @@ public class TwoFactorAuthConfigController extends BaseController {
     @PostMapping("/settings")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     public PlatformTwoFaSettings savePlatformTwoFaSettings(@Parameter(description = "Settings value", required = true)
-                                                           @RequestBody PlatformTwoFaSettings twoFaSettings) throws ThingsboardException {
+                                          @RequestBody PlatformTwoFaSettings twoFaSettings) throws ThingsboardException {
         return twoFaConfigManager.savePlatformTwoFaSettings(getTenantId(), twoFaSettings);
     }
 
