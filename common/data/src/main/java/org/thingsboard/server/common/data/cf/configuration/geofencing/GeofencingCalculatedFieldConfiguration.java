@@ -51,7 +51,7 @@ public class GeofencingCalculatedFieldConfiguration implements ArgumentsBasedCal
     private Integer scheduledUpdateInterval;
 
     @NotNull
-    private Output output;
+private Output output;
 
     @Override
     @JsonIgnore
