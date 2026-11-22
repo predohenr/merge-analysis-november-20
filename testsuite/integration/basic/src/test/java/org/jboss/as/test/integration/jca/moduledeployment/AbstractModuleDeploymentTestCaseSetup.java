@@ -177,9 +177,9 @@ public abstract class AbstractModuleDeploymentTestCaseSetup extends AbstractMgmt
                     throw new IllegalStateException("Cannot create module directory " + moduleDir.getAbsolutePath());
                 }
             } else {
-                throw new IllegalStateException(
-                        "Determined module path does not exist");
-            }
+            throw new IllegalStateException(
+                    "Determined module path does not exist");
+        }
         }
         if (!moduleDir.isDirectory()) {
             throw new IllegalStateException(
