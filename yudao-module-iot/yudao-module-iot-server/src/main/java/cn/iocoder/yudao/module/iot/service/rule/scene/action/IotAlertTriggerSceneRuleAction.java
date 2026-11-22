@@ -21,12 +21,18 @@ import cn.iocoder.yudao.module.system.api.notify.NotifyMessageSendApi;
 import cn.iocoder.yudao.module.system.api.notify.dto.NotifySendSingleToUserReqDTO;
 import cn.iocoder.yudao.module.system.api.sms.SmsSendApi;
 import cn.iocoder.yudao.module.system.api.sms.dto.send.SmsSendSingleToUserReqDTO;
+
 import jakarta.annotation.Nullable;
-import jakarta.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+
+import javax.annotation.Nullable;
+
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -81,10 +87,6 @@ public class IotAlertTriggerSceneRuleAction implements IotSceneRuleAction {
         config.getReceiveUserIds().forEach(userId ->
                 config.getReceiveTypes().forEach(receiveType -> sendAlertMessageToUser(userId, receiveType, templateParams)));
     }
-
-    /**
-     * 按指定接收方式，给单个用户发送告警消息
-     */
     private void sendAlertMessageToUser(Long userId, Integer receiveType, Map<String, Object> templateParams) {
         IotAlertReceiveTypeEnum typeEnum = IotAlertReceiveTypeEnum.of(receiveType);
         if (typeEnum == null) {
@@ -128,5 +130,9 @@ public class IotAlertTriggerSceneRuleAction implements IotSceneRuleAction {
     public IotSceneRuleActionTypeEnum getType() {
         return IotSceneRuleActionTypeEnum.ALERT_TRIGGER;
     }
+
+    /**
+     * 按指定接收方式，给单个用户发送告警消息
+     */
 
 }

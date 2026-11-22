@@ -7,8 +7,8 @@ import cn.iocoder.yudao.module.iot.dal.dataobject.alert.IotAlertConfigDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.alert.IotAlertRecordDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceDO;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,6 +26,13 @@ public interface IotAlertRecordService {
      * @return 告警记录
      */
     IotAlertRecordDO getAlertRecord(Long id);
+    PageResult<IotAlertRecordDO> getAlertRecordPage(IotAlertRecordPageReqVO pageReqVO);
+    List<IotAlertRecordDO> getAlertRecordListBySceneRuleId(@NotNull(message = "场景规则编号不能为空") Long sceneRuleId,
+                                                           Long deviceId, Boolean processStatus);
+    void processAlertRecordList(Collection<Long> ids, String remark);
+    @SuppressWarnings("UnusedReturnValue")
+    Long createAlertRecord(IotAlertConfigDO config, Long sceneRuleId,
+                           @Nullable IotDeviceMessage deviceMessage, @Nullable IotDeviceDO device);
 
     /**
      * 获得告警记录分页
@@ -33,7 +40,6 @@ public interface IotAlertRecordService {
      * @param pageReqVO 分页查询
      * @return 告警记录分页
      */
-    PageResult<IotAlertRecordDO> getAlertRecordPage(IotAlertRecordPageReqVO pageReqVO);
 
     /**
      * 获得指定场景规则的告警记录列表
@@ -43,8 +49,6 @@ public interface IotAlertRecordService {
      * @param processStatus 处理状态，允许空
      * @return 告警记录列表
      */
-    List<IotAlertRecordDO> getAlertRecordListBySceneRuleId(@NotNull(message = "场景规则编号不能为空") Long sceneRuleId,
-                                                           Long deviceId, Boolean processStatus);
 
     /**
      * 处理告警记录
@@ -52,7 +56,6 @@ public interface IotAlertRecordService {
      * @param ids 告警记录编号
      * @param remark 处理结果（备注）
      */
-    void processAlertRecordList(Collection<Long> ids, String remark);
 
     /**
      * 创建告警记录（包含场景规则编号）
@@ -63,8 +66,5 @@ public interface IotAlertRecordService {
      * @param device 设备信息，可为空；用于回填产品编号、设备编号
      * @return 告警记录编号
      */
-    @SuppressWarnings("UnusedReturnValue")
-    Long createAlertRecord(IotAlertConfigDO config, Long sceneRuleId,
-                           @Nullable IotDeviceMessage deviceMessage, @Nullable IotDeviceDO device);
 
 }
