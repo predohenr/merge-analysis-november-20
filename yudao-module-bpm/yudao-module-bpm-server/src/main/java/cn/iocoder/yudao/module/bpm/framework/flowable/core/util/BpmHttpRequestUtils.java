@@ -78,6 +78,22 @@ public class BpmHttpRequestUtils {
         }
     }
 
+    public static ResponseEntity<String> sendHttpRequest(String url,
+                                                         MultiValueMap<String, String> headers,
+                                                         Object body,
+                                                         RestTemplate restTemplate) {
+        HttpEntity<Object> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+            log.info("[sendHttpRequest][HTTP 请求，请求头：{}，请求体：{}，响应结果：{}]", headers, body, responseEntity);
+        } catch (RestClientException e) {
+            log.error("[sendHttpRequest][HTTP 请求，请求头：{}，请求体：{}，请求出错：{}]", headers, body, e.getMessage());
+            throw exception(PROCESS_INSTANCE_HTTP_CALL_ERROR);
+        }
+        return responseEntity;
+    }
+
     public static void executeBpmHttpRequest(BpmProcessInstanceStatusEvent event,
                                              String url) {
         // 1.1 设置请求头
@@ -104,22 +120,6 @@ public class BpmHttpRequestUtils {
         // 2. 发起请求
         RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
         sendHttpRequest(url, headers, event, restTemplate);
-    }
-
-    public static ResponseEntity<String> sendHttpRequest(String url,
-                                                         MultiValueMap<String, String> headers,
-                                                         Object body,
-                                                         RestTemplate restTemplate) {
-        HttpEntity<Object> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity;
-        try {
-            responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-            log.info("[sendHttpRequest][HTTP 请求，请求头：{}，请求体：{}，响应结果：{}]", headers, body, responseEntity);
-        } catch (RestClientException e) {
-            log.error("[sendHttpRequest][HTTP 请求，请求头：{}，请求体：{}，请求出错：{}]", headers, body, e.getMessage());
-            throw exception(PROCESS_INSTANCE_HTTP_CALL_ERROR);
-        }
-        return responseEntity;
     }
 
     public static MultiValueMap<String, String> buildHttpHeaders(ProcessInstance processInstance,

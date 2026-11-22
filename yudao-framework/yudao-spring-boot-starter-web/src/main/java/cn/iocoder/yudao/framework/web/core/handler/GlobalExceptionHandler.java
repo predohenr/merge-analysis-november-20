@@ -179,7 +179,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CommonResult<?> methodArgumentTypeInvalidFormatExceptionHandler(HttpMessageNotReadableException ex) {
         log.warn("[methodArgumentTypeInvalidFormatExceptionHandler]", ex);
-        if (ex.getCause() instanceof InvalidFormatException) {
+        if(ex.getCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) ex.getCause();
             return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数类型错误:%s", invalidFormatException.getValue()));
         }

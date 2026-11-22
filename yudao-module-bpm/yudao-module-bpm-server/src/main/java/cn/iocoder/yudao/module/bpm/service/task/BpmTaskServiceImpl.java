@@ -949,7 +949,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 3.1 设置任务所有人 (owner) 为原任务的处理人 (assignee)
         // 特殊：如果已经被委派（owner 非空），则不需要更新 owner：https://gitee.com/zhijiantianya/yudao-cloud/issues/ICJ153
         if (StrUtil.isEmpty(task.getOwner())) {
-            taskService.setOwner(taskId, task.getAssignee());
+        taskService.setOwner(taskId, task.getAssignee());
         }
         // 3.2 执行委派，将任务委派给 delegateUser
         taskService.delegateTask(taskId, reqVO.getDelegateUserId().toString());
@@ -978,7 +978,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 3.1 设置任务所有人 (owner) 为原任务的处理人 (assignee)
         // 特殊：如果已经被转派（owner 非空），则不需要更新 owner：https://gitee.com/zhijiantianya/yudao-cloud/issues/ICJ153
         if (StrUtil.isEmpty(task.getOwner())) {
-            taskService.setOwner(taskId, task.getAssignee());
+        taskService.setOwner(taskId, task.getAssignee());
         }
         // 3.2 执行转派（审批人），将任务转派给 assigneeUser
         // 委托（ delegate）和转派（transfer）的差别，就在这块的调用！！！！
