@@ -42,6 +42,20 @@ import org.springframework.util.Assert;
  * @author Sam Brannen
  * @since 6.2
  */
+
+/**
+ * An internal class used to track {@link BeanOverrideHandler}-related state after
+ * the bean factory has been processed and to provide lookup facilities to test
+ * execution listeners.
+ *
+ * <p>As of Spring Framework 6.2.6, {@code BeanOverrideRegistry} is hierarchical
+ * and has access to a potential parent in order to provide first-class support
+ * for {@link org.springframework.test.context.ContextHierarchy @ContextHierarchy}.
+ *
+ * @author Simon Baslé
+ * @author Sam Brannen
+ * @since 6.2
+ */
 class BeanOverrideRegistry {
 
 	static final String BEAN_NAME = "org.springframework.test.context.bean.override.internalBeanOverrideRegistry";
