@@ -36,9 +36,12 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.commons.logging.Log;
+
 import org.apache.commons.logging.LogFactory;
+
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.core.serializer.DefaultDeserializer;
 import org.springframework.core.serializer.DefaultSerializer;
 import org.springframework.core.serializer.Deserializer;
 import org.springframework.core.serializer.Serializer;
@@ -66,8 +69,6 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 	private RowMapper<AssertingPartyMetadata> assertingPartyMetadataRowMapper = new AssertingPartyMetadataRowMapper();
 
 	private final AssertingPartyMetadataParametersMapper assertingPartyMetadataParametersMapper = new AssertingPartyMetadataParametersMapper();
-
-	// @formatter:off
 	static final String[] COLUMN_NAMES = { "entity_id",
 			"single_sign_on_service_location",
 			"single_sign_on_service_binding",
@@ -79,31 +80,33 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 			"single_logout_service_response_location",
 			"single_logout_service_binding" };
 
-	// @formatter:on
-
 	private static final String TABLE_NAME = "saml2_asserting_party_metadata";
 
 	private static final String ENTITY_ID_FILTER = "entity_id = ?";
-
-	// @formatter:off
 	private static final String LOAD_BY_ID_SQL = "SELECT " + String.join(",", COLUMN_NAMES)
 			+ " FROM " + TABLE_NAME
 			+ " WHERE " + ENTITY_ID_FILTER;
 
 	private static final String LOAD_ALL_SQL = "SELECT " + String.join(",", COLUMN_NAMES)
 			+ " FROM " + TABLE_NAME;
-	// @formatter:on
-
-	// @formatter:off
 	private static final String SAVE_CREDENTIAL_RECORD_SQL = "INSERT INTO " + TABLE_NAME
 			+ " (" + String.join(",", COLUMN_NAMES) + ") VALUES (" + String.join(",", Collections.nCopies(COLUMN_NAMES.length, "?")) + ")";
-	// @formatter:on
-
-	// @formatter:off
 	private static final String UPDATE_CREDENTIAL_RECORD_SQL = "UPDATE " + TABLE_NAME
 			+ " SET " + String.join(" = ?,", Arrays.copyOfRange(COLUMN_NAMES, 1, COLUMN_NAMES.length))
 			+ " = ?"
 			+ " WHERE " + ENTITY_ID_FILTER;
+
+	// @formatter:off
+
+	// @formatter:on
+
+	// @formatter:off
+	// @formatter:on
+
+	// @formatter:off
+	// @formatter:on
+
+	// @formatter:off
 	// @formatter:on
 
 	/**
@@ -132,11 +135,6 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 				this.assertingPartyMetadataRowMapper);
 		return result.iterator();
 	}
-
-	/**
-	 * Persist this {@link AssertingPartyMetadata}
-	 * @param metadata the metadata to persist
-	 */
 	public void save(AssertingPartyMetadata metadata) {
 		Assert.notNull(metadata, "metadata cannot be null");
 		int rows = updateCredentialRecord(metadata);
@@ -156,6 +154,15 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 		parameters.add(credentialId);
 		return this.jdbcOperations.update(UPDATE_CREDENTIAL_RECORD_SQL, parameters.toArray());
 	}
+	public void setRowMapper(RowMapper<AssertingPartyMetadata> rowMapper) {
+		Assert.notNull(rowMapper, "rowMapper cannot be null");
+		this.assertingPartyMetadataRowMapper = rowMapper;
+	}
+
+	/**
+	 * Persist this {@link AssertingPartyMetadata}
+	 * @param metadata the metadata to persist
+	 */
 
 	/**
 	 * Set the {@link RowMapper} to use for reading {@link AssertingPartyMetadata} records
@@ -171,10 +178,6 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 	 * @since 7.0.5
 	 * @see AssertingPartyMetadataRowMapper
 	 */
-	public void setRowMapper(RowMapper<AssertingPartyMetadata> rowMapper) {
-		Assert.notNull(rowMapper, "rowMapper cannot be null");
-		this.assertingPartyMetadataRowMapper = rowMapper;
-	}
 
 	/**
 	 * The default {@link RowMapper} that maps the current row in
@@ -218,6 +221,10 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 				.encryptionX509Credentials((c) -> c.addAll(encryptionCredentials));
 			return builder.build();
 		}
+		public void setCredentialsDeserializer(Deserializer<Collection<Saml2X509Credential>> deserializer) {
+			Assert.notNull(deserializer, "deserializer cannot be null");
+			this.deserializer = deserializer;
+		}
 
 		/**
 		 * Set the {@link Deserializer} to use for reading the credential collection from
@@ -229,10 +236,6 @@ public final class JdbcAssertingPartyMetadataRepository implements AssertingPart
 		 * ensure that any deserialization of credentials is done securely.
 		 * @param deserializer the deserializer to use
 		 */
-		public void setCredentialsDeserializer(Deserializer<Collection<Saml2X509Credential>> deserializer) {
-			Assert.notNull(deserializer, "deserializer cannot be null");
-			this.deserializer = deserializer;
-		}
 
 		/**
 		 * The default deserializer for verification and encryption credentials.
