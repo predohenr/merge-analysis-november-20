@@ -72,6 +72,22 @@ public interface ModelContext {
      *  - Remove below method once all config-model versions in hosted production include changes from 1)
      *  - Remove all flag data files from hosted-feature-flag repository
      */
+
+    /**
+     * How to remove a temporary feature flags:
+     * 1)
+     * - Remove flag definition from Flags
+     * - Remove method implementation from ModelContextImpl.FeatureFlags
+     * - Modify default implementation of below method to return the new default value
+     * - Remove all usage of below method from config-model
+     *
+     * 2)
+     * - (optional) Track Vespa version that introduced changes from 1) in annotation field 'removeAfter'
+     *
+     * 3)
+     *  - Remove below method once all config-model versions in hosted production include changes from 1)
+     *  - Remove all flag data files from hosted-feature-flag repository
+     */
     interface FeatureFlags {
         @ModelFeatureFlag(owners = {"hakonhall"}) default boolean useNonPublicEndpointForTest() { return false; }
         @ModelFeatureFlag(owners = {"hmusum"}) default String responseSequencerType() { throw new UnsupportedOperationException("TODO specify default value"); }
@@ -122,6 +138,8 @@ public interface ModelContext {
         @ModelFeatureFlag(owners = {"hmusum"}, removeAfter = "8.599") default int searchNodeInitializerThreads() { return 0; }
         @ModelFeatureFlag(owners = {"hmusum"}) default int searchCoreMaxOutstandingMoveOps() { return 100; }
     }
+
+    /** Warning: As elsewhere in this package, do not make backwards incompatible changes that will break old config models! */
 
     /** Warning: As elsewhere in this package, do not make backwards incompatible changes that will break old config models! */
     interface Properties {
