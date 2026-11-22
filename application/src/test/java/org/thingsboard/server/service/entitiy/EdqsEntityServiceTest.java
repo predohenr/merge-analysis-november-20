@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.thingsboard.server.common.data.Device;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.asset.Asset;
 import org.thingsboard.server.common.data.id.CustomerId;
@@ -79,8 +79,6 @@ public class EdqsEntityServiceTest extends EntityServiceTest {
     public void beforeEach() {
         await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> edqsService.isApiEnabled());
     }
-
-    // sql implementation has a bug with data duplication, edqs implementation returns correct value
     @Override
     @Test
     public void testCountHierarchicalEntitiesByMultiRootQuery() throws InterruptedException {
@@ -113,8 +111,6 @@ public class EdqsEntityServiceTest extends EntityServiceTest {
         deviceService.deleteDevicesByTenantId(tenantId);
         assetService.deleteAssetsByTenantId(tenantId);
     }
-
-    // edqs has no nulls order strategies, always returns NULLs first for ASC and NULLs last for DESC
     @Override
     @Test
     public void testSortByNumericTelemetryKeyWithDifferentNullsOrderStrategy() throws ExecutionException, InterruptedException {
@@ -160,8 +156,6 @@ public class EdqsEntityServiceTest extends EntityServiceTest {
                 .toList();
         assertThat(descTelemetry).containsExactlyElementsOf(List.of("1", "0", "0", "", ""));
     }
-
-    // edqs has no nulls order strategies, always returns NULLs first for ASC and NULLs last for DESC
     @Override
     @Test
     public void testSortByBooleanKeyWithDifferentNullsOrderStrategy() throws ExecutionException, InterruptedException {
@@ -230,5 +224,11 @@ public class EdqsEntityServiceTest extends EntityServiceTest {
         return await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> countByQuery(customerId, query),
                 result -> result == expectedResult);
     }
+
+    // sql implementation has a bug with data duplication, edqs implementation returns correct value
+
+    // edqs has no nulls order strategies, always returns NULLs first for ASC and NULLs last for DESC
+
+    // edqs has no nulls order strategies, always returns NULLs first for ASC and NULLs last for DESC
 
 }
