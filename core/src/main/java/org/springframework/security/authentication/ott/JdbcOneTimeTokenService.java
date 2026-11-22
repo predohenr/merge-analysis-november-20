@@ -204,8 +204,8 @@ public final class JdbcOneTimeTokenService implements OneTimeTokenService, Dispo
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (this.taskScheduler != null) {
-			this.taskScheduler.afterPropertiesSet();
-		}
+		this.taskScheduler.afterPropertiesSet();
+	}
 	}
 
 	@Override
