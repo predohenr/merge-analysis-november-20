@@ -42,6 +42,16 @@ import org.springframework.util.StringUtils;
  * @author Sam Brannen
  * @since 6.2
  */
+
+/**
+ * {@link BeanOverrideHandler} implementation for Mockito {@code spy} support.
+ *
+ * @author Phillip Webb
+ * @author Simon Baslé
+ * @author Stephane Nicoll
+ * @author Sam Brannen
+ * @since 6.2
+ */
 class MockitoSpyBeanOverrideHandler extends AbstractMockitoBeanOverrideHandler {
 
 	private static final VerificationStartedListener verificationStartedListener =
