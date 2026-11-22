@@ -39,7 +39,7 @@ public class SystemParams {
     long maxArgumentsPerCF;
     long maxDataPointsPerRollingArg;
     TrendzSettings trendzSettings;
+    String iotHubBaseUrl;
     String nullsOrderStrategy;
     boolean edqsEnabled;
-    String iotHubBaseUrl;
 }
