@@ -225,7 +225,7 @@ public class IotDataRuleServiceImpl implements IotDataRuleService {
                 identifierForLog = identifiers;
             } else {
                 // 其他消息（事件 / 服务调用 / 状态）：单一 identifier
-                String identifier = IotDeviceMessageUtils.getIdentifier(message);
+            String identifier = IotDeviceMessageUtils.getIdentifier(message);
                 matchedRules = getSelf().getDataRuleListByConditionFromCache(deviceId, method, identifier);
                 identifierForLog = identifier;
             }
@@ -243,31 +243,6 @@ public class IotDataRuleServiceImpl implements IotDataRuleService {
         } catch (Exception e) {
             log.error("[executeDataRule][消息({}) 执行数据流转规则异常]", message, e);
         }
-    }
-
-    /**
-     * 匹配属性上报场景下命中的数据流转规则
-     *
-     * 同一规则可能同时匹配「任意属性」与具体 identifier，按 ruleId 去重后返回
-     *
-     * @param deviceId    设备编号
-     * @param method      消息方法
-     * @param identifiers 上报消息中包含的属性标识符集合
-     * @return 命中的数据流转规则列表
-     */
-    private List<IotDataRuleDO> matchPropertyPostDataRules(Long deviceId, String method, Set<String> identifiers) {
-        LinkedHashMap<Long, IotDataRuleDO> matchedRuleMap = new LinkedHashMap<>();
-        // 情况一：先匹配未填 identifier 的「任意属性」规则，默认就匹配
-        collectMatchedRules(matchedRuleMap, deviceId, method, null);
-        // 情况二：再针对每个上报的属性标识符匹配限定具体 identifier 的规则
-        identifiers.forEach(identifier -> collectMatchedRules(matchedRuleMap, deviceId, method, identifier));
-        return new ArrayList<>(matchedRuleMap.values());
-    }
-
-    private void collectMatchedRules(Map<Long, IotDataRuleDO> matchedRuleMap,
-                                     Long deviceId, String method, String identifier) {
-        getSelf().getDataRuleListByConditionFromCache(deviceId, method, identifier)
-                .forEach(rule -> matchedRuleMap.putIfAbsent(rule.getId(), rule));
     }
 
     /**
@@ -301,6 +276,31 @@ public class IotDataRuleServiceImpl implements IotDataRuleService {
                 log.error("[executeDataRule][规则({}) 数据目的({}) 执行异常]", rule.getId(), sinkId, e);
             }
         });
+    }
+
+    /**
+     * 匹配属性上报场景下命中的数据流转规则
+     *
+     * 同一规则可能同时匹配「任意属性」与具体 identifier，按 ruleId 去重后返回
+     *
+     * @param deviceId    设备编号
+     * @param method      消息方法
+     * @param identifiers 上报消息中包含的属性标识符集合
+     * @return 命中的数据流转规则列表
+     */
+    private List<IotDataRuleDO> matchPropertyPostDataRules(Long deviceId, String method, Set<String> identifiers) {
+        LinkedHashMap<Long, IotDataRuleDO> matchedRuleMap = new LinkedHashMap<>();
+        // 情况一：先匹配未填 identifier 的「任意属性」规则，默认就匹配
+        collectMatchedRules(matchedRuleMap, deviceId, method, null);
+        // 情况二：再针对每个上报的属性标识符匹配限定具体 identifier 的规则
+        identifiers.forEach(identifier -> collectMatchedRules(matchedRuleMap, deviceId, method, identifier));
+        return new ArrayList<>(matchedRuleMap.values());
+    }
+
+    private void collectMatchedRules(Map<Long, IotDataRuleDO> matchedRuleMap,
+                                     Long deviceId, String method, String identifier) {
+        getSelf().getDataRuleListByConditionFromCache(deviceId, method, identifier)
+                .forEach(rule -> matchedRuleMap.putIfAbsent(rule.getId(), rule));
     }
 
     /**

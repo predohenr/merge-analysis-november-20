@@ -99,7 +99,7 @@ public class IotDeviceMessageServiceImpl implements IotDeviceMessageService {
             messageDO.setTs(System.currentTimeMillis());
         }
         try {
-            deviceMessageMapper.insert(messageDO);
+        deviceMessageMapper.insert(messageDO);
         } catch (Exception ex) {
             // 特殊：@Async 方法的异常默认会被 handler 吞掉，这里显式记录便于排查
             log.error("[createDeviceLogAsync][消息日志写入失败 deviceId({}) messageId({}) paramsLen({}) dataLen({})]",

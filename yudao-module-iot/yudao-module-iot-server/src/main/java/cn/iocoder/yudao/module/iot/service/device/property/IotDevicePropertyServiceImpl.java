@@ -169,9 +169,9 @@ public class IotDevicePropertyServiceImpl implements IotDevicePropertyService {
                 properties.put(identifier, Convert.toFloat(value));
             } else if (IotDataSpecsDataTypeEnum.DOUBLE.getDataType().equals(dataType)) {
                 properties.put(identifier, Convert.toDouble(value));
-            } else if (IotDataSpecsDataTypeEnum.BOOL.getDataType().equals(dataType)) {
+            }  else if (IotDataSpecsDataTypeEnum.BOOL.getDataType().equals(dataType)) {
                 properties.put(identifier, Convert.toBool(value, false) ? (byte) 1 : (byte) 0);
-            } else {
+            }  else {
                 properties.put(identifier, value);
             }
         });
