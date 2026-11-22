@@ -84,7 +84,7 @@ public class MyBatisUtils {
                 orderBy.append(columnName).append(" ").append(getOrderDirection(sortingField.getOrder()));
             }
             if (StrUtil.isNotEmpty(orderBy)) {
-                lambdaQuery.last("ORDER BY " + orderBy);
+            lambdaQuery.last("ORDER BY " + orderBy);
             }
             // 另外个思路：https://blog.csdn.net/m0_59084856/article/details/138450913
         } else {
