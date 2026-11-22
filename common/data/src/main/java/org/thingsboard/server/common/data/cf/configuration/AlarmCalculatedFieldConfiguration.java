@@ -28,7 +28,7 @@ import java.util.Map;
 @Data
 public class AlarmCalculatedFieldConfiguration implements ArgumentsBasedCalculatedFieldConfiguration {
 
-    private Map<String, Argument> arguments;
+        private Map<String, Argument> arguments;
 
     @Valid
     @NotEmpty
