@@ -126,7 +126,7 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
     }
 
     private void pushDeviceCreatedEventToRuleEngine(TenantId tenantId, Edge edge, DeviceId deviceId) {
-        Device device = edgeCtx.getDeviceService().findDeviceById(tenantId, deviceId);
+            Device device = edgeCtx.getDeviceService().findDeviceById(tenantId, deviceId);
         pushEntityEventToRuleEngine(tenantId, edge, device, TbMsgType.ENTITY_CREATED);
     }
 
