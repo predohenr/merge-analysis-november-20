@@ -33,8 +33,6 @@ public interface CalculatedFieldCache {
 
     CalculatedField getCalculatedField(CalculatedFieldId calculatedFieldId);
 
-    List<CalculatedField> getCalculatedFieldsByEntityId(EntityId entityId);
-
     List<CalculatedFieldLink> getCalculatedFieldLinksByEntityId(EntityId entityId);
 
     CalculatedFieldCtx getCalculatedFieldCtx(CalculatedFieldId calculatedFieldId);
@@ -60,6 +58,8 @@ public interface CalculatedFieldCache {
     void updateOwnerEntity(TenantId tenantId, EntityId entityId);
 
     void addOwnerEntity(TenantId tenantId, EntityId entityId);
+
+    List<CalculatedField> getCalculatedFieldsByEntityId(EntityId entityId);
 
     void evictOwnerEntity(EntityId entityId);
 
