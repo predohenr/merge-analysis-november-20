@@ -152,7 +152,7 @@ public class DefaultTbServiceInfoProvider implements TbServiceInfoProvider {
             builder.addAllAssignedTenantProfiles(assignedTenantProfiles.stream().map(UUID::toString).collect(Collectors.toList()));
         }
         if (edqsConfig != null) {
-            builder.setLabel(edqsConfig.getLabel());
+        builder.setLabel(edqsConfig.getLabel());
         }
         builder.setReady(ready);
         builder.addAllTaskTypes(taskTypes.stream().map(JobType::name).toList());
