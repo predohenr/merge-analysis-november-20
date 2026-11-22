@@ -598,7 +598,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
      * @param processInstance 流程实例
      */
     @SuppressWarnings("unchecked")
-    private Map<String, Object> validateAndSetNextAssignees(String taskDefinitionKey, Map<String, Object> variables, BpmnModel bpmnModel,
+private Map<String, Object> validateAndSetNextAssignees(String taskDefinitionKey, Map<String, Object> variables, BpmnModel bpmnModel,
                                                             Map<String, List<Long>> nextAssignees, ProcessInstance processInstance) {
         // simple 设计器第一个节点默认为发起人节点，不校验是否存在审批人
         if (Objects.equals(taskDefinitionKey, START_USER_NODE_ID)) {
