@@ -490,11 +490,11 @@ public class IotDeviceServiceImpl implements IotDeviceService {
     public void updateDeviceFirmware(Long deviceId, Long firmwareId) {
         // 1. 校验设备是否存在
         IotDeviceDO device = validateDeviceExists(deviceId);
-
+        
         // 2. 更新设备固件版本
         IotDeviceDO updateObj = new IotDeviceDO().setId(deviceId).setFirmwareId(firmwareId);
         deviceMapper.updateById(updateObj);
-
+        
         // 3. 清空对应缓存
         deleteDeviceCache(device);
     }

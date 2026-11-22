@@ -289,8 +289,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         if (reqVO.getRoleId() != null) {
             userIds = permissionService.getUserRoleIdListByRoleId(singleton(reqVO.getRoleId()));
             if (CollUtil.isEmpty(userIds)) {
-                return PageResult.empty();
-            }
+            return PageResult.empty();
+        }
         }
 
         // 分页查询
@@ -494,7 +494,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             // 2.1.1 校验字段是否符合要求
             try {
                 ValidationUtils.validate(BeanUtils.toBean(importUser, UserSaveReqVO.class).setPassword(initPassword));
-            } catch (ConstraintViolationException ex) {
+            } catch (ConstraintViolationException ex){
                 String key = StrUtil.blankToDefault(importUser.getUsername(), "第 " + currentIndex + " 行");
                 respVO.getFailureUsernames().put(key, ex.getMessage());
                 return;

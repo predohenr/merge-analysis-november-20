@@ -384,8 +384,8 @@ public class SocialClientServiceImpl implements SocialClientService {
         // 重试机制：解决支付回调与订单信息上传之间的时间差导致的 10060001 错误
         // 对应 ISSUE：https://gitee.com/zhijiantianya/yudao-cloud/pulls/230
         for (int attempt = 1; attempt <= UPLOAD_SHIPPING_INFO_MAX_RETRIES; attempt++) {
-            try {
-                WxMaOrderShippingInfoBaseResponse response = service.getWxMaOrderShippingService().upload(request);
+        try {
+            WxMaOrderShippingInfoBaseResponse response = service.getWxMaOrderShippingService().upload(request);
                 // 成功，直接返回
                 if (response.getErrCode() == 0) {
                     log.info("[uploadWxaOrderShippingInfo][上传微信小程序发货信息成功：request({}) response({})]", request, response);
@@ -401,9 +401,9 @@ public class SocialClientServiceImpl implements SocialClientService {
                 // 其他错误或重试次数用尽，抛出异常
                 log.error("[uploadWxaOrderShippingInfo][上传微信小程序发货信息失败：request({}) response({})]", request, response);
                 throw exception(SOCIAL_CLIENT_WEIXIN_MINI_APP_ORDER_UPLOAD_SHIPPING_INFO_ERROR, response.getErrMsg());
-            } catch (WxErrorException ex) {
-                log.error("[uploadWxaOrderShippingInfo][上传微信小程序发货信息失败：request({})]", request, ex);
-                throw exception(SOCIAL_CLIENT_WEIXIN_MINI_APP_ORDER_UPLOAD_SHIPPING_INFO_ERROR, ex.getError().getErrorMsg());
+        } catch (WxErrorException ex) {
+            log.error("[uploadWxaOrderShippingInfo][上传微信小程序发货信息失败：request({})]", request, ex);
+            throw exception(SOCIAL_CLIENT_WEIXIN_MINI_APP_ORDER_UPLOAD_SHIPPING_INFO_ERROR, ex.getError().getErrorMsg());
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 log.error("[uploadWxaOrderShippingInfo][重试等待被中断：request({})]", request, ex);
