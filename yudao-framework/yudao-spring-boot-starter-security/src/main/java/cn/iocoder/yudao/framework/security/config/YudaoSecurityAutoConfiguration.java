@@ -8,10 +8,9 @@ import cn.iocoder.yudao.framework.security.core.handler.AuthenticationEntryPoint
 import cn.iocoder.yudao.framework.security.core.service.SecurityFrameworkService;
 import cn.iocoder.yudao.framework.security.core.service.SecurityFrameworkServiceImpl;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
+import cn.iocoder.yudao.framework.common.biz.system.oauth2.OAuth2TokenCommonApi;
 import cn.iocoder.yudao.module.system.api.oauth2.OAuth2TokenApi;
 import cn.iocoder.yudao.module.system.api.permission.PermissionApi;
-import cn.iocoder.yudao.framework.common.biz.system.oauth2.OAuth2TokenCommonApi;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -48,29 +47,14 @@ public class YudaoSecurityAutoConfiguration {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new AuthenticationEntryPointImpl();
     }
-
-    /**
-     * 权限不够处理器 Bean
-     */
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new AccessDeniedHandlerImpl();
     }
-
-    /**
-     * Spring Security 加密器
-     * 考虑到安全性，这里采用 BCryptPasswordEncoder 加密器
-     *
-     * @see <a href="http://stackabuse.com/password-encoding-with-spring-security/">Password Encoding with Spring Security</a>
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(securityProperties.getPasswordEncoderLength());
     }
-
-    /**
-     * Token 认证过滤器 Bean
-     */
     @Bean
     public TokenAuthenticationFilter authenticationTokenFilter(GlobalExceptionHandler globalExceptionHandler,
                                                                OAuth2TokenCommonApi oauth2TokenApi) {
@@ -81,11 +65,6 @@ public class YudaoSecurityAutoConfiguration {
     public SecurityFrameworkService securityFrameworkService(PermissionCommonApi permissionApi) {
         return new SecurityFrameworkServiceImpl(permissionApi);
     }
-
-    /**
-     * 声明调用 {@link SecurityContextHolder#setStrategyName(String)} 方法，
-     * 设置使用 {@link TransmittableThreadLocalSecurityContextHolderStrategy} 作为 Security 的上下文策略
-     */
     @Bean
     public MethodInvokingFactoryBean securityContextHolderMethodInvokingFactoryBean() {
         MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
@@ -94,5 +73,25 @@ public class YudaoSecurityAutoConfiguration {
         methodInvokingFactoryBean.setArguments(TransmittableThreadLocalSecurityContextHolderStrategy.class.getName());
         return methodInvokingFactoryBean;
     }
+
+    /**
+     * 权限不够处理器 Bean
+     */
+
+    /**
+     * Spring Security 加密器
+     * 考虑到安全性，这里采用 BCryptPasswordEncoder 加密器
+     *
+     * @see <a href="http://stackabuse.com/password-encoding-with-spring-security/">Password Encoding with Spring Security</a>
+     */
+
+    /**
+     * Token 认证过滤器 Bean
+     */
+
+    /**
+     * 声明调用 {@link SecurityContextHolder#setStrategyName(String)} 方法，
+     * 设置使用 {@link TransmittableThreadLocalSecurityContextHolderStrategy} 作为 Security 的上下文策略
+     */
 
 }
