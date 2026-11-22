@@ -1183,7 +1183,7 @@ public class DefaultTransportService extends TransportActivityManager implements
             stats.incrementSuccessful();
             if (callback != null) {
                 callback.onSuccess(metadata);
-            }
+        }
         }
 
         @Override
@@ -1191,7 +1191,7 @@ public class DefaultTransportService extends TransportActivityManager implements
             stats.incrementFailed();
             if (callback != null) {
                 callback.onFailure(t);
-            }
+        }
         }
 
     }
