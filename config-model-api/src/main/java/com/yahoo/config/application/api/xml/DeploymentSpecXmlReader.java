@@ -43,7 +43,6 @@ import com.yahoo.io.IOUtils;
 import com.yahoo.text.XML;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.time.Clock;
@@ -66,7 +65,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import static java.util.Comparator.comparingInt;
 
 /**
