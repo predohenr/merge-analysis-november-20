@@ -70,8 +70,8 @@ public class MyBatisUtils {
                     orderBy.append(", ");
                 }
                 orderBy.append(StrUtil.toUnderlineCase(sortingField.getField()))
-                        .append(" ")
-                        .append(SortingField.ORDER_ASC.equals(sortingField.getOrder()) ? "ASC" : "DESC");
+                       .append(" ")
+                       .append(SortingField.ORDER_ASC.equals(sortingField.getOrder()) ? "ASC" : "DESC");
             }
             lambdaQuery.last("ORDER BY " + orderBy);
             // 另外个思路：https://blog.csdn.net/m0_59084856/article/details/138450913
