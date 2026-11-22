@@ -115,6 +115,11 @@ public abstract class SharedEntityManagerCreator {
 	public static EntityManager createSharedEntityManager(EntityManagerFactory emf, @Nullable Map<?, ?> properties) {
 		return createSharedEntityManager(emf, properties, true);
 	}
+	public static EntityManager createSharedEntityManager(
+			EntityManagerFactory emf, @Nullable Map<?, ?> properties, Class<?>... entityManagerInterfaces) {
+
+		return createSharedEntityManager(emf, properties, true, entityManagerInterfaces);
+	}
 
 	/**
 	 * Create a transactional EntityManager proxy for the given EntityManagerFactory.
@@ -134,34 +139,6 @@ public abstract class SharedEntityManagerCreator {
 		return createSharedEntityManager(emf, properties, synchronizedWithTransaction,
 				(emIfc == null ? NO_ENTITY_MANAGER_INTERFACES : new Class<?>[] {emIfc}));
 	}
-
-	/**
-	 * Create a transactional EntityManager proxy for the given EntityManagerFactory.
-	 * @param emf the EntityManagerFactory to obtain EntityManagers from as needed
-	 * @param properties the properties to be passed into the
-	 * {@code createEntityManager} call (may be {@code null})
-	 * @param entityManagerInterfaces the interfaces to be implemented by the
-	 * EntityManager. Allows the addition or specification of proprietary interfaces.
-	 * @return a shareable transactional EntityManager proxy
-	 */
-	public static EntityManager createSharedEntityManager(
-			EntityManagerFactory emf, @Nullable Map<?, ?> properties, Class<?>... entityManagerInterfaces) {
-
-		return createSharedEntityManager(emf, properties, true, entityManagerInterfaces);
-	}
-
-	/**
-	 * Create a transactional EntityManager proxy for the given EntityManagerFactory.
-	 * @param emf the EntityManagerFactory to obtain EntityManagers from as needed
-	 * @param properties the properties to be passed into the
-	 * {@code createEntityManager} call (may be {@code null})
-	 * @param synchronizedWithTransaction whether to automatically join ongoing
-	 * transactions (according to the JPA 2.1 SynchronizationType rules)
-	 * @param entityManagerInterfaces the interfaces to be implemented by the
-	 * EntityManager. Allows the addition or specification of proprietary interfaces.
-	 * @return a shareable transactional EntityManager proxy
-	 * @since 4.0
-	 */
 	public static EntityManager createSharedEntityManager(EntityManagerFactory emf, @Nullable Map<?, ?> properties,
 			boolean synchronizedWithTransaction, Class<?>... entityManagerInterfaces) {
 
@@ -176,6 +153,29 @@ public abstract class SharedEntityManagerCreator {
 				(cl != null ? cl : SharedEntityManagerCreator.class.getClassLoader()),
 				ifcs, new SharedEntityManagerInvocationHandler(emf, properties, synchronizedWithTransaction));
 	}
+
+	/**
+	 * Create a transactional EntityManager proxy for the given EntityManagerFactory.
+	 * @param emf the EntityManagerFactory to obtain EntityManagers from as needed
+	 * @param properties the properties to be passed into the
+	 * {@code createEntityManager} call (may be {@code null})
+	 * @param entityManagerInterfaces the interfaces to be implemented by the
+	 * EntityManager. Allows the addition or specification of proprietary interfaces.
+	 * @return a shareable transactional EntityManager proxy
+	 */
+
+	/**
+	 * Create a transactional EntityManager proxy for the given EntityManagerFactory.
+	 * @param emf the EntityManagerFactory to obtain EntityManagers from as needed
+	 * @param properties the properties to be passed into the
+	 * {@code createEntityManager} call (may be {@code null})
+	 * @param synchronizedWithTransaction whether to automatically join ongoing
+	 * transactions (according to the JPA 2.1 SynchronizationType rules)
+	 * @param entityManagerInterfaces the interfaces to be implemented by the
+	 * EntityManager. Allows the addition or specification of proprietary interfaces.
+	 * @return a shareable transactional EntityManager proxy
+	 * @since 4.0
+	 */
 
 	/**
 	 * Create a transactional EntityAgent proxy for the given EntityManagerFactory.
