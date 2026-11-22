@@ -1399,7 +1399,7 @@ public abstract class AbstractWebTest extends AbstractInMemoryStorageTest {
 
     protected List<Job> findJobs(List<JobType> types, List<UUID> entities) throws Exception {
         return doGetTypedWithPageLink("/api/jobs?types=" + types.stream().map(Enum::name).collect(Collectors.joining(",")) +
-                        "&entities=" + entities.stream().map(UUID::toString).collect(Collectors.joining(",")) + "&",
+                                      "&entities=" + entities.stream().map(UUID::toString).collect(Collectors.joining(",")) + "&",
                 new TypeReference<PageData<Job>>() {}, new PageLink(100, 0, null, new SortOrder("createdTime", SortOrder.Direction.DESC))).getData();
     }
 
