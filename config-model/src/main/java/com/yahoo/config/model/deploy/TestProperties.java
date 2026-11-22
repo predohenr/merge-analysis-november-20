@@ -139,6 +139,7 @@ public class TestProperties implements ModelContext.Properties, ModelContext.Fea
     }
     @Override public boolean useTriton() { return useTriton; }
     @Override public boolean scaleMetricsproxyHeapByNodeCount() { return scaleMetricsproxyHeapByNodeCount; }
+
     @Override public boolean ignoreConnectivityChecksAtStartup() { return ignoreConnectivityChecksAtStartup; }
     @Override public double searchNodeReservedDiskSpaceFactor() { return searchNodeReservedDiskSpaceFactor; }
 
