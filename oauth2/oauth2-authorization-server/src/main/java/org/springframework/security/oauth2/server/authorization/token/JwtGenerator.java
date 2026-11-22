@@ -22,12 +22,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
+import org.springframework.security.core.Authentication;
+
+import org.springframework.security.core.GrantedAuthority;
+
+import org.springframework.security.core.authority.FactorGrantedAuthority;
 
 import org.jspecify.annotations.Nullable;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.FactorGrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -207,25 +208,10 @@ public final class JwtGenerator implements OAuth2TokenGenerator<Jwt> {
 
 		return jwt;
 	}
-
-	/**
-	 * Sets the {@link OAuth2TokenCustomizer} that customizes the
-	 * {@link JwtEncodingContext#getJwsHeader() JWS headers} and/or
-	 * {@link JwtEncodingContext#getClaims() claims} for the generated {@link Jwt}.
-	 * @param jwtCustomizer the {@link OAuth2TokenCustomizer} that customizes the headers
-	 * and/or claims for the generated {@code Jwt}
-	 */
 	public void setJwtCustomizer(OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer) {
 		Assert.notNull(jwtCustomizer, "jwtCustomizer cannot be null");
 		this.jwtCustomizer = jwtCustomizer;
 	}
-
-	/**
-	 * Sets the {@link Clock} used when obtaining the current instant via
-	 * {@link Clock#instant()}.
-	 * @param clock the {@link Clock} used when obtaining the current instant via
-	 * {@link Clock#instant()}
-	 */
 	public void setClock(Clock clock) {
 		Assert.notNull(clock, "clock cannot be null");
 		this.clock = clock;
@@ -243,5 +229,20 @@ public final class JwtGenerator implements OAuth2TokenGenerator<Jwt> {
 		Assert.notNull(authenticationTime, "authenticationTime cannot be null");
 		return Date.from(authenticationTime);
 	}
+
+	/**
+	 * Sets the {@link OAuth2TokenCustomizer} that customizes the
+	 * {@link JwtEncodingContext#getJwsHeader() JWS headers} and/or
+	 * {@link JwtEncodingContext#getClaims() claims} for the generated {@link Jwt}.
+	 * @param jwtCustomizer the {@link OAuth2TokenCustomizer} that customizes the headers
+	 * and/or claims for the generated {@code Jwt}
+	 */
+
+	/**
+	 * Sets the {@link Clock} used when obtaining the current instant via
+	 * {@link Clock#instant()}.
+	 * @param clock the {@link Clock} used when obtaining the current instant via
+	 * {@link Clock#instant()}
+	 */
 
 }
