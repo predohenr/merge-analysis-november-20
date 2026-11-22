@@ -76,10 +76,10 @@ public class SlackNotificationChannel implements NotificationChannel {
                 log.warn("Incident grouping is enabled but Slack bot_token/channel_id are not set; " +
                         "falling back to plain webhook mode without incident support");
             }
-            restTemplate = new RestTemplateBuilder()
-                    .connectTimeout(Duration.ofSeconds(5))
-                    .readTimeout(Duration.ofSeconds(2))
-                    .build();
+        restTemplate = new RestTemplateBuilder()
+                .connectTimeout(Duration.ofSeconds(5))
+                .readTimeout(Duration.ofSeconds(2))
+                .build();
             log.info("Slack webhook mode enabled");
         }
     }
@@ -93,8 +93,8 @@ public class SlackNotificationChannel implements NotificationChannel {
         } else if (slackApiClient != null) {
             slackApiClient.postMessage(channelId, message);
         } else {
-            restTemplate.postForObject(webhookUrl, Map.of("text", message), String.class);
-        }
+        restTemplate.postForObject(webhookUrl, Map.of("text", message), String.class);
+    }
     }
 
     @PreDestroy
