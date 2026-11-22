@@ -48,9 +48,9 @@ public class ExcelUtils {
         // 参考 https://t.zsxq.com/zM77F 帖子，增加 try 处理，兼容 windows 场景
         try (InputStream inputStream = file.getInputStream()) {
             return FastExcelFactory.read(inputStream, head, null)
-                    .autoCloseStream(false) // 不要自动关闭，交给 Servlet 自己处理
-                    .doReadAllSync();
-        }
+                .autoCloseStream(false)  // 不要自动关闭，交给 Servlet 自己处理
+                .doReadAllSync();
+    }
     }
 
 }

@@ -360,8 +360,8 @@ public class AfterSaleServiceImpl implements AfterSaleService {
                     .setStatus(AfterSaleStatusEnum.COMPLETE.getStatus()).setRefundTime(LocalDateTime.now()));
             newStatus = AfterSaleStatusEnum.COMPLETE.getStatus();
         } else {
-            // 发起退款单。注意，需要在事务提交后，再进行发起，避免重复发起
-            createPayRefund(userIp, afterSale);
+        // 发起退款单。注意，需要在事务提交后，再进行发起，避免重复发起
+        createPayRefund(userIp, afterSale);
             newStatus = afterSale.getStatus();  // 特殊：这里状态不变，而是最终 updateAfterSaleRefunded 处理！！！
         }
 
