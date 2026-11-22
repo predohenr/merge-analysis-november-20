@@ -866,7 +866,7 @@ public class OAuth2LoginConfigurerTests {
 			http
 				.oauth2Login((login) -> login
 					.clientRegistrationRepository(
-						new InMemoryClientRegistrationRepository(GOOGLE_CLIENT_REGISTRATION))
+							new InMemoryClientRegistrationRepository(GOOGLE_CLIENT_REGISTRATION))
 					.userInfoEndpoint((info) -> info
 						.userAuthoritiesMapper(createGrantedAuthoritiesMapper())));
 			// @formatter:on
@@ -1132,7 +1132,7 @@ public class OAuth2LoginConfigurerTests {
 			http
 				.oauth2Login((login) -> login
 					.clientRegistrationRepository(
-						new InMemoryClientRegistrationRepository(
+							new InMemoryClientRegistrationRepository(
 							GOOGLE_CLIENT_REGISTRATION, GITHUB_CLIENT_REGISTRATION)));
 			// @formatter:on
 			return super.configureFilterChain(http);
@@ -1150,7 +1150,7 @@ public class OAuth2LoginConfigurerTests {
 			http
 				.oauth2Login((login) -> login
 					.clientRegistrationRepository(
-						new InMemoryClientRegistrationRepository(
+							new InMemoryClientRegistrationRepository(
 							GOOGLE_CLIENT_REGISTRATION, CLIENT_CREDENTIALS_REGISTRATION)));
 			// @formatter:on
 			return super.configureFilterChain(http);
@@ -1168,7 +1168,7 @@ public class OAuth2LoginConfigurerTests {
 			http
 				.oauth2Login((login) -> login
 					.clientRegistrationRepository(
-						new InMemoryClientRegistrationRepository(GOOGLE_CLIENT_REGISTRATION))
+							new InMemoryClientRegistrationRepository(GOOGLE_CLIENT_REGISTRATION))
 					.loginPage("/custom-login"));
 			// @formatter:on
 			return super.configureFilterChain(http);
@@ -1281,7 +1281,7 @@ public class OAuth2LoginConfigurerTests {
 						new InMemoryClientRegistrationRepository(GOOGLE_CLIENT_REGISTRATION)))
 				.exceptionHandling((handling) -> handling
 					.defaultAuthenticationEntryPointFor(
-						new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+							new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
 						new RequestHeaderRequestMatcher("X-Requested-With", "XMLHttpRequest")));
 			// @formatter:on
 			return super.configureFilterChain(http);
