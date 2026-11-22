@@ -42,7 +42,7 @@ class DashboardDataValidatorTest {
 
     @MockitoBean
     TenantService tenantService;
-    @MockitoBean
+    @MockBean
     ApiLimitService apiLimitService;
     @MockitoSpyBean
     DashboardDataValidator validator;
