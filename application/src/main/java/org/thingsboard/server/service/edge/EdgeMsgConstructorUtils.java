@@ -779,18 +779,18 @@ public class EdgeMsgConstructorUtils {
         String bodyStr = JacksonUtil.toString(body);
         JsonObject jsonObject = JsonParser.parseString(bodyStr).getAsJsonObject();
         if (jsonObject.has("ts") && latestByKey != null && !latestByKey.isEmpty()) {
-            long ts = jsonObject.get("ts").getAsLong();
-            JsonObject kv = jsonObject.getAsJsonObject("kv");
-            for (Iterator<Map.Entry<String, JsonElement>> it = kv.entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<String, JsonElement> e = it.next();
-                Long latestTs = latestByKey.get(e.getKey());
-                if (latestTs == null || !latestTs.equals(ts)) {
-                    it.remove();
-                }
+        long ts = jsonObject.get("ts").getAsLong();
+        JsonObject kv = jsonObject.getAsJsonObject("kv");
+        for (Iterator<Map.Entry<String, JsonElement>> it = kv.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<String, JsonElement> e = it.next();
+            Long latestTs = latestByKey.get(e.getKey());
+            if (latestTs == null || !latestTs.equals(ts)) {
+                it.remove();
             }
-            if (kv.isEmpty()) {
-                return null;
-            }
+        }
+        if (kv.isEmpty()) {
+            return null;
+        }
         }
         return JacksonUtil.toJsonNode(jsonObject.toString());
     }
