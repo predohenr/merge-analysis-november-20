@@ -506,7 +506,7 @@ public class DefaultTransportService extends TransportActivityManager implements
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SessionEventMsg msg, TransportServiceCallback<Void> callback) {
         if (checkLimits(sessionInfo, msg, callback)) {
             if (msg.getEvent() != TransportProtos.SessionEvent.CLOSED) {
-                recordActivityInternal(sessionInfo);
+            recordActivityInternal(sessionInfo);
             }
             sendToDeviceActor(sessionInfo, TransportToDeviceActorMsg.newBuilder().setSessionInfo(sessionInfo)
                     .setSessionEvent(msg).build(), callback);
@@ -1185,7 +1185,7 @@ public class DefaultTransportService extends TransportActivityManager implements
             stats.incrementSuccessful();
             if (callback != null) {
                 callback.onSuccess(metadata);
-            }
+        }
         }
 
         @Override
@@ -1193,7 +1193,7 @@ public class DefaultTransportService extends TransportActivityManager implements
             stats.incrementFailed();
             if (callback != null) {
                 callback.onFailure(t);
-            }
+        }
         }
 
     }
