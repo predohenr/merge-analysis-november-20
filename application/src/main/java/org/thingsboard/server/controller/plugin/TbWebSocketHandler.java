@@ -200,7 +200,7 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
                 if (StringUtils.isNotEmpty(authCmd.getApiKey())) {
                     securityCtx = apiKeyAuthenticationProvider.authenticate(authCmd.getApiKey());
                 } else {
-                    securityCtx = authenticationProvider.authenticate(authCmd.getToken());
+                securityCtx = authenticationProvider.authenticate(authCmd.getToken());
                 }
             } catch (Exception e) {
                 close(sessionRef, CloseStatus.BAD_DATA.withReason(e.getMessage()));
@@ -338,9 +338,9 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         String query = session.getUri().getQuery();
         if (query != null) {
             String token = extractQueryParam(query, "token");
-            if (StringUtils.isNotEmpty(token)) {
-                securityCtx = authenticationProvider.authenticate(token);
-            }
+        if (StringUtils.isNotEmpty(token)) {
+            securityCtx = authenticationProvider.authenticate(token);
+        }
         }
         return WebSocketSessionRef.builder()
                 .sessionId(UUID.randomUUID().toString())
