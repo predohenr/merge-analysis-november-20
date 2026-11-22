@@ -3,10 +3,11 @@ package cn.iocoder.yudao.module.ai.controller.admin.model.vo.chatRole;
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.validation.InEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.validator.constraints.URL;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.*;
 import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.URL;
-
 import java.util.List;
 
 @Schema(description = "管理后台 - AI 聊天角色新增/修改 Request VO")
