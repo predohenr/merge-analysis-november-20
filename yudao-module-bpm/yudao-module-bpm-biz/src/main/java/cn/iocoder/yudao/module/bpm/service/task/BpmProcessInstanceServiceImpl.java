@@ -935,10 +935,10 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                 return;
             }
             BpmModelMetaInfoVO.HttpRequestSetting setting = processDefinitionInfo.getProcessBeforeTriggerSetting();
-            BpmHttpRequestUtils.executeBpmHttpRequest(instance,
-                    setting.getUrl(),
-                    setting.getHeader(),
-                    setting.getBody(),
+                BpmHttpRequestUtils.executeBpmHttpRequest(instance,
+                        setting.getUrl(),
+                        setting.getHeader(),
+                        setting.getBody(),
                     true, setting.getResponse());
         });
     }

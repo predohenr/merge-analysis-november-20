@@ -57,26 +57,26 @@ public class BpmHttpRequestUtils {
         if (Boolean.FALSE.equals(handleResponse)) {
             return;
         }
-        // 3.1 判断是否需要解析返回值
-        if (responseEntity == null
-                || StrUtil.isEmpty(responseEntity.getBody())
-                || !responseEntity.getStatusCode().is2xxSuccessful()
-                || CollUtil.isEmpty(response)) {
-            return;
+            // 3.1 判断是否需要解析返回值
+            if (responseEntity == null
+                    || StrUtil.isEmpty(responseEntity.getBody())
+                    || !responseEntity.getStatusCode().is2xxSuccessful()
+                    || CollUtil.isEmpty(response)) {
+                return;
+            }
+            // 3.2 解析返回值, 返回值必须符合 CommonResult 规范。
+            CommonResult<Map<String, Object>> respResult = JsonUtils.parseObjectQuietly(responseEntity.getBody(),
+                    new TypeReference<CommonResult<Map<String, Object>>>() {});
+            if (respResult == null || !respResult.isSuccess()) {
+                return;
+            }
+            // 3.3 获取需要更新的流程变量
+            Map<String, Object> updateVariables = getNeedUpdatedVariablesFromResponse(respResult.getData(), response);
+            // 3.4 更新流程变量
+            if (CollUtil.isNotEmpty(updateVariables)) {
+                processInstanceService.updateProcessInstanceVariables(processInstance.getId(), updateVariables);
+            }
         }
-        // 3.2 解析返回值, 返回值必须符合 CommonResult 规范。
-        CommonResult<Map<String, Object>> respResult = JsonUtils.parseObjectQuietly(responseEntity.getBody(),
-                new TypeReference<>() {});
-        if (respResult == null || !respResult.isSuccess()) {
-            return;
-        }
-        // 3.3 获取需要更新的流程变量
-        Map<String, Object> updateVariables = getNeedUpdatedVariablesFromResponse(respResult.getData(), response);
-        // 3.4 更新流程变量
-        if (CollUtil.isNotEmpty(updateVariables)) {
-            processInstanceService.updateProcessInstanceVariables(processInstance.getId(), updateVariables);
-        }
-    }
 
     public static ResponseEntity<String> sendHttpRequest(String url,
                                                          MultiValueMap<String, String> headers,

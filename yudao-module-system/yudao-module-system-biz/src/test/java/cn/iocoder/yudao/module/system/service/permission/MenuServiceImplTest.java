@@ -288,6 +288,19 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
     }
 
     @Test
+    public void testValidateMenu_Name_success() {
+        // mock 父子菜单
+        MenuDO sonMenu = createParentAndSonMenu();
+        // 准备参数
+        Long parentId = sonMenu.getParentId();
+        Long otherSonMenuId = randomLongId();
+        String otherSonMenuName = randomString();
+
+        // 调用，无需断言
+        menuService.validateMenuName(parentId, otherSonMenuName, otherSonMenuId);
+    }
+
+    @Test
     public void testValidateMenu_sonMenuNameNameDuplicate() {
         // mock 父子菜单
         MenuDO sonMenu = createParentAndSonMenu();

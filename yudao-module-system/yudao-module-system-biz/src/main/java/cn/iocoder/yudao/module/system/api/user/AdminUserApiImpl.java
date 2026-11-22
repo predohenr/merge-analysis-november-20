@@ -10,9 +10,10 @@ import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
 import cn.iocoder.yudao.module.system.service.dept.DeptService;
 import cn.iocoder.yudao.module.system.service.user.AdminUserService;
-import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,8 +69,8 @@ public class AdminUserApiImpl implements AdminUserApi {
     @Override
     public CommonResult<List<AdminUserRespDTO>> getUserList(Collection<Long> ids) {
         return DataPermissionUtils.executeIgnore(() -> { // 禁用数据权限。原因是，一般基于指定 id 的 API 查询，都是数据拼接为主
-            List<AdminUserDO> users = userService.getUserList(ids);
-            return success(BeanUtils.toBean(users, AdminUserRespDTO.class));
+        List<AdminUserDO> users = userService.getUserList(ids);
+        return success(BeanUtils.toBean(users, AdminUserRespDTO.class));
         });
     }
 
