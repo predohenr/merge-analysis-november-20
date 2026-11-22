@@ -18,8 +18,6 @@ import cn.iocoder.yudao.module.mp.service.account.MpAccountService;
 import cn.iocoder.yudao.module.mp.service.material.MpMaterialService;
 import cn.iocoder.yudao.module.mp.service.message.bo.MpMessageSendOutReqBO;
 import cn.iocoder.yudao.module.mp.service.user.MpUserService;
-import jakarta.annotation.Resource;
-import jakarta.validation.Validator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -32,6 +30,9 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
+import javax.annotation.Resource;
+import javax.validation.Validator;
 
 import java.util.concurrent.TimeUnit;
 
