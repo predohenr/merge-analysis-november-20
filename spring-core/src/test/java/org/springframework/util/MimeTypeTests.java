@@ -42,6 +42,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author Sam Brannen
  * @author Dimitrios Liapis
  */
+
+/**
+ * Tests for {@link MimeType}.
+ *
+ * @author Arjen Poutsma
+ * @author Juergen Hoeller
+ * @author Sam Brannen
+ * @author Dimitrios Liapis
+ */
 class MimeTypeTests {
 
 	@Test
