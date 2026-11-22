@@ -162,9 +162,9 @@ public class ContentCachingResponseWrapper extends HttpServletResponseWrapper {
 	public void setHeader(String name, String value) {
 		if (HttpHeaders.CONTENT_LENGTH.equalsIgnoreCase(name)) {
 			if (value != null) {
-				this.contentLength = toContentLengthInt(Long.parseLong(value));
-			}
-			else {
+			this.contentLength = toContentLengthInt(Long.parseLong(value));
+		}
+		else {
 				this.contentLength = null;
 				super.setHeader(name, null);
 			}
