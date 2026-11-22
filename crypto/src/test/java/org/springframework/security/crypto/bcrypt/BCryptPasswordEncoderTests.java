@@ -246,12 +246,12 @@ public class BCryptPasswordEncoderTests extends AbstractPasswordEncoderValidatio
 	void passwordLargerThan72BytesShouldThrowIllegalArgumentException() {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String singleByteChars = "a".repeat(68);
-		String password72Bytes = singleByteChars + "😀";
+		String password72Bytes = singleByteChars + "ðŸ˜€";
 		assertThat(password72Bytes.length()).isEqualTo(70);
 		assertThat(password72Bytes.getBytes(StandardCharsets.UTF_8).length).isEqualTo(72);
 		assertThatNoException().isThrownBy(() -> encoder.encode(password72Bytes));
 		String singleByteCharsTooLong = "a".repeat(69);
-		String password73Bytes = singleByteCharsTooLong + "😀";
+		String password73Bytes = singleByteCharsTooLong + "ðŸ˜€";
 		assertThat(password73Bytes.getBytes(StandardCharsets.UTF_8).length).isEqualTo(73);
 		assertThatIllegalArgumentException().isThrownBy(() -> encoder.encode(password73Bytes))
 			.withMessageContaining("password cannot be more than 72 bytes");
