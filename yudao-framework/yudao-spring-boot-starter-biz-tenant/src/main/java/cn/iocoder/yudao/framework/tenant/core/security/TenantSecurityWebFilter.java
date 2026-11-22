@@ -12,13 +12,14 @@ import cn.iocoder.yudao.framework.tenant.core.service.TenantFrameworkService;
 import cn.iocoder.yudao.framework.web.config.WebProperties;
 import cn.iocoder.yudao.framework.web.core.filter.ApiRequestFilter;
 import cn.iocoder.yudao.framework.web.core.handler.GlobalExceptionHandler;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
-
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.AntPathMatcher;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
@@ -35,18 +36,18 @@ import java.util.Set;
 public class TenantSecurityWebFilter extends ApiRequestFilter {
 
     private final TenantProperties tenantProperties;
-
-    /**
-     * 允许忽略租户的 URL 列表
-     *
-     * 目的：解决 <a href="https://gitee.com/zhijiantianya/yudao-cloud/issues/ICUQL9">修改配置会导致 @TenantIgnore Controller 接口过滤失效</>
-     */
     private final Set<String> ignoreUrls;
 
     private final AntPathMatcher pathMatcher;
 
     private final GlobalExceptionHandler globalExceptionHandler;
     private final TenantFrameworkService tenantFrameworkService;
+
+    /**
+     * 允许忽略租户的 URL 列表
+     *
+     * 目的：解决 <a href="https://gitee.com/zhijiantianya/yudao-cloud/issues/ICUQL9">修改配置会导致 @TenantIgnore Controller 接口过滤失效</>
+     */
 
     public TenantSecurityWebFilter(WebProperties webProperties,
                                    TenantProperties tenantProperties,
