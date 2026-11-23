@@ -18,9 +18,9 @@ package org.springframework.http.client;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 
 import org.jspecify.annotations.Nullable;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.util.StreamUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * Tests for {@link JdkClientHttpRequestFactory}.
+ *
+ * @author Marten Deinum
+ * @author Brian Clozel
+ */
 
 /**
  * Tests for {@link JdkClientHttpRequestFactory}.
