@@ -342,9 +342,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					// Leniently created singleton object could have appeared in the meantime.
 					singletonObject = this.singletonObjects.get(beanName);
 					if (singletonObject == null) {
-						singletonObject = singletonFactory.getObject();
-						newSingleton = true;
-					}
+					singletonObject = singletonFactory.getObject();
+					newSingleton = true;
+				}
 				}
 				catch (IllegalStateException ex) {
 					// Has the singleton object implicitly appeared in the meantime ->
@@ -388,16 +388,16 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			if (locked) {
 				this.singletonLock.unlock();
 			}
-			this.lenientCreationLock.lock();
-			try {
-				this.singletonsInLenientCreation.remove(beanName);
-				this.lenientCreationFinished.signalAll();
-			}
-			finally {
-				this.lenientCreationLock.unlock();
+				this.lenientCreationLock.lock();
+				try {
+					this.singletonsInLenientCreation.remove(beanName);
+					this.lenientCreationFinished.signalAll();
+				}
+				finally {
+					this.lenientCreationLock.unlock();
+				}
 			}
 		}
-	}
 
 	/**
 	 * Determine whether the current thread is allowed to hold the singleton lock.
