@@ -94,11 +94,6 @@ class RestClientIntegrationTests {
 	}
 
 
-	private MockWebServer server;
-
-	private RestClient restClient;
-
-
 	private void startServer(ClientHttpRequestFactory requestFactory) {
 		this.server = new MockWebServer();
 		this.restClient = RestClient
@@ -1183,6 +1178,11 @@ class RestClientIntegrationTests {
 	private void expectRequestCount(int count) {
 		assertThat(this.server.getRequestCount()).isEqualTo(count);
 	}
+
+
+	private MockWebServer server;
+
+	private RestClient restClient;
 
 
 	@SuppressWarnings("serial")
