@@ -74,7 +74,7 @@ public class SQLStateSQLExceptionTranslator extends AbstractFallbackSQLException
 	private static final Set<String> PESSIMISTIC_LOCKING_FAILURE_CODES = Set.of(
 			"40",  // Transaction rollback
 			"61"   // Oracle: deadlock
-	);
+		);
 
 	private static final Set<String> DATA_ACCESS_RESOURCE_FAILURE_CODES = Set.of(
 			"08",  // Connection exception
