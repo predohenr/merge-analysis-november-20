@@ -86,6 +86,15 @@ import static org.mockito.Mockito.verify;
  * @author Rob Harrop
  * @author Sam Brannen
  */
+
+/**
+ * Tests for {@link DispatcherServlet}.
+ *
+ * @author Rod Johnson
+ * @author Juergen Hoeller
+ * @author Rob Harrop
+ * @author Sam Brannen
+ */
 class DispatcherServletTests {
 
 	private static final String URL_KNOWN_ONLY_PARENT = "/knownOnlyToParent.do";
@@ -864,23 +873,6 @@ class DispatcherServletTests {
 	}
 
 	@Test
-	void shouldResetResponseBufferIfNotCommitted() throws Exception {
-		StaticWebApplicationContext context = new StaticWebApplicationContext();
-		context.setServletContext(getServletContext());
-		context.registerSingleton("/error", ErrorController.class);
-		DispatcherServlet servlet = new DispatcherServlet(context);
-		servlet.init(servletConfig);
-
-		MockHttpServletRequest request = new MockHttpServletRequest(getServletContext(), "GET", "/error");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		assertThatThrownBy(() -> servlet.service(request, response)).isInstanceOf(ServletException.class)
-				.hasCauseInstanceOf(IllegalArgumentException.class);
-		assertThat(response.getContentAsByteArray()).isEmpty();
-		assertThat(response.getStatus()).isEqualTo(400);
-		assertThat(response.getHeader("Test-Header")).isEqualTo("spring");
-	}
-
-	@Test
 	void shouldAttemptToResetResponseBufferIfCommitted() throws Exception {
 		StaticWebApplicationContext context = new StaticWebApplicationContext();
 		context.setServletContext(getServletContext());
@@ -894,6 +886,23 @@ class DispatcherServletTests {
 		assertThatThrownBy(() -> servlet.service(request, response)).isInstanceOf(ServletException.class)
 				.hasCauseInstanceOf(IllegalArgumentException.class);
 		assertThat(response.getContentAsByteArray()).isNotEmpty();
+		assertThat(response.getStatus()).isEqualTo(400);
+		assertThat(response.getHeader("Test-Header")).isEqualTo("spring");
+	}
+
+	@Test
+	void shouldResetResponseBufferIfNotCommitted() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		context.setServletContext(getServletContext());
+		context.registerSingleton("/error", ErrorController.class);
+		DispatcherServlet servlet = new DispatcherServlet(context);
+		servlet.init(servletConfig);
+
+		MockHttpServletRequest request = new MockHttpServletRequest(getServletContext(), "GET", "/error");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		assertThatThrownBy(() -> servlet.service(request, response)).isInstanceOf(ServletException.class)
+				.hasCauseInstanceOf(IllegalArgumentException.class);
+		assertThat(response.getContentAsByteArray()).isEmpty();
 		assertThat(response.getStatus()).isEqualTo(400);
 		assertThat(response.getHeader("Test-Header")).isEqualTo("spring");
 	}
