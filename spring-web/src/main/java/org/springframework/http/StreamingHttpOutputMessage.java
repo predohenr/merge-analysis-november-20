@@ -66,7 +66,6 @@ public interface StreamingHttpOutputMessage extends HttpOutputMessage {
 	}
 
 
-
 	/**
 	 * Contract to stream request body content to an {@link OutputStream}.
 	 * In some HTTP client libraries this is only possible indirectly through a
