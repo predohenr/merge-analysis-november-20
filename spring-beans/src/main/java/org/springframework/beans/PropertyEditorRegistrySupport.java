@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	private boolean configValueEditorsActive = false;
 
-	private @Nullable PropertyEditorRegistrar defaultEditorRegistrar;
+	@Nullable
+	private PropertyEditorRegistrar defaultEditorRegistrar;
 
 	@SuppressWarnings("NullAway.Init")
 	private Map<Class<?>, PropertyEditor> defaultEditors;
