@@ -40,6 +40,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Marten Deinum
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link JdkClientHttpRequestFactory}.
+ *
+ * @author Marten Deinum
+ * @author Brian Clozel
+ */
 class JdkClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTests {
 
 	private static @Nullable String originalPropertyValue;
@@ -96,6 +103,14 @@ class JdkClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTests {
 		}
 	}
 
+	@Test // gh-34971
+	@EnabledForJreRange(min = JRE.JAVA_19) // behavior fixed in Java 19
+	void requestContentLengthHeaderWhenNoBody() throws Exception {
+		URI uri = URI.create(baseUrl + "/header/Content-Length");
+		assertNoContentLength(uri, HttpMethod.GET);
+		assertNoContentLength(uri, HttpMethod.DELETE);
+	}
+
 	@Test // gh-35068
 	void deleteRequestWithBody() throws Exception {
 		URI uri = URI.create(baseUrl + "/echo");
@@ -106,14 +121,6 @@ class JdkClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTests {
 			assertThat(StreamUtils.copyToString(response.getBody(), StandardCharsets.ISO_8859_1))
 					.as("Invalid request body").isEqualTo("body");
 		}
-	}
-
-	@Test // gh-34971
-	@EnabledForJreRange(min = JRE.JAVA_19) // behavior fixed in Java 19
-	void requestContentLengthHeaderWhenNoBody() throws Exception {
-		URI uri = URI.create(baseUrl + "/header/Content-Length");
-		assertNoContentLength(uri, HttpMethod.GET);
-		assertNoContentLength(uri, HttpMethod.DELETE);
 	}
 
 	protected void assertNoContentLength(URI uri, HttpMethod method) throws Exception {
