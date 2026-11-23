@@ -36,6 +36,16 @@ import org.springframework.http.client.ClientHttpResponse;
  * @author Rossen Stoyanchev
  * @since 4.1.5
  */
+
+/**
+ * Implementation of {@link ClientHttpResponse} that can not only check if
+ * the response has a message body, but also if its length is 0 (i.e. empty)
+ * by actually reading the input stream.
+ *
+ * @author Brian Clozel
+ * @author Rossen Stoyanchev
+ * @since 4.1.5
+ */
 class IntrospectingClientHttpResponse extends ClientHttpResponseDecorator {
 
 	private @Nullable PushbackInputStream pushbackInputStream;
@@ -88,28 +98,28 @@ class IntrospectingClientHttpResponse extends ClientHttpResponseDecorator {
 			return true;
 		}
 		try {
-			if (body.markSupported()) {
-				body.mark(1);
-				if (body.read() == -1) {
-					return true;
-				}
-				else {
-					body.reset();
-					return false;
-				}
+		if (body.markSupported()) {
+			body.mark(1);
+			if (body.read() == -1) {
+				return true;
 			}
 			else {
-				this.pushbackInputStream = new PushbackInputStream(body);
-				int b = this.pushbackInputStream.read();
-				if (b == -1) {
-					return true;
-				}
-				else {
-					this.pushbackInputStream.unread(b);
-					return false;
-				}
+				body.reset();
+				return false;
 			}
 		}
+		else {
+			this.pushbackInputStream = new PushbackInputStream(body);
+			int b = this.pushbackInputStream.read();
+			if (b == -1) {
+				return true;
+			}
+			else {
+				this.pushbackInputStream.unread(b);
+				return false;
+			}
+		}
+	}
 		catch (EOFException exc) {
 			return true;
 		}
