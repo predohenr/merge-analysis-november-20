@@ -158,149 +158,149 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/** Well-known name for the MultipartResolver object in the bean factory for this namespace. */
 	public static final String MULTIPART_RESOLVER_BEAN_NAME = "multipartResolver";
+	public static final String LOCALE_RESOLVER_BEAN_NAME = "localeResolver";
+	public static final String HANDLER_MAPPING_BEAN_NAME = "handlerMapping";
+	public static final String HANDLER_ADAPTER_BEAN_NAME = "handlerAdapter";
+	public static final String HANDLER_EXCEPTION_RESOLVER_BEAN_NAME = "handlerExceptionResolver";
+	public static final String REQUEST_TO_VIEW_NAME_TRANSLATOR_BEAN_NAME = "viewNameTranslator";
+	public static final String VIEW_RESOLVER_BEAN_NAME = "viewResolver";
+	public static final String FLASH_MAP_MANAGER_BEAN_NAME = "flashMapManager";
+	public static final String WEB_APPLICATION_CONTEXT_ATTRIBUTE = DispatcherServlet.class.getName() + ".CONTEXT";
+	public static final String LOCALE_RESOLVER_ATTRIBUTE = DispatcherServlet.class.getName() + ".LOCALE_RESOLVER";
+	public static final String INPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".INPUT_FLASH_MAP";
+	public static final String OUTPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".OUTPUT_FLASH_MAP";
+	public static final String FLASH_MAP_MANAGER_ATTRIBUTE = DispatcherServlet.class.getName() + ".FLASH_MAP_MANAGER";
+	public static final String EXCEPTION_ATTRIBUTE = DispatcherServlet.class.getName() + ".EXCEPTION";
+	public static final String PAGE_NOT_FOUND_LOG_CATEGORY = "org.springframework.web.servlet.PageNotFound";
+	private static final String DEFAULT_STRATEGIES_PATH = "DispatcherServlet.properties";
+	private static final String DEFAULT_STRATEGIES_PREFIX = "org.springframework.web.servlet";
+	protected static final Log pageNotFoundLogger = LogFactory.getLog(PAGE_NOT_FOUND_LOG_CATEGORY);
+	private static @Nullable Properties defaultStrategies;
+	private boolean detectAllHandlerMappings = true;
+	private boolean detectAllHandlerAdapters = true;
+	private boolean detectAllHandlerExceptionResolvers = true;
+	private boolean detectAllViewResolvers = true;
+	private boolean cleanupAfterInclude = true;
+	private @Nullable MultipartResolver multipartResolver;
+	private @Nullable LocaleResolver localeResolver;
+	private @Nullable List<HandlerMapping> handlerMappings;
+	private @Nullable List<HandlerAdapter> handlerAdapters;
+	private @Nullable List<HandlerExceptionResolver> handlerExceptionResolvers;
+	private @Nullable RequestToViewNameTranslator viewNameTranslator;
+	private @Nullable FlashMapManager flashMapManager;
+	private @Nullable List<ViewResolver> viewResolvers;
+
+	private boolean parseRequestPath;
 
 	/** Well-known name for the LocaleResolver object in the bean factory for this namespace. */
-	public static final String LOCALE_RESOLVER_BEAN_NAME = "localeResolver";
 
 	/**
 	 * Well-known name for the HandlerMapping object in the bean factory for this namespace.
 	 * Only used when "detectAllHandlerMappings" is turned off.
 	 * @see #setDetectAllHandlerMappings
 	 */
-	public static final String HANDLER_MAPPING_BEAN_NAME = "handlerMapping";
 
 	/**
 	 * Well-known name for the HandlerAdapter object in the bean factory for this namespace.
 	 * Only used when "detectAllHandlerAdapters" is turned off.
 	 * @see #setDetectAllHandlerAdapters
 	 */
-	public static final String HANDLER_ADAPTER_BEAN_NAME = "handlerAdapter";
 
 	/**
 	 * Well-known name for the HandlerExceptionResolver object in the bean factory for this namespace.
 	 * Only used when "detectAllHandlerExceptionResolvers" is turned off.
 	 * @see #setDetectAllHandlerExceptionResolvers
 	 */
-	public static final String HANDLER_EXCEPTION_RESOLVER_BEAN_NAME = "handlerExceptionResolver";
 
 	/**
 	 * Well-known name for the RequestToViewNameTranslator object in the bean factory for this namespace.
 	 */
-	public static final String REQUEST_TO_VIEW_NAME_TRANSLATOR_BEAN_NAME = "viewNameTranslator";
 
 	/**
 	 * Well-known name for the ViewResolver object in the bean factory for this namespace.
 	 * Only used when "detectAllViewResolvers" is turned off.
 	 * @see #setDetectAllViewResolvers
 	 */
-	public static final String VIEW_RESOLVER_BEAN_NAME = "viewResolver";
 
 	/**
 	 * Well-known name for the FlashMapManager object in the bean factory for this namespace.
 	 */
-	public static final String FLASH_MAP_MANAGER_BEAN_NAME = "flashMapManager";
 
 	/**
 	 * Request attribute to hold the current web application context.
 	 * Otherwise only the global web app context is obtainable by tags etc.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#findWebApplicationContext
 	 */
-	public static final String WEB_APPLICATION_CONTEXT_ATTRIBUTE = DispatcherServlet.class.getName() + ".CONTEXT";
 
 	/**
 	 * Request attribute to hold the current LocaleResolver, retrievable by views.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getLocaleResolver
 	 */
-	public static final String LOCALE_RESOLVER_ATTRIBUTE = DispatcherServlet.class.getName() + ".LOCALE_RESOLVER";
 
 	/**
 	 * Name of request attribute that holds a read-only {@code Map<String,?>}
 	 * with "input" flash attributes saved by a previous request, if any.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getInputFlashMap(HttpServletRequest)
 	 */
-	public static final String INPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".INPUT_FLASH_MAP";
 
 	/**
 	 * Name of request attribute that holds the "output" {@link FlashMap} with
 	 * attributes to save for a subsequent request.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getOutputFlashMap(HttpServletRequest)
 	 */
-	public static final String OUTPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".OUTPUT_FLASH_MAP";
 
 	/**
 	 * Name of request attribute that holds the {@link FlashMapManager}.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getFlashMapManager(HttpServletRequest)
 	 */
-	public static final String FLASH_MAP_MANAGER_ATTRIBUTE = DispatcherServlet.class.getName() + ".FLASH_MAP_MANAGER";
 
 	/**
 	 * Name of request attribute that exposes an Exception resolved with a
 	 * {@link HandlerExceptionResolver} but where no view was rendered
 	 * (for example, setting the status code).
 	 */
-	public static final String EXCEPTION_ATTRIBUTE = DispatcherServlet.class.getName() + ".EXCEPTION";
 
 	/** Log category to use when no mapped handler is found for a request. */
-	public static final String PAGE_NOT_FOUND_LOG_CATEGORY = "org.springframework.web.servlet.PageNotFound";
 
 	/**
 	 * Name of the class path resource (relative to the DispatcherServlet class)
 	 * that defines DispatcherServlet's default strategy names.
 	 */
-	private static final String DEFAULT_STRATEGIES_PATH = "DispatcherServlet.properties";
 
 	/**
 	 * Common prefix that DispatcherServlet's default strategy attributes start with.
 	 */
-	private static final String DEFAULT_STRATEGIES_PREFIX = "org.springframework.web.servlet";
 
 
 	/** Additional logger to use when no mapped handler is found for a request. */
-	protected static final Log pageNotFoundLogger = LogFactory.getLog(PAGE_NOT_FOUND_LOG_CATEGORY);
 
 	/** Store default strategy implementations. */
-	private static @Nullable Properties defaultStrategies;
 
 	/** Detect all HandlerMappings or just expect "handlerMapping" bean?. */
-	private boolean detectAllHandlerMappings = true;
 
 	/** Detect all HandlerAdapters or just expect "handlerAdapter" bean?. */
-	private boolean detectAllHandlerAdapters = true;
 
 	/** Detect all HandlerExceptionResolvers or just expect "handlerExceptionResolver" bean?. */
-	private boolean detectAllHandlerExceptionResolvers = true;
 
 	/** Detect all ViewResolvers or just expect "viewResolver" bean?. */
-	private boolean detectAllViewResolvers = true;
 
 	/** Perform cleanup of request attributes after include request?. */
-	private boolean cleanupAfterInclude = true;
 
 	/** MultipartResolver used by this servlet. */
-	private @Nullable MultipartResolver multipartResolver;
 
 	/** LocaleResolver used by this servlet. */
-	private @Nullable LocaleResolver localeResolver;
 
 	/** List of HandlerMappings used by this servlet. */
-	private @Nullable List<HandlerMapping> handlerMappings;
 
 	/** List of HandlerAdapters used by this servlet. */
-	private @Nullable List<HandlerAdapter> handlerAdapters;
 
 	/** List of HandlerExceptionResolvers used by this servlet. */
-	private @Nullable List<HandlerExceptionResolver> handlerExceptionResolvers;
 
 	/** RequestToViewNameTranslator used by this servlet. */
-	private @Nullable RequestToViewNameTranslator viewNameTranslator;
 
 	/** FlashMapManager used by this servlet. */
-	private @Nullable FlashMapManager flashMapManager;
 
 	/** List of ViewResolvers used by this servlet. */
-	private @Nullable List<ViewResolver> viewResolvers;
-
-	private boolean parseRequestPath;
 
 
 	/**
@@ -323,121 +323,29 @@ public class DispatcherServlet extends FrameworkServlet {
 	public DispatcherServlet() {
 		setDispatchOptionsRequest(true);
 	}
-
-	/**
-	 * Create a new {@code DispatcherServlet} with the given web application context. This
-	 * constructor is useful in Servlet environments where instance-based registration
-	 * of servlets is possible through the {@link ServletContext#addServlet} API.
-	 * <p>Using this constructor indicates that the following properties / init-params
-	 * will be ignored:
-	 * <ul>
-	 * <li>{@link #setContextClass(Class)} / 'contextClass'</li>
-	 * <li>{@link #setContextConfigLocation(String)} / 'contextConfigLocation'</li>
-	 * <li>{@link #setContextAttribute(String)} / 'contextAttribute'</li>
-	 * <li>{@link #setNamespace(String)} / 'namespace'</li>
-	 * </ul>
-	 * <p>The given web application context may or may not yet be {@linkplain
-	 * ConfigurableApplicationContext#refresh() refreshed}. If it has <strong>not</strong>
-	 * already been refreshed (the recommended approach), then the following will occur:
-	 * <ul>
-	 * <li>If the given context does not already have a {@linkplain
-	 * ConfigurableApplicationContext#setParent parent}, the root application context
-	 * will be set as the parent.</li>
-	 * <li>If the given context has not already been assigned an {@linkplain
-	 * ConfigurableApplicationContext#setId id}, one will be assigned to it</li>
-	 * <li>{@code ServletContext} and {@code ServletConfig} objects will be delegated to
-	 * the application context</li>
-	 * <li>{@link #postProcessWebApplicationContext} will be called</li>
-	 * <li>Any {@code ApplicationContextInitializer}s specified through the
-	 * "contextInitializerClasses" init-param or through the {@link
-	 * #setContextInitializers} property will be applied.</li>
-	 * <li>{@link ConfigurableApplicationContext#refresh refresh()} will be called if the
-	 * context implements {@link ConfigurableApplicationContext}</li>
-	 * </ul>
-	 * If the context has already been refreshed, none of the above will occur, under the
-	 * assumption that the user has performed these actions (or not) per their specific
-	 * needs.
-	 * <p>See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
-	 * @param webApplicationContext the context to use
-	 * @see #initWebApplicationContext
-	 * @see #configureAndRefreshWebApplicationContext
-	 * @see org.springframework.web.WebApplicationInitializer
-	 */
 	public DispatcherServlet(WebApplicationContext webApplicationContext) {
 		super(webApplicationContext);
 		setDispatchOptionsRequest(true);
 	}
-
-
-	/**
-	 * Set whether to detect all HandlerMapping beans in this servlet's context. Otherwise,
-	 * just a single bean with name "handlerMapping" will be expected.
-	 * <p>Default is "true". Turn this off if you want this servlet to use a single
-	 * HandlerMapping, despite multiple HandlerMapping beans being defined in the context.
-	 */
 	public void setDetectAllHandlerMappings(boolean detectAllHandlerMappings) {
 		this.detectAllHandlerMappings = detectAllHandlerMappings;
 	}
-
-	/**
-	 * Set whether to detect all HandlerAdapter beans in this servlet's context. Otherwise,
-	 * just a single bean with name "handlerAdapter" will be expected.
-	 * <p>Default is "true". Turn this off if you want this servlet to use a single
-	 * HandlerAdapter, despite multiple HandlerAdapter beans being defined in the context.
-	 */
 	public void setDetectAllHandlerAdapters(boolean detectAllHandlerAdapters) {
 		this.detectAllHandlerAdapters = detectAllHandlerAdapters;
 	}
-
-	/**
-	 * Set whether to detect all HandlerExceptionResolver beans in this servlet's context. Otherwise,
-	 * just a single bean with name "handlerExceptionResolver" will be expected.
-	 * <p>Default is "true". Turn this off if you want this servlet to use a single
-	 * HandlerExceptionResolver, despite multiple HandlerExceptionResolver beans being defined in the context.
-	 */
 	public void setDetectAllHandlerExceptionResolvers(boolean detectAllHandlerExceptionResolvers) {
 		this.detectAllHandlerExceptionResolvers = detectAllHandlerExceptionResolvers;
 	}
-
-	/**
-	 * Set whether to detect all ViewResolver beans in this servlet's context. Otherwise,
-	 * just a single bean with name "viewResolver" will be expected.
-	 * <p>Default is "true". Turn this off if you want this servlet to use a single
-	 * ViewResolver, despite multiple ViewResolver beans being defined in the context.
-	 */
 	public void setDetectAllViewResolvers(boolean detectAllViewResolvers) {
 		this.detectAllViewResolvers = detectAllViewResolvers;
 	}
-
-	/**
-	 * Set whether to perform cleanup of request attributes after an include request, that is,
-	 * whether to reset the original state of all request attributes after the DispatcherServlet
-	 * has processed within an include request. Otherwise, just the DispatcherServlet's own
-	 * request attributes will be reset, but not model attributes for JSPs or special attributes
-	 * set by views (for example, JSTL's).
-	 * <p>Default is "true", which is strongly recommended. Views should not rely on request attributes
-	 * having been set by (dynamic) includes. This allows JSP views rendered by an included controller
-	 * to use any model attributes, even with the same names as in the main JSP, without causing side
-	 * effects. Only turn this off for special needs, for example to deliberately allow main JSPs to
-	 * access attributes from JSP views rendered by an included controller.
-	 */
 	public void setCleanupAfterInclude(boolean cleanupAfterInclude) {
 		this.cleanupAfterInclude = cleanupAfterInclude;
 	}
-
-
-	/**
-	 * This implementation calls {@link #initStrategies}.
-	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
 		initStrategies(context);
 	}
-
-	/**
-	 * Initialize the strategy objects that this servlet uses.
-	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
-	 */
 	protected void initStrategies(ApplicationContext context) {
 		initMultipartResolver(context);
 		initLocaleResolver(context);
@@ -448,12 +356,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		initViewResolvers(context);
 		initFlashMapManager(context);
 	}
-
-	/**
-	 * Initialize the MultipartResolver used by this class.
-	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
-	 * no multipart handling is provided.
-	 */
 	private void initMultipartResolver(ApplicationContext context) {
 		try {
 			this.multipartResolver = context.getBean(MULTIPART_RESOLVER_BEAN_NAME, MultipartResolver.class);
@@ -472,12 +374,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the LocaleResolver used by this class.
-	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
-	 * we default to AcceptHeaderLocaleResolver.
-	 */
 	private void initLocaleResolver(ApplicationContext context) {
 		try {
 			this.localeResolver = context.getBean(LOCALE_RESOLVER_BEAN_NAME, LocaleResolver.class);
@@ -497,12 +393,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the HandlerMappings used by this class.
-	 * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
-	 * we default to BeanNameUrlHandlerMapping.
-	 */
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 
@@ -543,12 +433,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the HandlerAdapters used by this class.
-	 * <p>If no HandlerAdapter beans are defined in the BeanFactory for this namespace,
-	 * we default to SimpleControllerHandlerAdapter.
-	 */
 	private void initHandlerAdapters(ApplicationContext context) {
 		this.handlerAdapters = null;
 
@@ -582,12 +466,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the HandlerExceptionResolver used by this class.
-	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
-	 * we default to no exception resolver.
-	 */
 	private void initHandlerExceptionResolvers(ApplicationContext context) {
 		this.handlerExceptionResolvers = null;
 
@@ -622,11 +500,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the RequestToViewNameTranslator used by this servlet instance.
-	 * <p>If no implementation is configured then we default to DefaultRequestToViewNameTranslator.
-	 */
 	private void initRequestToViewNameTranslator(ApplicationContext context) {
 		try {
 			this.viewNameTranslator =
@@ -647,12 +520,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the ViewResolvers used by this class.
-	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
-	 * namespace, we default to InternalResourceViewResolver.
-	 */
 	private void initViewResolvers(ApplicationContext context) {
 		this.viewResolvers = null;
 
@@ -686,12 +553,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Initialize the {@link FlashMapManager} used by this servlet instance.
-	 * <p>If no implementation is configured then we default to
-	 * {@code org.springframework.web.servlet.support.DefaultFlashMapManager}.
-	 */
 	private void initFlashMapManager(ApplicationContext context) {
 		try {
 			this.flashMapManager = context.getBean(FLASH_MAP_MANAGER_BEAN_NAME, FlashMapManager.class);
@@ -711,39 +572,12 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Obtain this servlet's MultipartResolver, if any.
-	 * @return the MultipartResolver used by this servlet, or {@code null} if none
-	 * (indicating that no multipart support is available)
-	 */
 	public final @Nullable MultipartResolver getMultipartResolver() {
 		return this.multipartResolver;
 	}
-
-	/**
-	 * Return the configured {@link HandlerMapping} beans that were detected by
-	 * type in the {@link WebApplicationContext} or initialized based on the
-	 * default set of strategies from {@literal DispatcherServlet.properties}.
-	 * <p><strong>Note:</strong> This method may return {@code null} if invoked
-	 * prior to {@link #onRefresh(ApplicationContext)}.
-	 * @return an immutable list with the configured mappings, or {@code null}
-	 * if not initialized yet
-	 * @since 5.0
-	 */
 	public final @Nullable List<HandlerMapping> getHandlerMappings() {
 		return (this.handlerMappings != null ? Collections.unmodifiableList(this.handlerMappings) : null);
 	}
-
-	/**
-	 * Return the default strategy object for the given strategy interface.
-	 * <p>The default implementation delegates to {@link #getDefaultStrategies},
-	 * expecting a single object in the list.
-	 * @param context the current WebApplicationContext
-	 * @param strategyInterface the strategy interface
-	 * @return the corresponding strategy object
-	 * @see #getDefaultStrategies
-	 */
 	protected <T> T getDefaultStrategy(ApplicationContext context, Class<T> strategyInterface) {
 		List<T> strategies = getDefaultStrategies(context, strategyInterface);
 		if (strategies.size() != 1) {
@@ -752,16 +586,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		return strategies.get(0);
 	}
-
-	/**
-	 * Create a List of default strategy objects for the given strategy interface.
-	 * <p>The default implementation uses the "DispatcherServlet.properties" file (in the same
-	 * package as the DispatcherServlet class) to determine the class names. It instantiates
-	 * the strategy objects through the context's BeanFactory.
-	 * @param context the current WebApplicationContext
-	 * @param strategyInterface the strategy interface
-	 * @return the List of corresponding strategy objects
-	 */
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> getDefaultStrategies(ApplicationContext context, Class<T> strategyInterface) {
 		if (defaultStrategies == null) {
@@ -805,26 +629,9 @@ public class DispatcherServlet extends FrameworkServlet {
 			return Collections.emptyList();
 		}
 	}
-
-	/**
-	 * Create a default strategy.
-	 * <p>The default implementation uses
-	 * {@link org.springframework.beans.factory.config.AutowireCapableBeanFactory#createBean(Class)}.
-	 * @param context the current WebApplicationContext
-	 * @param clazz the strategy implementation class to instantiate
-	 * @return the fully configured strategy instance
-	 * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
-	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#createBean(Class)
-	 */
 	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
 		return context.getAutowireCapableBeanFactory().createBean(clazz);
 	}
-
-
-	/**
-	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
-	 * for the actual dispatching.
-	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logRequest(request);
@@ -920,18 +727,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		});
 	}
-
-	/**
-	 * Process the actual dispatching to the handler.
-	 * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
-	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
-	 * to find the first that supports the handler class.
-	 * <p>All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
-	 * themselves to decide which methods are acceptable.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @throws Exception in case of any kind of processing failure
-	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
@@ -1002,10 +797,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Do we need view name translation?
-	 */
 	private void applyDefaultViewName(HttpServletRequest request, @Nullable ModelAndView mv) throws Exception {
 		if (mv != null && !mv.hasView()) {
 			String defaultViewName = getDefaultViewName(request);
@@ -1014,11 +805,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Handle the result of handler selection and handler invocation, which is
-	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
-	 */
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
 			@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,
 			@Nullable Exception exception) throws Exception {
@@ -1060,14 +846,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			mappedHandler.triggerAfterCompletion(request, response, null);
 		}
 	}
-
-	/**
-	 * Build a LocaleContext for the given request, exposing the request's primary locale as current locale.
-	 * <p>The default implementation uses the dispatcher's LocaleResolver to obtain the current locale,
-	 * which might change during a request.
-	 * @param request current HTTP request
-	 * @return the corresponding LocaleContext
-	 */
 	@Override
 	protected LocaleContext buildLocaleContext(final HttpServletRequest request) {
 		LocaleResolver lr = this.localeResolver;
@@ -1078,14 +856,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			return () -> (lr != null ? lr.resolveLocale(request) : request.getLocale());
 		}
 	}
-
-	/**
-	 * Convert the request into a multipart request, and make multipart resolver available.
-	 * <p>If no multipart resolver is set, simply use the existing request.
-	 * @param request current HTTP request
-	 * @return the processed request (multipart wrapper if necessary)
-	 * @see MultipartResolver#resolveMultipart
-	 */
 	protected HttpServletRequest checkMultipart(HttpServletRequest request) throws MultipartException {
 		if (this.multipartResolver != null && this.multipartResolver.isMultipart(request)) {
 			if (WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class) != null) {
@@ -1115,10 +885,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		// If not returned before: return original request.
 		return request;
 	}
-
-	/**
-	 * Check "jakarta.servlet.error.exception" attribute for a multipart exception.
-	 */
 	private static boolean hasMultipartException(HttpServletRequest request) {
 		Throwable error = (Throwable) request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE);
 		while (error != null) {
@@ -1129,12 +895,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		return false;
 	}
-
-	/**
-	 * Clean up any resources used by the given multipart request (if any).
-	 * @param request current HTTP request
-	 * @see MultipartResolver#cleanupMultipart
-	 */
 	protected void cleanupMultipart(HttpServletRequest request) {
 		if (this.multipartResolver != null) {
 			MultipartHttpServletRequest multipartRequest =
@@ -1144,13 +904,6 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 	}
-
-	/**
-	 * Return the HandlerExecutionChain for this request.
-	 * <p>Tries all handler mappings in order.
-	 * @param request current HTTP request
-	 * @return the HandlerExecutionChain, or {@code null} if no handler could be found
-	 */
 	protected @Nullable HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
 		if (this.handlerMappings != null) {
 			for (HandlerMapping mapping : this.handlerMappings) {
@@ -1162,13 +915,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		return null;
 	}
-
-	/**
-	 * No handler found &rarr; set appropriate HTTP response status.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @throws Exception if preparing the response failed
-	 */
 	protected void noHandlerFound(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (pageNotFoundLogger.isWarnEnabled()) {
 			pageNotFoundLogger.warn("No mapping for " + request.getMethod() + " " + getRequestUri(request));
@@ -1176,12 +922,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		throw new NoHandlerFoundException(request.getMethod(), getRequestUri(request),
 				new ServletServerHttpRequest(request).getHeaders());
 	}
-
-	/**
-	 * Return the HandlerAdapter for this handler object.
-	 * @param handler the handler object to find an adapter for
-	 * @throws ServletException if no HandlerAdapter can be found for the handler. This is a fatal error.
-	 */
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
@@ -1193,17 +933,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		throw new ServletException("No adapter for handler [" + handler +
 				"]: The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler");
 	}
-
-	/**
-	 * Determine an error ModelAndView via the registered HandlerExceptionResolvers.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @param handler the executed handler, or {@code null} if none chosen at the time of the exception
-	 * (for example, if multipart resolution failed)
-	 * @param ex the exception that got thrown during handler execution
-	 * @return a corresponding ModelAndView to forward to
-	 * @throws Exception if no error ModelAndView found
-	 */
 	protected @Nullable ModelAndView processHandlerException(HttpServletRequest request, HttpServletResponse response,
 			@Nullable Object handler, Exception ex) throws Exception {
 
@@ -1253,16 +982,6 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		throw ex;
 	}
-
-	/**
-	 * Render the given ModelAndView.
-	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
-	 * @param mv the ModelAndView to render
-	 * @param request current HTTP servlet request
-	 * @param response current HTTP servlet response
-	 * @throws ServletException if view is missing or cannot be resolved
-	 * @throws Exception if there's a problem rendering the view
-	 */
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// Determine locale for request and apply it to the response.
 		Locale locale =
@@ -1310,31 +1029,9 @@ public class DispatcherServlet extends FrameworkServlet {
 			throw ex;
 		}
 	}
-
-	/**
-	 * Translate the supplied request into a default view name.
-	 * @param request current HTTP servlet request
-	 * @return the view name (or {@code null} if no default found)
-	 * @throws Exception if view name translation failed
-	 */
 	protected @Nullable String getDefaultViewName(HttpServletRequest request) throws Exception {
 		return (this.viewNameTranslator != null ? this.viewNameTranslator.getViewName(request) : null);
 	}
-
-	/**
-	 * Resolve the given view name into a View object (to be rendered).
-	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
-	 * Can be overridden for custom resolution strategies, potentially based on
-	 * specific model attributes or request parameters.
-	 * @param viewName the name of the view to resolve
-	 * @param model the model to be passed to the view
-	 * @param locale the current locale
-	 * @param request current HTTP servlet request
-	 * @return the View object, or {@code null} if none found
-	 * @throws Exception if the view cannot be resolved
-	 * (typically in case of problems creating an actual View object)
-	 * @see ViewResolver#resolveViewName
-	 */
 	protected @Nullable View resolveViewName(String viewName, @Nullable Map<String, Object> model,
 			Locale locale, HttpServletRequest request) throws Exception {
 
@@ -1361,12 +1058,6 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		throw ex;
 	}
-
-	/**
-	 * Restore the request attributes after an include.
-	 * @param request current HTTP request
-	 * @param attributesSnapshot the snapshot of the request attributes before the include
-	 */
 	@SuppressWarnings("unchecked")
 	private void restoreAttributesAfterInclude(HttpServletRequest request, Map<?, ?> attributesSnapshot) {
 		// Need to copy into separate Collection here, to avoid side effects
@@ -1403,5 +1094,314 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		return uri;
 	}
+
+	/**
+	 * Create a new {@code DispatcherServlet} with the given web application context. This
+	 * constructor is useful in Servlet environments where instance-based registration
+	 * of servlets is possible through the {@link ServletContext#addServlet} API.
+	 * <p>Using this constructor indicates that the following properties / init-params
+	 * will be ignored:
+	 * <ul>
+	 * <li>{@link #setContextClass(Class)} / 'contextClass'</li>
+	 * <li>{@link #setContextConfigLocation(String)} / 'contextConfigLocation'</li>
+	 * <li>{@link #setContextAttribute(String)} / 'contextAttribute'</li>
+	 * <li>{@link #setNamespace(String)} / 'namespace'</li>
+	 * </ul>
+	 * <p>The given web application context may or may not yet be {@linkplain
+	 * ConfigurableApplicationContext#refresh() refreshed}. If it has <strong>not</strong>
+	 * already been refreshed (the recommended approach), then the following will occur:
+	 * <ul>
+	 * <li>If the given context does not already have a {@linkplain
+	 * ConfigurableApplicationContext#setParent parent}, the root application context
+	 * will be set as the parent.</li>
+	 * <li>If the given context has not already been assigned an {@linkplain
+	 * ConfigurableApplicationContext#setId id}, one will be assigned to it</li>
+	 * <li>{@code ServletContext} and {@code ServletConfig} objects will be delegated to
+	 * the application context</li>
+	 * <li>{@link #postProcessWebApplicationContext} will be called</li>
+	 * <li>Any {@code ApplicationContextInitializer}s specified through the
+	 * "contextInitializerClasses" init-param or through the {@link
+	 * #setContextInitializers} property will be applied.</li>
+	 * <li>{@link ConfigurableApplicationContext#refresh refresh()} will be called if the
+	 * context implements {@link ConfigurableApplicationContext}</li>
+	 * </ul>
+	 * If the context has already been refreshed, none of the above will occur, under the
+	 * assumption that the user has performed these actions (or not) per their specific
+	 * needs.
+	 * <p>See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
+	 * @param webApplicationContext the context to use
+	 * @see #initWebApplicationContext
+	 * @see #configureAndRefreshWebApplicationContext
+	 * @see org.springframework.web.WebApplicationInitializer
+	 */
+
+
+	/**
+	 * Set whether to detect all HandlerMapping beans in this servlet's context. Otherwise,
+	 * just a single bean with name "handlerMapping" will be expected.
+	 * <p>Default is "true". Turn this off if you want this servlet to use a single
+	 * HandlerMapping, despite multiple HandlerMapping beans being defined in the context.
+	 */
+
+	/**
+	 * Set whether to detect all HandlerAdapter beans in this servlet's context. Otherwise,
+	 * just a single bean with name "handlerAdapter" will be expected.
+	 * <p>Default is "true". Turn this off if you want this servlet to use a single
+	 * HandlerAdapter, despite multiple HandlerAdapter beans being defined in the context.
+	 */
+
+	/**
+	 * Set whether to detect all HandlerExceptionResolver beans in this servlet's context. Otherwise,
+	 * just a single bean with name "handlerExceptionResolver" will be expected.
+	 * <p>Default is "true". Turn this off if you want this servlet to use a single
+	 * HandlerExceptionResolver, despite multiple HandlerExceptionResolver beans being defined in the context.
+	 */
+
+	/**
+	 * Set whether to detect all ViewResolver beans in this servlet's context. Otherwise,
+	 * just a single bean with name "viewResolver" will be expected.
+	 * <p>Default is "true". Turn this off if you want this servlet to use a single
+	 * ViewResolver, despite multiple ViewResolver beans being defined in the context.
+	 */
+
+	/**
+	 * Set whether to perform cleanup of request attributes after an include request, that is,
+	 * whether to reset the original state of all request attributes after the DispatcherServlet
+	 * has processed within an include request. Otherwise, just the DispatcherServlet's own
+	 * request attributes will be reset, but not model attributes for JSPs or special attributes
+	 * set by views (for example, JSTL's).
+	 * <p>Default is "true", which is strongly recommended. Views should not rely on request attributes
+	 * having been set by (dynamic) includes. This allows JSP views rendered by an included controller
+	 * to use any model attributes, even with the same names as in the main JSP, without causing side
+	 * effects. Only turn this off for special needs, for example to deliberately allow main JSPs to
+	 * access attributes from JSP views rendered by an included controller.
+	 */
+
+
+	/**
+	 * This implementation calls {@link #initStrategies}.
+	 */
+
+	/**
+	 * Initialize the strategy objects that this servlet uses.
+	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
+	 */
+
+	/**
+	 * Initialize the MultipartResolver used by this class.
+	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
+	 * no multipart handling is provided.
+	 */
+
+	/**
+	 * Initialize the LocaleResolver used by this class.
+	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
+	 * we default to AcceptHeaderLocaleResolver.
+	 */
+
+	/**
+	 * Initialize the HandlerMappings used by this class.
+	 * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
+	 * we default to BeanNameUrlHandlerMapping.
+	 */
+
+	/**
+	 * Initialize the HandlerAdapters used by this class.
+	 * <p>If no HandlerAdapter beans are defined in the BeanFactory for this namespace,
+	 * we default to SimpleControllerHandlerAdapter.
+	 */
+
+	/**
+	 * Initialize the HandlerExceptionResolver used by this class.
+	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
+	 * we default to no exception resolver.
+	 */
+
+	/**
+	 * Initialize the RequestToViewNameTranslator used by this servlet instance.
+	 * <p>If no implementation is configured then we default to DefaultRequestToViewNameTranslator.
+	 */
+
+	/**
+	 * Initialize the ViewResolvers used by this class.
+	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
+	 * namespace, we default to InternalResourceViewResolver.
+	 */
+
+	/**
+	 * Initialize the {@link FlashMapManager} used by this servlet instance.
+	 * <p>If no implementation is configured then we default to
+	 * {@code org.springframework.web.servlet.support.DefaultFlashMapManager}.
+	 */
+
+	/**
+	 * Obtain this servlet's MultipartResolver, if any.
+	 * @return the MultipartResolver used by this servlet, or {@code null} if none
+	 * (indicating that no multipart support is available)
+	 */
+
+	/**
+	 * Return the configured {@link HandlerMapping} beans that were detected by
+	 * type in the {@link WebApplicationContext} or initialized based on the
+	 * default set of strategies from {@literal DispatcherServlet.properties}.
+	 * <p><strong>Note:</strong> This method may return {@code null} if invoked
+	 * prior to {@link #onRefresh(ApplicationContext)}.
+	 * @return an immutable list with the configured mappings, or {@code null}
+	 * if not initialized yet
+	 * @since 5.0
+	 */
+
+	/**
+	 * Return the default strategy object for the given strategy interface.
+	 * <p>The default implementation delegates to {@link #getDefaultStrategies},
+	 * expecting a single object in the list.
+	 * @param context the current WebApplicationContext
+	 * @param strategyInterface the strategy interface
+	 * @return the corresponding strategy object
+	 * @see #getDefaultStrategies
+	 */
+
+	/**
+	 * Create a List of default strategy objects for the given strategy interface.
+	 * <p>The default implementation uses the "DispatcherServlet.properties" file (in the same
+	 * package as the DispatcherServlet class) to determine the class names. It instantiates
+	 * the strategy objects through the context's BeanFactory.
+	 * @param context the current WebApplicationContext
+	 * @param strategyInterface the strategy interface
+	 * @return the List of corresponding strategy objects
+	 */
+
+	/**
+	 * Create a default strategy.
+	 * <p>The default implementation uses
+	 * {@link org.springframework.beans.factory.config.AutowireCapableBeanFactory#createBean(Class)}.
+	 * @param context the current WebApplicationContext
+	 * @param clazz the strategy implementation class to instantiate
+	 * @return the fully configured strategy instance
+	 * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
+	 * @see org.springframework.beans.factory.config.AutowireCapableBeanFactory#createBean(Class)
+	 */
+
+
+	/**
+	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
+	 * for the actual dispatching.
+	 */
+
+	/**
+	 * Process the actual dispatching to the handler.
+	 * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
+	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
+	 * to find the first that supports the handler class.
+	 * <p>All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
+	 * themselves to decide which methods are acceptable.
+	 * @param request current HTTP request
+	 * @param response current HTTP response
+	 * @throws Exception in case of any kind of processing failure
+	 */
+
+	/**
+	 * Do we need view name translation?
+	 */
+
+	/**
+	 * Handle the result of handler selection and handler invocation, which is
+	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
+	 */
+
+	/**
+	 * Build a LocaleContext for the given request, exposing the request's primary locale as current locale.
+	 * <p>The default implementation uses the dispatcher's LocaleResolver to obtain the current locale,
+	 * which might change during a request.
+	 * @param request current HTTP request
+	 * @return the corresponding LocaleContext
+	 */
+
+	/**
+	 * Convert the request into a multipart request, and make multipart resolver available.
+	 * <p>If no multipart resolver is set, simply use the existing request.
+	 * @param request current HTTP request
+	 * @return the processed request (multipart wrapper if necessary)
+	 * @see MultipartResolver#resolveMultipart
+	 */
+
+	/**
+	 * Check "jakarta.servlet.error.exception" attribute for a multipart exception.
+	 */
+
+	/**
+	 * Clean up any resources used by the given multipart request (if any).
+	 * @param request current HTTP request
+	 * @see MultipartResolver#cleanupMultipart
+	 */
+
+	/**
+	 * Return the HandlerExecutionChain for this request.
+	 * <p>Tries all handler mappings in order.
+	 * @param request current HTTP request
+	 * @return the HandlerExecutionChain, or {@code null} if no handler could be found
+	 */
+
+	/**
+	 * No handler found &rarr; set appropriate HTTP response status.
+	 * @param request current HTTP request
+	 * @param response current HTTP response
+	 * @throws Exception if preparing the response failed
+	 */
+
+	/**
+	 * Return the HandlerAdapter for this handler object.
+	 * @param handler the handler object to find an adapter for
+	 * @throws ServletException if no HandlerAdapter can be found for the handler. This is a fatal error.
+	 */
+
+	/**
+	 * Determine an error ModelAndView via the registered HandlerExceptionResolvers.
+	 * @param request current HTTP request
+	 * @param response current HTTP response
+	 * @param handler the executed handler, or {@code null} if none chosen at the time of the exception
+	 * (for example, if multipart resolution failed)
+	 * @param ex the exception that got thrown during handler execution
+	 * @return a corresponding ModelAndView to forward to
+	 * @throws Exception if no error ModelAndView found
+	 */
+
+	/**
+	 * Render the given ModelAndView.
+	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
+	 * @param mv the ModelAndView to render
+	 * @param request current HTTP servlet request
+	 * @param response current HTTP servlet response
+	 * @throws ServletException if view is missing or cannot be resolved
+	 * @throws Exception if there's a problem rendering the view
+	 */
+
+	/**
+	 * Translate the supplied request into a default view name.
+	 * @param request current HTTP servlet request
+	 * @return the view name (or {@code null} if no default found)
+	 * @throws Exception if view name translation failed
+	 */
+
+	/**
+	 * Resolve the given view name into a View object (to be rendered).
+	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
+	 * Can be overridden for custom resolution strategies, potentially based on
+	 * specific model attributes or request parameters.
+	 * @param viewName the name of the view to resolve
+	 * @param model the model to be passed to the view
+	 * @param locale the current locale
+	 * @param request current HTTP servlet request
+	 * @return the View object, or {@code null} if none found
+	 * @throws Exception if the view cannot be resolved
+	 * (typically in case of problems creating an actual View object)
+	 * @see ViewResolver#resolveViewName
+	 */
+
+	/**
+	 * Restore the request attributes after an include.
+	 * @param request current HTTP request
+	 * @param attributesSnapshot the snapshot of the request attributes before the include
+	 */
 
 }
