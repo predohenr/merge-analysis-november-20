@@ -522,6 +522,13 @@ public abstract class ReflectionHelper {
 	 * of arguments: the set that a method/constructor is expecting and the set that is being
 	 * supplied at the point of invocation.
 	 */
+
+
+	/**
+	 * {@code ArgumentsMatchKind} describes what kind of match was achieved between two sets
+	 * of arguments: the set that a method/constructor is expecting and the set that is being
+	 * supplied at the point of invocation.
+	 */
 	enum ArgumentsMatchKind {
 
 		/**
