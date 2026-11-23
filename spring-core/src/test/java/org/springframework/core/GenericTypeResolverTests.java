@@ -276,10 +276,10 @@ class GenericTypeResolverTests {
 	public static class MySimpleInterfaceType implements MyInterfaceType<String> {
 	}
 
-	public static class MyParameterizedInterfaceType<P> implements MyInterfaceType<Collection<P>> {
+	public class MyParameterizedInterfaceType<P> implements MyInterfaceType<Collection<P>> {
 	}
 
-	public static class MyOptionalInterfaceType extends MyParameterizedInterfaceType<Optional<String>> {
+	public class MyOptionalInterfaceType extends MyParameterizedInterfaceType<Optional<String>> {
 		@Override
 		public Collection<Optional<String>> get() {
 			return super.get();
@@ -335,58 +335,24 @@ class GenericTypeResolverTests {
 		public String notParameterizedWithArguments(Integer x, Boolean b) {
 			return null;
 		}
-
-		/**
-		 * Simulates a factory method that wraps the supplied object in a proxy of the
-		 * same type.
-		 */
 		public static <T> T createProxy(T object) {
 			return null;
 		}
-
-		/**
-		 * Similar to {@link #createProxy(Object)} but adds an additional argument before
-		 * the argument of type {@code T}. Note that they may potentially be of the same
-		 * time when invoked!
-		 */
 		public static <T> T createNamedProxy(String name, T object) {
 			return null;
 		}
-
-		/**
-		 * Simulates factory methods found in libraries such as Mockito and EasyMock.
-		 */
 		public static <MOCK> MOCK createMock(Class<MOCK> toMock) {
 			return null;
 		}
-
-		/**
-		 * Similar to {@link #createMock(Class)} but adds an additional method argument
-		 * before the parameterized argument.
-		 */
 		public static <T> T createNamedMock(String name, Class<T> toMock) {
 			return null;
 		}
-
-		/**
-		 * Similar to {@link #createNamedMock(String, Class)} but adds an additional
-		 * parameterized type.
-		 */
 		public static <V extends Object, T> T createVMock(V name, Class<T> toMock) {
 			return null;
 		}
-
-		/**
-		 * Extract some value of the type supported by the interface (i.e., by a concrete,
-		 * non-generic implementation of the interface).
-		 */
 		public static <T> T extractValueFrom(MyInterfaceType<T> myInterfaceType) {
 			return null;
 		}
-
-		/**
-		 * Extract some magic value from the supplied map.
-		 */
 		public static <K, V> V extractMagicValue(Map<K, V> map) {
 			return null;
 		}
@@ -399,6 +365,40 @@ class GenericTypeResolverTests {
 
 		public void readGenericArrayInputMessage(T[] message) {
 		}
+
+		/**
+		 * Simulates a factory method that wraps the supplied object in a proxy of the
+		 * same type.
+		 */
+
+		/**
+		 * Similar to {@link #createProxy(Object)} but adds an additional argument before
+		 * the argument of type {@code T}. Note that they may potentially be of the same
+		 * time when invoked!
+		 */
+
+		/**
+		 * Simulates factory methods found in libraries such as Mockito and EasyMock.
+		 */
+
+		/**
+		 * Similar to {@link #createMock(Class)} but adds an additional method argument
+		 * before the parameterized argument.
+		 */
+
+		/**
+		 * Similar to {@link #createNamedMock(String, Class)} but adds an additional
+		 * parameterized type.
+		 */
+
+		/**
+		 * Extract some value of the type supported by the interface (i.e., by a concrete,
+		 * non-generic implementation of the interface).
+		 */
+
+		/**
+		 * Extract some magic value from the supplied map.
+		 */
 	}
 
 	public static class MySimpleTypeWithMethods extends MyTypeWithMethods<Integer> {
