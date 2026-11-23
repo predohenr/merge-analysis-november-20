@@ -78,6 +78,13 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
  * @author Phillip Webb
  * @author Stephane Nicoll
  */
+
+/**
+ * Tests for {@link InstanceSupplierCodeGenerator}.
+ *
+ * @author Phillip Webb
+ * @author Stephane Nicoll
+ */
 class InstanceSupplierCodeGeneratorTests {
 
 	private final TestGenerationContext generationContext;
