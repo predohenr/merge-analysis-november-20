@@ -36,6 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Phillip Webb
  * @author Juergen Hoeller
  */
+
+/**
+ * @author Phillip Webb
+ * @author Juergen Hoeller
+ */
 class ConfigurationClassEnhancerTests {
 
 	@Test
