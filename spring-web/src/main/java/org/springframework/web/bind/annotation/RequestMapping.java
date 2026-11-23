@@ -81,7 +81,7 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 @Mapping
 @Reflective(ControllerMappingReflectiveProcessor.class)
-public @interface RequestMapping {
+public@interface RequestMapping{
 
 	/**
 	 * Assign a name to this mapping.
@@ -233,6 +233,4 @@ public @interface RequestMapping {
 	 * with a higher version takes precedence.
 	 * @since 7.0
 	 */
-	String version() default "";
-
-}
+	String version() default "";}
