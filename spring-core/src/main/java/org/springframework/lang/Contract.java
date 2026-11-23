@@ -77,11 +77,9 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target(ElementType.METHOD)
-public @interface Contract {
+public@interface Contract{
 
 	/**
 	 * Contains the contract clauses describing causal relations between call arguments and the returned value.
 	 */
-	String value();
-
-}
+	String value();}
