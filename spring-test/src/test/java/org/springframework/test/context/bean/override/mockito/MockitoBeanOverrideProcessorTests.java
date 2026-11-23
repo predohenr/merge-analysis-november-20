@@ -38,6 +38,14 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Sam Brannen
  * @since 6.2
  */
+
+/**
+ * Tests for {@link MockitoBeanOverrideProcessor}.
+ *
+ * @author Simon Baslé
+ * @author Sam Brannen
+ * @since 6.2
+ */
 class MockitoBeanOverrideProcessorTests {
 
 	private final MockitoBeanOverrideProcessor processor = new MockitoBeanOverrideProcessor();
@@ -89,7 +97,7 @@ class MockitoBeanOverrideProcessorTests {
 
 		static class TestCase {
 
-			@MockitoBean
+						@MockitoBean
 			@MockitoSpyBean
 			public @Nullable Integer number;
 
