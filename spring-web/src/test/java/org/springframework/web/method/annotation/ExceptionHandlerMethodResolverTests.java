@@ -40,6 +40,13 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Rossen Stoyanchev
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link ExceptionHandlerMethodResolver}.
+ *
+ * @author Rossen Stoyanchev
+ * @author Brian Clozel
+ */
 class ExceptionHandlerMethodResolverTests {
 
 	@Test
