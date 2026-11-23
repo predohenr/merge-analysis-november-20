@@ -109,14 +109,6 @@ final class PlaceholderParser {
 		this.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders;
 		this.escape = escape;
 	}
-
-	/**
-	 * Replace all placeholders of format {@code ${name}} with the value returned
-	 * from the supplied {@link PlaceholderResolver}.
-	 * @param value the value containing the placeholders to be replaced
-	 * @param placeholderResolver the {@code PlaceholderResolver} to use for replacement
-	 * @return the supplied value with placeholders replaced inline
-	 */
 	public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {
 		List<Part> parts = parse(value, false);
 		if (parts == null) {
@@ -197,18 +189,6 @@ final class PlaceholderParser {
 		}
 		return new NestedPlaceholderPart(text, keyParts, null);
 	}
-
-	/**
-	 * Parse an input value that may contain a separator character and return a
-	 * {@link ParsedValue}. If a valid separator character has been identified, the
-	 * given {@code value} is split between a {@code key} and a {@code fallback}. If not,
-	 * only the {@code key} is set.
-	 * <p>
-	 * The returned key may be different from the original value as escaped
-	 * separators, if any, are resolved.
-	 * @param value the value to parse
-	 * @return the parsed section
-	 */
 	private ParsedSection parseSection(String value) {
 		if (this.separator == null || !value.contains(this.separator)) {
 			return new ParsedSection(value, null);
@@ -279,6 +259,26 @@ final class PlaceholderParser {
 			parts.add(new TextPart(text));
 		}
 	}
+
+	/**
+	 * Replace all placeholders of format {@code ${name}} with the value returned
+	 * from the supplied {@link PlaceholderResolver}.
+	 * @param value the value containing the placeholders to be replaced
+	 * @param placeholderResolver the {@code PlaceholderResolver} to use for replacement
+	 * @return the supplied value with placeholders replaced inline
+	 */
+
+	/**
+	 * Parse an input value that may contain a separator character and return a
+	 * {@link ParsedValue}. If a valid separator character has been identified, the
+	 * given {@code value} is split between a {@code key} and a {@code fallback}. If not,
+	 * only the {@code key} is set.
+	 * <p>
+	 * The returned key may be different from the original value as escaped
+	 * separators, if any, are resolved.
+	 * @param value the value to parse
+	 * @return the parsed section
+	 */
 
 
 	/**
@@ -384,19 +384,7 @@ final class PlaceholderParser {
 		 * @return the resolved part
 		 */
 		String resolve(PartResolutionContext resolutionContext);
-
-		/**
-		 * Provide a textual representation of this part.
-		 * @return the raw text that this part defines
-		 */
 		String text();
-
-		/**
-		 * Return a String that appends the resolution of the specified parts.
-		 * @param parts the parts to resolve
-		 * @param resolutionContext the context to use for the resolution
-		 * @return a concatenation of the supplied parts with placeholders replaced inline
-		 */
 		static String resolveAll(Iterable<Part> parts, PartResolutionContext resolutionContext) {
 			StringBuilder sb = new StringBuilder();
 			for (Part part : parts) {
@@ -404,6 +392,18 @@ final class PlaceholderParser {
 			}
 			return sb.toString();
 		}
+
+		/**
+		 * Provide a textual representation of this part.
+		 * @return the raw text that this part defines
+		 */
+
+		/**
+		 * Return a String that appends the resolution of the specified parts.
+		 * @param parts the parts to resolve
+		 * @param resolutionContext the context to use for the resolution
+		 * @return a concatenation of the supplied parts with placeholders replaced inline
+		 */
 	}
 
 
@@ -422,16 +422,6 @@ final class PlaceholderParser {
 		public String text() {
 			return this.text;
 		}
-
-		/**
-		 * Resolve the placeholder with the given {@code key}. If the result of such
-		 * resolution return other placeholders, those are resolved as well until the
-		 * resolution no longer contains any placeholders.
-		 * @param resolutionContext the resolution context to use
-		 * @param key the initial placeholder
-		 * @return the full resolution of the given {@code key} or {@code null} if
-		 * the placeholder has no value to begin with
-		 */
 		protected @Nullable String resolveRecursively(PartResolutionContext resolutionContext, String key) {
 			String resolvedValue = resolutionContext.resolvePlaceholder(key);
 			if (resolvedValue == null) {
@@ -448,6 +438,16 @@ final class PlaceholderParser {
 			resolutionContext.removePlaceholder(key);
 			return value;
 		}
+
+		/**
+		 * Resolve the placeholder with the given {@code key}. If the result of such
+		 * resolution return other placeholders, those are resolved as well until the
+		 * resolution no longer contains any placeholders.
+		 * @param resolutionContext the resolution context to use
+		 * @param key the initial placeholder
+		 * @return the full resolution of the given {@code key} or {@code null} if
+		 * the placeholder has no value to begin with
+		 */
 	}
 
 
