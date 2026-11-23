@@ -80,6 +80,13 @@ import static org.junit.jupiter.params.provider.Arguments.argumentSet;
  * @author Arjen Poutsma
  * @author Sebastien Deleuze
  */
+
+/**
+ * Integration tests for {@link RestClient}.
+ *
+ * @author Arjen Poutsma
+ * @author Sebastien Deleuze
+ */
 class RestClientIntegrationTests {
 
 	@Retention(RetentionPolicy.RUNTIME)
