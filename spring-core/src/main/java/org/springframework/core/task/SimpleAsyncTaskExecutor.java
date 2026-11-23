@@ -308,8 +308,8 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
 		if (isThrottleActive() && startTimeout > TIMEOUT_IMMEDIATE) {
 			this.concurrencyThrottle.beforeAccess();
 			try {
-				doExecute(new TaskTrackingRunnable(taskToUse));
-			}
+			doExecute(new TaskTrackingRunnable(taskToUse));
+		}
 			catch (Throwable ex) {
 				// Release concurrency permit if thread creation fails
 				this.concurrencyThrottle.afterAccess();
