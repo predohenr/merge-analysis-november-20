@@ -1684,24 +1684,6 @@ class DefaultListableBeanFactoryTests {
 	}
 
 	@Test
-	void getBeanByTypeWithPrimaryAndUniqueNonFallbackDefinition() {
-		RootBeanDefinition bd1 = new RootBeanDefinition(TestBean.class);
-		bd1.setLazyInit(true);
-		bd1.setFallback(true);
-		RootBeanDefinition bd2 = new RootBeanDefinition(TestBean.class);
-		bd2.setPrimary(true);
-		bd2.setFallback(true);
-		RootBeanDefinition bd3 = new RootBeanDefinition(TestBean.class);
-		lbf.registerBeanDefinition("bd1", bd1);
-		lbf.registerBeanDefinition("bd2", bd2);
-		lbf.registerBeanDefinition("bd3", bd3);
-
-		TestBean bean = lbf.getBean(TestBean.class);
-		assertThat(bean.getBeanName()).isEqualTo("bd2");
-		assertThat(lbf.containsSingleton("bd1")).isFalse();
-	}
-
-	@Test
 	void getBeanByTypeWithUniqueNonFallbackAndUniqueNonDefaultDefinition() {
 		RootBeanDefinition bd1 = new RootBeanDefinition(TestBean.class);
 		bd1.setLazyInit(true);
@@ -1717,6 +1699,24 @@ class DefaultListableBeanFactoryTests {
 
 		TestBean bean = lbf.getBean(TestBean.class);
 		assertThat(bean.getBeanName()).isEqualTo("bd3");
+		assertThat(lbf.containsSingleton("bd1")).isFalse();
+	}
+
+	@Test
+	void getBeanByTypeWithPrimaryAndUniqueNonFallbackDefinition() {
+		RootBeanDefinition bd1 = new RootBeanDefinition(TestBean.class);
+		bd1.setLazyInit(true);
+		bd1.setFallback(true);
+		RootBeanDefinition bd2 = new RootBeanDefinition(TestBean.class);
+		bd2.setPrimary(true);
+		bd2.setFallback(true);
+		RootBeanDefinition bd3 = new RootBeanDefinition(TestBean.class);
+		lbf.registerBeanDefinition("bd1", bd1);
+		lbf.registerBeanDefinition("bd2", bd2);
+		lbf.registerBeanDefinition("bd3", bd3);
+
+		TestBean bean = lbf.getBean(TestBean.class);
+		assertThat(bean.getBeanName()).isEqualTo("bd2");
 		assertThat(lbf.containsSingleton("bd1")).isFalse();
 	}
 
