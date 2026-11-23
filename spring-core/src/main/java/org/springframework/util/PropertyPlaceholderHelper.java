@@ -97,7 +97,7 @@ public class PropertyPlaceholderHelper {
 	}
 
 	@Deprecated(since = "6.2.12", forRemoval = true)
-	protected String parseStringValue(String value, PlaceholderResolver placeholderResolver) {
+protected String parseStringValue(String value, PlaceholderResolver placeholderResolver) {
 		return this.parser.replacePlaceholders(value, placeholderResolver);
 	}
 
