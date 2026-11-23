@@ -83,17 +83,17 @@ public final class UrlHandlerFilter extends OncePerRequestFilter {
 				ServletRequestPathUtils.getParsedRequestPath(request) :
 				ServletRequestPathUtils.parse(request));
 
-		for (Map.Entry<Handler, List<PathPattern>> entry : this.handlers.entrySet()) {
-			if (!entry.getKey().supports(request, path)) {
-				continue;
-			}
-			for (PathPattern pattern : entry.getValue()) {
-				if (pattern.matches(path)) {
-					entry.getKey().handle(request, response, chain);
-					return;
+			for (Map.Entry<Handler, List<PathPattern>> entry : this.handlers.entrySet()) {
+				if (!entry.getKey().supports(request, path)) {
+					continue;
+				}
+				for (PathPattern pattern : entry.getValue()) {
+					if (pattern.matches(path)) {
+						entry.getKey().handle(request, response, chain);
+						return;
+					}
 				}
 			}
-		}
 
 		chain.doFilter(request, response);
 	}
@@ -130,6 +130,11 @@ public final class UrlHandlerFilter extends OncePerRequestFilter {
 		 * Build the {@link UrlHandlerFilter} instance.
 		 */
 		UrlHandlerFilter build();
+
+
+		/**
+		 * A spec to configure a trailing slash handler.
+		 */
 
 
 		/**
@@ -334,8 +339,8 @@ public final class UrlHandlerFilter extends OncePerRequestFilter {
 			RequestPath previousPath = (RequestPath) request.getAttribute(ServletRequestPathUtils.PATH_ATTRIBUTE);
 			ServletRequestPathUtils.clearParsedRequestPath(request);
 			try {
-				chain.doFilter(request, response);
-			}
+			chain.doFilter(request, response);
+		}
 			finally {
 				if (previousPath != null) {
 					ServletRequestPathUtils.setParsedRequestPath(previousPath, request);
