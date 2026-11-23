@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,16 @@ import org.springframework.stereotype.Service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+
+/**
+ * Tests for {@link AnnotationBeanNameGenerator}.
+ *
+ * @author Rick Evans
+ * @author Juergen Hoeller
+ * @author Mark Fisher
+ * @author Chris Beams
+ * @author Sam Brannen
+ */
 
 /**
  * Tests for {@link AnnotationBeanNameGenerator}.
@@ -211,15 +221,15 @@ class AnnotationBeanNameGeneratorTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Component
 	@interface ConventionBasedComponent1 {
-		// This is intentionally convention-based. Please do not add @AliasFor.
+		// This intentionally convention-based. Please do not add @AliasFor.
 		// See gh-31093.
 		String value() default "";
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Component
-	@interface ConventionBasedComponent2 {
-		// This is intentionally convention-based. Please do not add @AliasFor.
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
 		// See gh-31093.
 		String value() default "";
 	}
@@ -243,25 +253,21 @@ class AnnotationBeanNameGeneratorTests {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
 	@Component
-	@interface NonStringMetaComponent {
-
-		long value();
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
+		String value() default "";
 	}
 
 	@NonStringMetaComponent(123)
 	private static class ComponentFromNonStringMeta {
 	}
 
-	/**
-	 * @see org.springframework.web.bind.annotation.RestController
-	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Controller
-	@interface TestRestController {
-		// This is intentionally convention-based. Please do not add @AliasFor.
+	@Component
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
 		// See gh-31093.
 		String value() default "";
 	}
@@ -278,46 +284,20 @@ class AnnotationBeanNameGeneratorTests {
 	static class ComposedControllerAnnotationWithStringValue {
 	}
 
-	/**
-	 * Mock of {@code org.springframework.web.bind.annotation.ControllerAdvice},
-	 * which also has a {@code value} attribute that is NOT a {@code String} that
-	 * is meant to be used for the component name.
-	 * <p>Declares a custom {@link #name} that explicitly aliases {@link Component#value()}.
-	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
 	@Component
-	@interface TestControllerAdvice {
-
-		@AliasFor(annotation = Component.class, attribute = "value")
-		String name() default "";
-
-		@AliasFor("basePackages")
-		String[] value() default {};
-
-		@AliasFor("value")
-		String[] basePackages() default {};
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
+		String value() default "";
 	}
 
-	/**
-	 * Mock of {@code org.springframework.web.bind.annotation.RestControllerAdvice},
-	 * which also has a {@code value} attribute that is NOT a {@code String} that
-	 * is meant to be used for the component name.
-	 * <p>Declares a custom {@link #name} that explicitly aliases
-	 * {@link TestControllerAdvice#name()} instead of {@link Component#value()}.
-	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@TestControllerAdvice
-	@interface TestRestControllerAdvice {
-
-		@AliasFor(annotation = TestControllerAdvice.class)
-		String name() default "";
-
-		@AliasFor(annotation = TestControllerAdvice.class)
-		String[] value() default {};
-
-		@AliasFor(annotation = TestControllerAdvice.class)
-		String[] basePackages() default {};
+	@Component
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
+		String value() default "";
 	}
 
 	@TestControllerAdvice(basePackages = "com.example", name = "myControllerAdvice")
@@ -329,24 +309,18 @@ class AnnotationBeanNameGeneratorTests {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.ANNOTATION_TYPE)
-	@interface MetaAnnotationWithStringAttribute {
-
-		String attribute() default "";
+	@Component
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
+		String value() default "";
 	}
 
-	/**
-	 * Custom stereotype annotation which has a {@code String value} attribute that
-	 * is explicitly declared as an alias for an attribute in a meta-annotation
-	 * other than {@link Component @Component}.
-	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
 	@Component
-	@MetaAnnotationWithStringAttribute
-	@interface MyStereotype {
-
-		@AliasFor(annotation = MetaAnnotationWithStringAttribute.class, attribute = "attribute")
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
 		String value() default "";
 	}
 
@@ -354,22 +328,12 @@ class AnnotationBeanNameGeneratorTests {
 	static class StereotypeWithoutExplicitName {
 	}
 
-	/**
-	 * Custom stereotype annotation which is identical to {@link MyStereotype @MyStereotype}
-	 * except that it has a {@link #name} attribute that is an explicit alias for
-	 * {@link Component#value}.
-	 */
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
 	@Component
-	@MetaAnnotationWithStringAttribute
-	@interface MyNamedStereotype {
-
-		@AliasFor(annotation = MetaAnnotationWithStringAttribute.class, attribute = "attribute")
+	@interface ConventionBasedComponent1 {
+		// This intentionally convention-based. Please do not add @AliasFor.
+		// See gh-31093.
 		String value() default "";
-
-		@AliasFor(annotation = Component.class, attribute = "value")
-		String name() default "";
 	}
 
 	@MyNamedStereotype(value = "enigma", name ="explicitName")
