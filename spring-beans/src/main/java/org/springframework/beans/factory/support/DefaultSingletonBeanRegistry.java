@@ -306,8 +306,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 						try {
 							while ((singletonObject = this.singletonObjects.get(beanName)) == null) {
 								if (!this.singletonsInLenientCreation.contains(beanName)) {
-									throw ex;
-								}
+						throw ex;
+					}
 								try {
 									this.lenientCreationFinished.await();
 								}
