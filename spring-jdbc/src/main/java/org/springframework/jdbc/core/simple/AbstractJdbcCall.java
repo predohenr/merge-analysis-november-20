@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -286,24 +286,24 @@ public abstract class AbstractJdbcCall {
 	public final void compile() throws InvalidDataAccessApiUsageException {
 		this.compilationLock.lock();
 		try {
-			if (!isCompiled()) {
-				if (getProcedureName() == null) {
-					throw new InvalidDataAccessApiUsageException("Procedure or Function name is required");
-				}
-				try {
-					this.jdbcTemplate.afterPropertiesSet();
-				}
-				catch (IllegalArgumentException ex) {
-					throw new InvalidDataAccessApiUsageException(ex.getMessage());
-				}
-				compileInternal();
-				this.compiled = true;
-				if (logger.isDebugEnabled()) {
-					logger.debug("SqlCall for " + (isFunction() ? "function" : "procedure") +
-							" [" + getProcedureName() + "] compiled");
-				}
+		if (!isCompiled()) {
+			if (getProcedureName() == null) {
+				throw new InvalidDataAccessApiUsageException("Procedure or Function name is required");
+			}
+			try {
+				this.jdbcTemplate.afterPropertiesSet();
+			}
+			catch (IllegalArgumentException ex) {
+				throw new InvalidDataAccessApiUsageException(ex.getMessage());
+			}
+			compileInternal();
+			this.compiled = true;
+			if (logger.isDebugEnabled()) {
+				logger.debug("SqlCall for " + (isFunction() ? "function" : "procedure") +
+						" [" + getProcedureName() + "] compiled");
 			}
 		}
+	}
 		finally {
 			this.compilationLock.unlock();
 		}
