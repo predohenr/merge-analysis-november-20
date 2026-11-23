@@ -45,7 +45,6 @@ public class SseEmitter extends ResponseBodyEmitter {
 
 	private static final MediaType TEXT_PLAIN = new MediaType("text", "plain", StandardCharsets.UTF_8);
 
-
 	/**
 	 * Create a new SseEmitter instance.
 	 */

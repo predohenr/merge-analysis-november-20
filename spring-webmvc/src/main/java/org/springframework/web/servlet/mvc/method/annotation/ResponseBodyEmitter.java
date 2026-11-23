@@ -372,6 +372,14 @@ public class ResponseBodyEmitter {
 	 * timeout, error, and completion for any reason (including from the
 	 * container side).
 	 */
+
+
+	/**
+	 * Contract to handle the sending of event data, the completion of event
+	 * sending, and the registration of callbacks to be invoked in case of
+	 * timeout, error, and completion for any reason (including from the
+	 * container side).
+	 */
 	interface Handler {
 
 		/**
