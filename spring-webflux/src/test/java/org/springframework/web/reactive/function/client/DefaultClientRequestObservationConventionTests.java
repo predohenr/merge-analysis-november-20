@@ -32,6 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Brian Clozel
  */
+
+/**
+ * Tests for {@link DefaultClientRequestObservationConvention}.
+ *
+ * @author Brian Clozel
+ */
 class DefaultClientRequestObservationConventionTests {
 
 	private final DefaultClientRequestObservationConvention observationConvention = new DefaultClientRequestObservationConvention();
