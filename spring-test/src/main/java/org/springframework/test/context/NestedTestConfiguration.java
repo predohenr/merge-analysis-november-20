@@ -105,7 +105,7 @@ import org.jspecify.annotations.Nullable;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface NestedTestConfiguration {
+public@interface NestedTestConfiguration{
 
 	/**
 	 * JVM system property used to change the default <em>enclosing configuration
@@ -132,6 +132,14 @@ public @interface NestedTestConfiguration {
 	 * @see EnclosingConfiguration#OVERRIDE
 	 */
 	EnclosingConfiguration value();
+
+
+	/**
+	 * Enumeration of <em>modes</em> that dictate how test configuration from
+	 * enclosing classes is processed for inner test classes.
+	 * @see #INHERIT
+	 * @see #OVERRIDE
+	 */
 
 
 	/**
@@ -181,6 +189,4 @@ public @interface NestedTestConfiguration {
 				return null;
 			}
 		}
-	}
-
-}
+	}}
