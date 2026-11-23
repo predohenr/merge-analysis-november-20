@@ -122,29 +122,29 @@ public class ResponseBodyEmitter {
 	void initialize(Handler handler) throws IOException {
 		this.writeLock.lock();
 		try {
-			this.handler = handler;
+		this.handler = handler;
 
-			try {
-				sendInternal(this.earlySendAttempts);
-			}
-			finally {
-				this.earlySendAttempts.clear();
-			}
+		try {
+			sendInternal(this.earlySendAttempts);
+		}
+		finally {
+			this.earlySendAttempts.clear();
+		}
 
-			if (this.complete) {
-				if (this.failure != null) {
-					this.handler.completeWithError(this.failure);
-				}
-				else {
-					this.handler.complete();
-				}
+		if (this.complete) {
+			if (this.failure != null) {
+				this.handler.completeWithError(this.failure);
 			}
 			else {
-				this.handler.onTimeout(this.timeoutCallback);
-				this.handler.onError(this.errorCallback);
-				this.handler.onCompletion(this.completionCallback);
+				this.handler.complete();
 			}
 		}
+		else {
+			this.handler.onTimeout(this.timeoutCallback);
+			this.handler.onError(this.errorCallback);
+			this.handler.onCompletion(this.completionCallback);
+		}
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -153,11 +153,11 @@ public class ResponseBodyEmitter {
 	void initializeWithError(Throwable ex) {
 		this.writeLock.lock();
 		try {
-			this.complete = true;
-			this.failure = ex;
-			this.earlySendAttempts.clear();
-			this.errorCallback.accept(ex);
-		}
+		this.complete = true;
+		this.failure = ex;
+		this.earlySendAttempts.clear();
+		this.errorCallback.accept(ex);
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -202,21 +202,21 @@ public class ResponseBodyEmitter {
 				(this.failure != null ? " with error: " + this.failure : ""));
 		this.writeLock.lock();
 		try {
-			if (this.handler != null) {
-				try {
-					this.handler.send(object, mediaType);
-				}
-				catch (IOException ex) {
-					throw ex;
-				}
-				catch (Throwable ex) {
-					throw new IllegalStateException("Failed to send " + object, ex);
-				}
+		if (this.handler != null) {
+			try {
+				this.handler.send(object, mediaType);
 			}
-			else {
-				this.earlySendAttempts.add(new DataWithMediaType(object, mediaType));
+			catch (IOException ex) {
+				throw ex;
+			}
+			catch (Throwable ex) {
+				throw new IllegalStateException("Failed to send " + object, ex);
 			}
 		}
+		else {
+			this.earlySendAttempts.add(new DataWithMediaType(object, mediaType));
+		}
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -236,8 +236,8 @@ public class ResponseBodyEmitter {
 				(this.failure != null ? " with error: " + this.failure : ""));
 		this.writeLock.lock();
 		try {
-			sendInternal(items);
-		}
+		sendInternal(items);
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -274,11 +274,11 @@ public class ResponseBodyEmitter {
 	public void complete() {
 		this.writeLock.lock();
 		try {
-			this.complete = true;
-			if (this.handler != null) {
-				this.handler.complete();
-			}
+		this.complete = true;
+		if (this.handler != null) {
+			this.handler.complete();
 		}
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -298,12 +298,12 @@ public class ResponseBodyEmitter {
 	public void completeWithError(Throwable ex) {
 		this.writeLock.lock();
 		try {
-			this.complete = true;
-			this.failure = ex;
-			if (this.handler != null) {
-				this.handler.completeWithError(ex);
-			}
+		this.complete = true;
+		this.failure = ex;
+		if (this.handler != null) {
+			this.handler.completeWithError(ex);
 		}
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -317,8 +317,8 @@ public class ResponseBodyEmitter {
 	public void onTimeout(Runnable callback) {
 		this.writeLock.lock();
 		try {
-			this.timeoutCallback.addDelegate(callback);
-		}
+		this.timeoutCallback.addDelegate(callback);
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -334,8 +334,8 @@ public class ResponseBodyEmitter {
 	public void onError(Consumer<Throwable> callback) {
 		this.writeLock.lock();
 		try {
-			this.errorCallback.addDelegate(callback);
-		}
+		this.errorCallback.addDelegate(callback);
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -351,8 +351,8 @@ public class ResponseBodyEmitter {
 	public void onCompletion(Runnable callback) {
 		this.writeLock.lock();
 		try {
-			this.completionCallback.addDelegate(callback);
-		}
+		this.completionCallback.addDelegate(callback);
+	}
 		finally {
 			this.writeLock.unlock();
 		}
@@ -363,6 +363,14 @@ public class ResponseBodyEmitter {
 	public String toString() {
 		return "ResponseBodyEmitter@" + ObjectUtils.getIdentityHexString(this);
 	}
+
+
+	/**
+	 * Contract to handle the sending of event data, the completion of event
+	 * sending, and the registration of callbacks to be invoked in case of
+	 * timeout, error, and completion for any reason (including from the
+	 * container side).
+	 */
 
 
 	/**
