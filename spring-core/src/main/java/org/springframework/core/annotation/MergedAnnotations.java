@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -623,6 +623,15 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 		}
 
 	}
+
+	/**
+	 * Search strategies supported by {@link MergedAnnotations#search(SearchStrategy)}
+	 * as well as {@link MergedAnnotations#from(AnnotatedElement, SearchStrategy)}
+	 * and variants of that method.
+	 *
+	 * <p>Each strategy creates a different set of aggregates that will be
+	 * combined to create the final {@link MergedAnnotations}.
+	 */
 
 	/**
 	 * Search strategies supported by {@link MergedAnnotations#search(SearchStrategy)}
