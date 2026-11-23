@@ -27,6 +27,8 @@ import java.nio.charset.Charset;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.lang.Contract;
+
 /**
  * Simple utility methods for dealing with streams.
  *
@@ -66,15 +68,6 @@ public abstract class StreamUtils {
 
 		return in.readAllBytes();
 	}
-
-	/**
-	 * Copy the contents of the given InputStream into a String.
-	 * <p>Leaves the stream open when done.
-	 * @param in the InputStream to copy from (may be {@code null} or empty)
-	 * @param charset the {@link Charset} to use to decode the bytes
-	 * @return the String that has been copied to (possibly empty)
-	 * @throws IOException in case of I/O errors
-	 */
 	public static String copyToString(@Nullable InputStream in, Charset charset) throws IOException {
 		if (in == null) {
 			return "";
@@ -89,29 +82,12 @@ public abstract class StreamUtils {
 		}
 		return out.toString();
 	}
-
-	/**
-	 * Copy the contents of the given {@link ByteArrayOutputStream} into a {@link String}.
-	 * <p>This is a more effective equivalent of {@code new String(baos.toByteArray(), charset)}.
-	 * @param baos the {@code ByteArrayOutputStream} to be copied into a String
-	 * @param charset the {@link Charset} to use to decode the bytes
-	 * @return the String that has been copied to (possibly empty)
-	 * @since 5.2.6
-	 */
 	public static String copyToString(ByteArrayOutputStream baos, Charset charset) {
 		Assert.notNull(baos, "No ByteArrayOutputStream specified");
 		Assert.notNull(charset, "No Charset specified");
 
 		return baos.toString(charset);
 	}
-
-	/**
-	 * Copy the contents of the given byte array to the given OutputStream.
-	 * <p>Leaves the stream open when done.
-	 * @param in the byte array to copy from
-	 * @param out the OutputStream to copy to
-	 * @throws IOException in case of I/O errors
-	 */
 	public static void copy(byte[] in, OutputStream out) throws IOException {
 		Assert.notNull(in, "No input byte array specified");
 		Assert.notNull(out, "No OutputStream specified");
@@ -119,15 +95,6 @@ public abstract class StreamUtils {
 		out.write(in);
 		out.flush();
 	}
-
-	/**
-	 * Copy the contents of the given String to the given OutputStream.
-	 * <p>Leaves the stream open when done.
-	 * @param in the String to copy from
-	 * @param charset the Charset
-	 * @param out the OutputStream to copy to
-	 * @throws IOException in case of I/O errors
-	 */
 	public static void copy(String in, Charset charset, OutputStream out) throws IOException {
 		Assert.notNull(in, "No input String specified");
 		Assert.notNull(charset, "No Charset specified");
@@ -136,15 +103,6 @@ public abstract class StreamUtils {
 		out.write(in.getBytes(charset));
 		out.flush();
 	}
-
-	/**
-	 * Copy the contents of the given InputStream to the given OutputStream.
-	 * <p>Leaves both streams open when done.
-	 * @param in the InputStream to copy from
-	 * @param out the OutputStream to copy to
-	 * @return the number of bytes copied
-	 * @throws IOException in case of I/O errors
-	 */
 	public static int copy(InputStream in, OutputStream out) throws IOException {
 		Assert.notNull(in, "No InputStream specified");
 		Assert.notNull(out, "No OutputStream specified");
@@ -153,20 +111,6 @@ public abstract class StreamUtils {
 		out.flush();
 		return count;
 	}
-
-	/**
-	 * Copy a range of content of the given InputStream to the given OutputStream.
-	 * <p>If the specified range exceeds the length of the InputStream, this copies
-	 * up to the end of the stream and returns the actual number of copied bytes.
-	 * <p>Leaves both streams open when done.
-	 * @param in the InputStream to copy from
-	 * @param out the OutputStream to copy to
-	 * @param start the position to start copying from
-	 * @param end the position to end copying
-	 * @return the number of bytes copied
-	 * @throws IOException in case of I/O errors
-	 * @since 4.3
-	 */
 	public static long copyRange(InputStream in, OutputStream out, long start, long end) throws IOException {
 		Assert.notNull(in, "No InputStream specified");
 		Assert.notNull(out, "No OutputStream specified");
@@ -189,6 +133,82 @@ public abstract class StreamUtils {
 		}
 		return (end - start + 1 - bytesToCopy);
 	}
+	public static int drain(@Nullable InputStream in) throws IOException {
+		if (in == null) {
+			return 0;
+		}
+		return (int) in.transferTo(OutputStream.nullOutputStream());
+	}
+	@Deprecated(since = "6.0")
+	public static InputStream emptyInput() {
+		return InputStream.nullInputStream();
+	}
+	public static InputStream nonClosing(InputStream in) {
+		Assert.notNull(in, "No InputStream specified");
+		return new NonClosingInputStream(in);
+	}
+	public static OutputStream nonClosing(OutputStream out) {
+		Assert.notNull(out, "No OutputStream specified");
+		return new NonClosingOutputStream(out);
+	}
+
+	/**
+	 * Copy the contents of the given InputStream into a String.
+	 * <p>Leaves the stream open when done.
+	 * @param in the InputStream to copy from (may be {@code null} or empty)
+	 * @param charset the {@link Charset} to use to decode the bytes
+	 * @return the String that has been copied to (possibly empty)
+	 * @throws IOException in case of I/O errors
+	 */
+
+	/**
+	 * Copy the contents of the given {@link ByteArrayOutputStream} into a {@link String}.
+	 * <p>This is a more effective equivalent of {@code new String(baos.toByteArray(), charset)}.
+	 * @param baos the {@code ByteArrayOutputStream} to be copied into a String
+	 * @param charset the {@link Charset} to use to decode the bytes
+	 * @return the String that has been copied to (possibly empty)
+	 * @since 5.2.6
+	 */
+
+	/**
+	 * Copy the contents of the given byte array to the given OutputStream.
+	 * <p>Leaves the stream open when done.
+	 * @param in the byte array to copy from
+	 * @param out the OutputStream to copy to
+	 * @throws IOException in case of I/O errors
+	 */
+
+	/**
+	 * Copy the contents of the given String to the given OutputStream.
+	 * <p>Leaves the stream open when done.
+	 * @param in the String to copy from
+	 * @param charset the Charset
+	 * @param out the OutputStream to copy to
+	 * @throws IOException in case of I/O errors
+	 */
+
+	/**
+	 * Copy the contents of the given InputStream to the given OutputStream.
+	 * <p>Leaves both streams open when done.
+	 * @param in the InputStream to copy from
+	 * @param out the OutputStream to copy to
+	 * @return the number of bytes copied
+	 * @throws IOException in case of I/O errors
+	 */
+
+	/**
+	 * Copy a range of content of the given InputStream to the given OutputStream.
+	 * <p>If the specified range exceeds the length of the InputStream, this copies
+	 * up to the end of the stream and returns the actual number of copied bytes.
+	 * <p>Leaves both streams open when done.
+	 * @param in the InputStream to copy from
+	 * @param out the OutputStream to copy to
+	 * @param start the position to start copying from
+	 * @param end the position to end copying
+	 * @return the number of bytes copied
+	 * @throws IOException in case of I/O errors
+	 * @since 4.3
+	 */
 
 	/**
 	 * Drain the remaining content of the given {@link InputStream}.
@@ -199,12 +219,6 @@ public abstract class StreamUtils {
 	 * @throws IOException in case of I/O errors
 	 * @since 4.3
 	 */
-	public static int drain(@Nullable InputStream in) throws IOException {
-		if (in == null) {
-			return 0;
-		}
-		return (int) in.transferTo(OutputStream.nullOutputStream());
-	}
 
 	/**
 	 * Return an efficient empty {@link InputStream}.
@@ -212,10 +226,6 @@ public abstract class StreamUtils {
 	 * @since 4.2.2
 	 * @deprecated as of 6.0 in favor of {@link InputStream#nullInputStream()}
 	 */
-	@Deprecated(since = "6.0")
-	public static InputStream emptyInput() {
-		return InputStream.nullInputStream();
-	}
 
 	/**
 	 * Return a variant of the given {@link InputStream} where calling
@@ -223,10 +233,6 @@ public abstract class StreamUtils {
 	 * @param in the InputStream to decorate
 	 * @return a version of the InputStream that ignores calls to close
 	 */
-	public static InputStream nonClosing(InputStream in) {
-		Assert.notNull(in, "No InputStream specified");
-		return new NonClosingInputStream(in);
-	}
 
 	/**
 	 * Return a variant of the given {@link OutputStream} where calling
@@ -234,10 +240,6 @@ public abstract class StreamUtils {
 	 * @param out the OutputStream to decorate
 	 * @return a version of the OutputStream that ignores calls to close
 	 */
-	public static OutputStream nonClosing(OutputStream out) {
-		Assert.notNull(out, "No OutputStream specified");
-		return new NonClosingOutputStream(out);
-	}
 
 
 	private static final class NonClosingInputStream extends FilterInputStream {
