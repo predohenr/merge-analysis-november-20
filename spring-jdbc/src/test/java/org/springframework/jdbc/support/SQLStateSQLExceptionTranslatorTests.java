@@ -41,6 +41,14 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  * @author Juergen Hoeller
  * @author Chris Beams
  */
+
+/**
+ * Tests for {@link SQLStateSQLExceptionTranslator}.
+ *
+ * @author Rick Evans
+ * @author Juergen Hoeller
+ * @author Chris Beams
+ */
 class SQLStateSQLExceptionTranslatorTests {
 
 	private final SQLExceptionTranslator translator = new SQLStateSQLExceptionTranslator();
