@@ -55,8 +55,8 @@ import org.springframework.http.client.JettyClientHttpRequestFactory;
 import org.springframework.http.client.ReactorClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.testfixture.xml.Pojo;
@@ -74,6 +74,13 @@ import static org.junit.jupiter.params.provider.Arguments.argumentSet;
  * @author Arjen Poutsma
  * @author Sebastien Deleuze
  */
+
+/**
+ * Integration tests for {@link RestClient}.
+ *
+ * @author Arjen Poutsma
+ * @author Sebastien Deleuze
+ */
 class RestClientIntegrationTests {
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -83,7 +90,7 @@ class RestClientIntegrationTests {
 	@interface ParameterizedRestClientTest {
 	}
 
-	static Stream<Arguments> clientHttpRequestFactories() {
+		static Stream<Arguments> clientHttpRequestFactories() {
 		return Stream.of(
 			argumentSet("JDK HttpURLConnection", new SimpleClientHttpRequestFactory()),
 			argumentSet("HttpComponents", new HttpComponentsClientHttpRequestFactory()),
