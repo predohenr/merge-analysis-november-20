@@ -16,10 +16,9 @@
 
 package org.springframework.validation;
 
-import java.util.HexFormat;
-
 import org.jspecify.annotations.Nullable;
 
+import java.util.HexFormat;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
