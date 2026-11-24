@@ -41,7 +41,6 @@ import java.util.stream.Stream;
 import jakarta.annotation.Priority;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.NotWritablePropertyException;
