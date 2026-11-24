@@ -80,13 +80,6 @@ public abstract class ResourceHandlerUtils {
 			// ignore
 		}
 	}
-
-	/**
-	 * Check if the given static resource location path ends with a trailing
-	 * slash, and append it if necessary.
-	 * @param path the location path
-	 * @return the resulting path to use
-	 */
 	public static String initLocationPath(String path) {
 		String separator = (path.contains(FOLDER_SEPARATOR) ? FOLDER_SEPARATOR : WINDOWS_FOLDER_SEPARATOR);
 		if (!path.endsWith(separator)) {
@@ -95,17 +88,6 @@ public abstract class ResourceHandlerUtils {
 		}
 		return path;
 	}
-
-	/**
-	 * Normalize the given resource path replacing the following:
-	 * <ul>
-	 * <li>Backslash with forward slash.
-	 * <li>Duplicate occurrences of slash with a single slash.
-	 * <li>Any combination of leading slash and control characters (00-1F and 7F)
-	 * with a single "/" or "". For example {@code "  / // foo/bar"}
-	 * becomes {@code "/foo/bar"}.
-	 * </ul>
-	 */
 	public static String normalizeInputPath(String path) {
 		path = StringUtils.replace(path, "\\", "/");
 		path = cleanDuplicateSlashes(path);
@@ -150,31 +132,9 @@ public abstract class ResourceHandlerUtils {
 		}
 		return (slash ? "/" : "");
 	}
-
-	/**
-	 * Whether the given input path is invalid as determined by
-	 * {@link #isInvalidPath(String)}. The path is also decoded and the same
-	 * checks are performed again.
-	 */
 	public static boolean shouldIgnoreInputPath(String path) {
 		return (!StringUtils.hasText(path) || isInvalidPath(path) || isInvalidEncodedPath(path));
 	}
-
-	/**
-	 * Checks for invalid resource input paths rejecting the following:
-	 * <ul>
-	 * <li>Paths that contain "WEB-INF" or "META-INF"
-	 * <li>Paths that contain "../" after a call to
-	 * {@link StringUtils#cleanPath}.
-	 * <li>Paths that represent a {@link ResourceUtils#isUrl
-	 * valid URL} or would represent one after the leading slash is removed.
-	 * </ul>
-	 * <p><strong>Note:</strong> this method assumes that leading, duplicate '/'
-	 * or control characters (e.g. white space) have been trimmed so that the
-	 * path starts predictably with a single '/' or does not have one.
-	 * @param path the path to validate
-	 * @return {@code true} if the path is invalid, {@code false} otherwise
-	 */
 	public static boolean isInvalidPath(String path) {
 		if (path.contains("WEB-INF") || path.contains("META-INF")) {
 			if (logger.isWarnEnabled()) {
@@ -226,21 +186,12 @@ public abstract class ResourceHandlerUtils {
 			return "";
 		}
 	}
-
-	/**
-	 * Create a resource relative to the given {@link Resource}, also decoding
-	 * the resource path for a {@link UrlResource}.
-	 */
 	public static Resource createRelativeResource(Resource location, String resourcePath) throws IOException {
 		if (!(location instanceof UrlResource)) {
 			resourcePath = UriUtils.decode(resourcePath, StandardCharsets.UTF_8);
 		}
 		return location.createRelative(resourcePath);
 	}
-
-	/**
-	 * Check whether the resource is under the given location.
-	 */
 	public static boolean isResourceUnderLocation(Resource location, Resource resource) throws IOException {
 		if (resource.getClass() != location.getClass()) {
 			return false;
@@ -284,5 +235,54 @@ public abstract class ResourceHandlerUtils {
 		}
 		return false;
 	}
+
+	/**
+	 * Check if the given static resource location path ends with a trailing
+	 * slash, and append it if necessary.
+	 * @param path the location path
+	 * @return the resulting path to use
+	 */
+
+	/**
+	 * Normalize the given resource path replacing the following:
+	 * <ul>
+	 * <li>Backslash with forward slash.
+	 * <li>Duplicate occurrences of slash with a single slash.
+	 * <li>Any combination of leading slash and control characters (00-1F and 7F)
+	 * with a single "/" or "". For example {@code "  / // foo/bar"}
+	 * becomes {@code "/foo/bar"}.
+	 * </ul>
+	 */
+
+	/**
+	 * Whether the given input path is invalid as determined by
+	 * {@link #isInvalidPath(String)}. The path is also decoded and the same
+	 * checks are performed again.
+	 */
+
+	/**
+	 * Checks for invalid resource input paths rejecting the following:
+	 * <ul>
+	 * <li>Paths that contain "WEB-INF" or "META-INF"
+	 * <li>Paths that contain "../" after a call to
+	 * {@link StringUtils#cleanPath}.
+	 * <li>Paths that represent a {@link ResourceUtils#isUrl
+	 * valid URL} or would represent one after the leading slash is removed.
+	 * </ul>
+	 * <p><strong>Note:</strong> this method assumes that leading, duplicate '/'
+	 * or control characters (e.g. white space) have been trimmed so that the
+	 * path starts predictably with a single '/' or does not have one.
+	 * @param path the path to validate
+	 * @return {@code true} if the path is invalid, {@code false} otherwise
+	 */
+
+	/**
+	 * Create a resource relative to the given {@link Resource}, also decoding
+	 * the resource path for a {@link UrlResource}.
+	 */
+
+	/**
+	 * Check whether the resource is under the given location.
+	 */
 
 }
