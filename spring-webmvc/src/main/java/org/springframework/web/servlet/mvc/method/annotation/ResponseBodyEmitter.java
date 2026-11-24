@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -321,6 +321,14 @@ public class ResponseBodyEmitter {
 	 * timeout, error, and completion for any reason (including from the
 	 * container side).
 	 */
+
+
+	/**
+	 * Contract to handle the sending of event data, the completion of event
+	 * sending, and the registration of callbacks to be invoked in case of
+	 * timeout, error, and completion for any reason (including from the
+	 * container side).
+	 */
 	interface Handler {
 
 		/**
@@ -401,10 +409,10 @@ public class ResponseBodyEmitter {
 		@Override
 		public void accept(Throwable t) {
 			if (ResponseBodyEmitter.this.state.compareAndSet(State.START, State.COMPLETE)) {
-				for (Consumer<Throwable> delegate : this.delegates) {
-					delegate.accept(t);
-				}
+			for(Consumer<Throwable> delegate : this.delegates) {
+				delegate.accept(t);
 			}
+		}
 		}
 	}
 
