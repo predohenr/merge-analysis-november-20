@@ -10,7 +10,6 @@
 #![no_std]
 #![no_main]
 #![deny(missing_docs)]
-
 use kernel::component::Component;
 use kernel::debug::PanicResources;
 use kernel::hil::led::LedLow;
