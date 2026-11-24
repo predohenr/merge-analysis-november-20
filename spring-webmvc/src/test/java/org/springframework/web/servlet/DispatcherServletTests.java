@@ -86,6 +86,15 @@ import static org.mockito.Mockito.verify;
  * @author Rob Harrop
  * @author Sam Brannen
  */
+
+/**
+ * Tests for {@link DispatcherServlet}.
+ *
+ * @author Rod Johnson
+ * @author Juergen Hoeller
+ * @author Rob Harrop
+ * @author Sam Brannen
+ */
 class DispatcherServletTests {
 
 	private static final String URL_KNOWN_ONLY_PARENT = "/knownOnlyToParent.do";
