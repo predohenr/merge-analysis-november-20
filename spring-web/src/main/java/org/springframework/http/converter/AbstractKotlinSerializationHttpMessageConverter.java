@@ -117,10 +117,6 @@ public abstract class AbstractKotlinSerializationHttpMessageConverter<T extends 
 		}
 		return readInternal(serializer, this.format, inputMessage);
 	}
-
-	/**
-	 * Reads the given input message with the given serializer and format.
-	 */
 	protected abstract Object readInternal(KSerializer<Object> serializer, T format, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException;
 
@@ -135,20 +131,8 @@ public abstract class AbstractKotlinSerializationHttpMessageConverter<T extends 
 		}
 		writeInternal(object, serializer, this.format, outputMessage);
 	}
-
-	/**
-	 * Write the given object to the output message with the given serializer and format.
-	 */
 	protected abstract void writeInternal(Object object, KSerializer<Object> serializer, T format,
 			HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException;
-
-	/**
-	 * Tries to find a serializer that can marshall or unmarshall instances of the given type
-	 * using kotlinx.serialization. If no serializer can be found, {@code null} is returned.
-	 * <p>Resolved serializers are cached and cached results are returned on successive calls.
-	 * @param resolvableType the type to find a serializer for
-	 * @return a resolved serializer for the given type, or {@code null}
-	 */
 	private @Nullable KSerializer<Object> serializer(ResolvableType resolvableType) {
 		if (resolvableType.getSource() instanceof MethodParameter parameter) {
 			Method method = parameter.getMethod();
@@ -192,4 +176,20 @@ public abstract class AbstractKotlinSerializationHttpMessageConverter<T extends 
 	protected boolean supportsRepeatableWrites(Object object) {
 		return true;
 	}
+
+	/**
+	 * Reads the given input message with the given serializer and format.
+	 */
+
+	/**
+	 * Write the given object to the output message with the given serializer and format.
+	 */
+
+	/**
+	 * Tries to find a serializer that can marshall or unmarshall instances of the given type
+	 * using kotlinx.serialization. If no serializer can be found, {@code null} is returned.
+	 * <p>Resolved serializers are cached and cached results are returned on successive calls.
+	 * @param resolvableType the type to find a serializer for
+	 * @return a resolved serializer for the given type, or {@code null}
+	 */
 }
