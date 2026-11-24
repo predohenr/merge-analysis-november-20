@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -325,6 +325,12 @@ public interface ServerResponse {
 	 * Defines a builder that adds headers to the response.
 	 * @param <B> the builder subclass
 	 */
+
+
+	/**
+	 * Defines a builder that adds headers to the response.
+	 * @param <B> the builder subclass
+	 */
 	interface HeadersBuilder<B extends HeadersBuilder<B>> {
 
 		/**
@@ -475,6 +481,11 @@ public interface ServerResponse {
 	/**
 	 * Defines a builder that adds a body to the response.
 	 */
+
+
+	/**
+	 * Defines a builder that adds a body to the response.
+	 */
 	interface BodyBuilder extends HeadersBuilder<BodyBuilder> {
 
 		/**
@@ -572,6 +583,12 @@ public interface ServerResponse {
 		ServerResponse stream(Consumer<StreamBuilder> streamConsumer);
 
 	}
+
+	/**
+	 * Defines a builder for a body that sends server-sent events.
+	 *
+	 * @since 5.3.2
+	 */
 
 	/**
 	 * Defines a builder for a body that sends server-sent events.
@@ -686,6 +703,12 @@ public interface ServerResponse {
 	 *
 	 * @since 6.2
 	 */
+
+	/**
+	 * Defines a builder for a streaming response body.
+	 *
+	 * @since 6.2
+	 */
 	interface StreamBuilder {
 
 		/**
@@ -756,6 +779,10 @@ public interface ServerResponse {
 		void flush() throws IOException;
 
 	}
+
+	/**
+	 * Defines the context used during the {@link #writeTo(HttpServletRequest, HttpServletResponse, Context)}.
+	 */
 
 	/**
 	 * Defines the context used during the {@link #writeTo(HttpServletRequest, HttpServletResponse, Context)}.
