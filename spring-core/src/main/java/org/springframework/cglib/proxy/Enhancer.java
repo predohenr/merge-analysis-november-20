@@ -1306,9 +1306,9 @@ public class Enhancer extends AbstractClassGenerator {
 							e.unbox(retType);
 						}
 						else {
-							e.checkcast(retType);
-						}
+						e.checkcast(retType);
 					}
+				}
 				}
 				else {
 					e.load_args();
