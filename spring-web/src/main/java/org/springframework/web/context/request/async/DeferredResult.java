@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2025 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -279,6 +279,29 @@ public class DeferredResult<T> {
 		return setResultInternal(result);
 	}
 
+					@Override
+		public <S> boolean handleTimeout(NativeWebRequest request, DeferredResult<S> result) {
+				boolean continueProcessing = true;
+				try {
+					if (timeoutCallback != null) {
+						timeoutCallback.run();
+					}
+				}
+				finally {
+					Object value = timeoutResult.get();
+					if (value != RESULT_NONE) {
+						continueProcessing = false;
+						try {
+							setResultInternal(value);
+						}
+						catch (Throwable ex) {
+							logger.debug("Failed to handle timeout result", ex);
+						}
+					}
+				}
+				return continueProcessing;
+			}
+
 
 	final DeferredResultProcessingInterceptor getLifecycleInterceptor() {
 		return new LifecycleInterceptor();
@@ -299,29 +322,6 @@ public class DeferredResult<T> {
 	 * Instance interceptor to receive Servlet container notifications.
 	 */
 	private class LifecycleInterceptor implements DeferredResultProcessingInterceptor {
-
-		@Override
-		public <S> boolean handleTimeout(NativeWebRequest request, DeferredResult<S> result) {
-			boolean continueProcessing = true;
-			try {
-				if (timeoutCallback != null) {
-					timeoutCallback.run();
-				}
-			}
-			finally {
-				Object value = timeoutResult.get();
-				if (value != RESULT_NONE) {
-					continueProcessing = false;
-					try {
-						setResultInternal(value);
-					}
-					catch (Throwable ex) {
-						logger.debug("Failed to handle timeout result", ex);
-					}
-				}
-			}
-			return continueProcessing;
-		}
 
 		@Override
 		public <S> boolean handleError(NativeWebRequest request, DeferredResult<S> result, Throwable t) {
