@@ -8040,7 +8040,19 @@ fn signers_do_not_commit_unless_threshold_precommitted() {
         || Ok(test_observer::get_mined_nakamoto_blocks().len() > blocks_before),
     )
     .unwrap();
+    let peer_after = signer_test.get_peer_info();
+    wait_for_state_machine_update(
+        30,
+        &peer_after.pox_consensus,
+        peer_after.burn_block_height,
+        None,
+        &signer_test.signer_addresses_versions(),
+    )
+    .expect("Failed to update to tenure A");
 
+    TEST_BROADCAST_PROPOSAL_STALL.set(vec![]);
+
+    info!("------------------------- Wait for block proposal N -------------------------");
     let proposal = wait_for_block_proposal_block(30, height_before + 1, &miner_pk)
         .expect("Timed out waiting for block proposal");
     let hash = proposal.header.signer_signature_hash();
