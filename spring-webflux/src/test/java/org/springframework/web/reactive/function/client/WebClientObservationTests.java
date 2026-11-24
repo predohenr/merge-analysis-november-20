@@ -51,6 +51,11 @@ import static org.mockito.Mockito.when;
  * Tests for the {@link WebClient} {@link io.micrometer.observation.Observation observations}.
  * @author Brian Clozel
  */
+
+/**
+ * Tests for the {@link WebClient} {@link io.micrometer.observation.Observation observations}.
+ * @author Brian Clozel
+ */
 class WebClientObservationTests {
 
 
