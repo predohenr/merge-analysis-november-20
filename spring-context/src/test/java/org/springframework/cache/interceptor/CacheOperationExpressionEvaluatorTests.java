@@ -50,6 +50,15 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * @author Sam Brannen
  * @author Stephane Nicoll
  */
+
+/**
+ * Tests for {@link CacheOperationExpressionEvaluator}.
+ *
+ * @author Costin Leau
+ * @author Phillip Webb
+ * @author Sam Brannen
+ * @author Stephane Nicoll
+ */
 class CacheOperationExpressionEvaluatorTests {
 
 	private final StandardEvaluationContext originalEvaluationContext = new StandardEvaluationContext();
