@@ -54,18 +54,6 @@ public class FieldError extends ObjectError {
 	public FieldError(String objectName, String field, String defaultMessage) {
 		this(objectName, field, null, false, null, null, defaultMessage);
 	}
-
-	/**
-	 * Create a new FieldError instance.
-	 * @param objectName the name of the affected object
-	 * @param field the affected field of the object
-	 * @param rejectedValue the rejected field value
-	 * @param bindingFailure whether this error represents a binding failure
-	 * (like a type mismatch); else, it is a validation failure
-	 * @param codes the codes to be used to resolve this message
-	 * @param arguments the array of arguments to be used to resolve this message
-	 * @param defaultMessage the default message to be used to resolve this message
-	 */
 	public FieldError(String objectName, String field, @Nullable Object rejectedValue, boolean bindingFailure,
 			String @Nullable [] codes, Object @Nullable [] arguments, @Nullable String defaultMessage) {
 
@@ -75,26 +63,12 @@ public class FieldError extends ObjectError {
 		this.rejectedValue = rejectedValue;
 		this.bindingFailure = bindingFailure;
 	}
-
-
-	/**
-	 * Return the affected field of the object.
-	 */
 	public String getField() {
 		return this.field;
 	}
-
-	/**
-	 * Return the rejected field value.
-	 */
 	public @Nullable Object getRejectedValue() {
 		return this.rejectedValue;
 	}
-
-	/**
-	 * Return whether this error represents a binding failure
-	 * (like a type mismatch); otherwise it is a validation failure.
-	 */
 	public boolean isBindingFailure() {
 		return this.bindingFailure;
 	}
@@ -140,5 +114,31 @@ public class FieldError extends ObjectError {
 
 		return ObjectUtils.nullSafeToString(this.rejectedValue);
 	}
+
+	/**
+	 * Create a new FieldError instance.
+	 * @param objectName the name of the affected object
+	 * @param field the affected field of the object
+	 * @param rejectedValue the rejected field value
+	 * @param bindingFailure whether this error represents a binding failure
+	 * (like a type mismatch); else, it is a validation failure
+	 * @param codes the codes to be used to resolve this message
+	 * @param arguments the array of arguments to be used to resolve this message
+	 * @param defaultMessage the default message to be used to resolve this message
+	 */
+
+
+	/**
+	 * Return the affected field of the object.
+	 */
+
+	/**
+	 * Return the rejected field value.
+	 */
+
+	/**
+	 * Return whether this error represents a binding failure
+	 * (like a type mismatch); otherwise it is a validation failure.
+	 */
 
 }
