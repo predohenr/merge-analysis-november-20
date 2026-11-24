@@ -187,8 +187,8 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractHttpMe
 				factory.setNamespaceAware(true);
 				try {
 					factory.setFeature(
-							"http://apache.org/xml/features/disallow-doctype-decl", !isSupportDtd());
-				}
+						"http://apache.org/xml/features/disallow-doctype-decl", !isSupportDtd());
+			}
 				catch (Exception ex) {
 					// Xerces properties not recognized/supported - ignore
 				}
@@ -235,8 +235,8 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractHttpMe
 				factory.setNamespaceAware(true);
 				try {
 					factory.setFeature(
-							"http://apache.org/xml/features/disallow-doctype-decl", !isSupportDtd());
-				}
+						"http://apache.org/xml/features/disallow-doctype-decl", !isSupportDtd());
+			}
 				catch (Exception ex) {
 					// Xerces properties not recognized/supported - ignore
 				}
