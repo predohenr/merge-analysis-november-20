@@ -62,6 +62,18 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author David Haraburda
  * @author Sam Brannen
  */
+
+/**
+ * Tests for {@link GenericConversionService}.
+ *
+ * <p>In this package for access to package-local converter implementations.
+ *
+ * @author Keith Donald
+ * @author Juergen Hoeller
+ * @author Phillip Webb
+ * @author David Haraburda
+ * @author Sam Brannen
+ */
 class GenericConversionServiceTests {
 
 	private final GenericConversionService conversionService = new GenericConversionService();
