@@ -369,8 +369,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 				if (newSingleton) {
 					try {
-						addSingleton(beanName, singletonObject);
-					}
+					addSingleton(beanName, singletonObject);
+				}
 					catch (IllegalStateException ex) {
 						// Leniently accept same instance if implicitly appeared.
 						Object object = this.singletonObjects.get(beanName);
