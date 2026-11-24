@@ -379,22 +379,22 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
 					threads.forEach(Thread::interrupt);
 				}
 				if (this.taskTerminationTimeout > 0) {
-					synchronized (threads) {
-						try {
-							if (!threads.isEmpty()) {
-								threads.wait(this.taskTerminationTimeout);
-							}
-						}
-						catch (InterruptedException ex) {
-							Thread.currentThread().interrupt();
+				synchronized (threads) {
+					try {
+						if (!threads.isEmpty()) {
+							threads.wait(this.taskTerminationTimeout);
 						}
 					}
-					if (!this.cancelRemainingTasksOnClose) {
-						// Late interrupt for remaining tasks after timeout
-						threads.forEach(Thread::interrupt);
+					catch (InterruptedException ex) {
+						Thread.currentThread().interrupt();
 					}
 				}
+					if (!this.cancelRemainingTasksOnClose) {
+						// Late interrupt for remaining tasks after timeout
+				threads.forEach(Thread::interrupt);
 			}
+		}
+	}
 		}
 	}
 
