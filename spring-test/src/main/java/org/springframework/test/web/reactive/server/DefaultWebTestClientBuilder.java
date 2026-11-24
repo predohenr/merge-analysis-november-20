@@ -64,19 +64,6 @@ class DefaultWebTestClientBuilder implements WebTestClient.Builder {
 
 	private static final boolean WEB_FLUX_PRESENT;
 
-	static {
-		ClassLoader loader = DefaultWebTestClientBuilder.class.getClassLoader();
-		REACTOR_NETTY_CLIENT_PRESENT = ClassUtils.isPresent("reactor.netty.http.client.HttpClient", loader);
-		JETTY_CLIENT_PRESENT =
-				ClassUtils.isPresent("org.eclipse.jetty.client.HttpClient", loader) &&
-						ClassUtils.isPresent("org.eclipse.jetty.reactive.client.ReactiveRequest", loader);
-		HTTP_COMPONENTS_CLIENT_PRESENT =
-				ClassUtils.isPresent("org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient", loader) &&
-						ClassUtils.isPresent("org.apache.hc.core5.reactive.ReactiveDataConsumer", loader);
-		WEB_FLUX_PRESENT = ClassUtils.isPresent(
-				"org.springframework.web.reactive.function.client.ExchangeFunction", loader);
-	}
-
 
 	private final @Nullable WebHttpHandlerBuilder httpHandlerBuilder;
 
@@ -106,13 +93,24 @@ class DefaultWebTestClientBuilder implements WebTestClient.Builder {
 
 	private @Nullable Duration responseTimeout;
 
+	static {
+		ClassLoader loader = DefaultWebTestClientBuilder.class.getClassLoader();
+		REACTOR_NETTY_CLIENT_PRESENT = ClassUtils.isPresent("reactor.netty.http.client.HttpClient", loader);
+		JETTY_CLIENT_PRESENT =
+				ClassUtils.isPresent("org.eclipse.jetty.client.HttpClient", loader) &&
+						ClassUtils.isPresent("org.eclipse.jetty.reactive.client.ReactiveRequest", loader);
+		HTTP_COMPONENTS_CLIENT_PRESENT =
+				ClassUtils.isPresent("org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient", loader) &&
+						ClassUtils.isPresent("org.apache.hc.core5.reactive.ReactiveDataConsumer", loader);
+		WEB_FLUX_PRESENT = ClassUtils.isPresent(
+				"org.springframework.web.reactive.function.client.ExchangeFunction", loader);
+	}
+
 
 	/** Determine connector via classpath detection. */
 	DefaultWebTestClientBuilder() {
 		this(null, null, null);
 	}
-
-	/** Use HttpHandlerConnector with mock server. */
 	DefaultWebTestClientBuilder(WebHttpHandlerBuilder httpHandlerBuilder, @Nullable SslInfo sslInfo) {
 		this(httpHandlerBuilder, null, sslInfo);
 	}
@@ -131,8 +129,6 @@ class DefaultWebTestClientBuilder implements WebTestClient.Builder {
 		this.sslInfo = sslInfo;
 		this.httpHandlerBuilder = (httpHandlerBuilder != null ? httpHandlerBuilder.clone() : null);
 	}
-
-	/** Copy constructor. */
 	DefaultWebTestClientBuilder(DefaultWebTestClientBuilder other) {
 		this.httpHandlerBuilder = (other.httpHandlerBuilder != null ? other.httpHandlerBuilder.clone() : null);
 		this.connector = other.connector;
@@ -345,4 +341,8 @@ class DefaultWebTestClientBuilder implements WebTestClient.Builder {
 		return (this.baseUrl != null ?
 				new DefaultUriBuilderFactory(this.baseUrl) : new DefaultUriBuilderFactory());
 	}
+
+	/** Use HttpHandlerConnector with mock server. */
+
+	/** Copy constructor. */
 }
