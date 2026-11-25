@@ -340,7 +340,6 @@ export class Renderer3D extends Renderer {
 
   //This is helper function to reset the context anytime the attributes
   //are changed with setAttributes()
-
   async _resetContext(options, callback, ctor = Renderer3D) {
     const w = this.width;
     const h = this.height;
@@ -411,7 +410,6 @@ export class Renderer3D extends Renderer {
       }, 0);
     }
   }
-
   remove() {
     this.wrappedElt.remove();
     this.wrappedElt = null;
@@ -419,10 +417,15 @@ export class Renderer3D extends Renderer {
     this.elt = null;
   }
 
+  remove() {
+    if (this._textCanvas) {
+      this._textCanvas.parentElement.removeChild(this._textCanvas);
+    }
+    super.remove();
+  }
   //////////////////////////////////////////////
   // Geometry Building
   //////////////////////////////////////////////
-
   /**
    * Starts creating a new p5.Geometry. Subsequent shapes drawn will be added
    * to the geometry and then returned when
@@ -445,7 +448,6 @@ export class Renderer3D extends Renderer {
     this.geometryBuilder.prevFillColor = this.states.fillColor;
     this.fill(new Color([-1, -1, -1, -1]));
   }
-
   /**
    * Finishes creating a new <a href="#/p5.Geometry">p5.Geometry</a> that was
    * started using <a href="#/p5/beginGeometry">beginGeometry()</a>. One can also
@@ -470,7 +472,6 @@ export class Renderer3D extends Renderer {
     this.geometryBuilder = undefined;
     return geometry;
   }
-
   /**
    * Creates a new <a href="#/p5.Geometry">p5.Geometry</a> that contains all
    * the shapes drawn in a provided callback function. The returned combined shape
@@ -488,17 +489,14 @@ export class Renderer3D extends Renderer {
     callback();
     return this.endGeometry();
   }
-
   //////////////////////////////////////////////
   // Shape drawing
   //////////////////////////////////////////////
-
   beginShape(...args) {
     super.beginShape(...args);
     // TODO remove when shape refactor is complete
     // this.shapeBuilder.beginShape(...args);
   }
-
   curveDetail(d) {
     if (d === undefined) {
       return this.states.curveDetail;
@@ -506,7 +504,6 @@ export class Renderer3D extends Renderer {
       this.states.setValue("curveDetail", d);
     }
   }
-
   drawShape(shape) {
     const visitor = new PrimitiveToVerticesConverter({
       curveDetail: this.states.curveDetail,
@@ -528,16 +525,13 @@ export class Renderer3D extends Renderer {
     }
     this.drawShapeCount = 1;
   }
-
   endShape(mode, count) {
     this.drawShapeCount = count;
     super.endShape(mode, count);
   }
-
   vertexProperty(...args) {
     this.currentShape.vertexProperty(...args);
   }
-
   normal(xorv, y, z) {
     if (xorv instanceof Vector) {
       this.states.setValue("_currentNormal", xorv);
@@ -546,7 +540,6 @@ export class Renderer3D extends Renderer {
     }
     this.updateShapeVertexProperties();
   }
-
   model(model, count = 1) {
     if (model.vertices.length > 0) {
       if (this.geometryBuilder) {
@@ -561,15 +554,12 @@ export class Renderer3D extends Renderer {
       }
     }
   }
-
   _getOrMakeCachedBuffers(geometry) {
     return this.geometryBufferCache.ensureCached(geometry);
   }
-
   //////////////////////////////////////////////
   // Rendering
   //////////////////////////////////////////////
-
   _drawGeometry(geometry, { mode = constants.TRIANGLES, count = 1 } = {}) {
     for (const propName in geometry.userVertexProperties) {
       const prop = geometry.userVertexProperties[propName];
@@ -598,7 +588,6 @@ export class Renderer3D extends Renderer {
 
     this.buffers.user = [];
   }
-
   _drawFills(geometry, { count, mode } = {}) {
     this._useVertexColor = geometry.vertexColors.length > 0 &&
       !geometry.vertexColors.isDefault;
@@ -627,7 +616,6 @@ export class Renderer3D extends Renderer {
 
     shader.unbindShader();
   }
-
   _drawStrokes(geometry, { count } = {}) {
 
     this._useLineColor = geometry.vertexStrokeColors.length > 0;
@@ -653,7 +641,6 @@ export class Renderer3D extends Renderer {
 
     shader.unbindShader();
   }
-
   _prepareUserAttributes(geometry, shader) {
     for (const buff of this.buffers.user) {
       if (!this._pInst.constructor.disableFriendleErrors) {
@@ -677,7 +664,6 @@ export class Renderer3D extends Renderer {
       buff._prepareBuffer(geometry, shader);
     }
   }
-
   _drawGeometryScaled(model, scaleX, scaleY, scaleZ) {
     let originalModelMatrix = this.states.uModelMatrix;
     this.states.setValue("uModelMatrix", this.states.uModelMatrix.clone());
@@ -693,7 +679,6 @@ export class Renderer3D extends Renderer {
       this.states.setValue("uModelMatrix", originalModelMatrix);
     }
   }
-
   _update() {
     // reset model view and apply initial camera transform
     // (containing only look at info; no projection).
@@ -730,7 +715,6 @@ export class Renderer3D extends Renderer {
     //Clear depth every frame
     this._resetBuffersBeforeDraw();
   }
-
   background(...args) {
     const a0 = args[0];
 
@@ -756,29 +740,23 @@ export class Renderer3D extends Renderer {
     const _col = this._pInst.color(...args);
     this.clear(..._col._getRGBA());
   }
-
   //////////////////////////////////////////////
   // Positioning
   //////////////////////////////////////////////
-
   get uModelMatrix() {
     return this.states.uModelMatrix;
   }
-
   get uViewMatrix() {
     return this.states.uViewMatrix;
   }
-
   get uPMatrix() {
     return this.states.uPMatrix;
   }
-
   get uMVMatrix() {
     const m = this.uModelMatrix.copy();
     m.mult(this.uViewMatrix);
     return m;
   }
-
   /**
    * Get a matrix from world-space to screen-space
    */
@@ -797,7 +775,6 @@ export class Renderer3D extends Renderer {
       .mult(projectedToScreenMatrix);
     return worldToScreenMatrix;
   }
-
   //////////////////////////////////////////////
   // COLOR
   //////////////////////////////////////////////
@@ -837,7 +814,6 @@ export class Renderer3D extends Renderer {
     this.states.setValue('_useNormalMaterial', false);
     this.states.setValue('_tex', null);
   }
-
   /**
    * Basic stroke material for geometry with a given color
    * @param  {Number|Number[]|String|p5.Color} v1  gray value,
@@ -868,7 +844,6 @@ export class Renderer3D extends Renderer {
     // const color = fn.color.apply(this._pInst, arguments);
     this.states.setValue('curStrokeColor', this.states.strokeColor._array);
   }
-
   getCommonVertexProperties() {
     return {
       ...super.getCommonVertexProperties(),
@@ -877,17 +852,14 @@ export class Renderer3D extends Renderer {
       normal: this.states._currentNormal,
     };
   }
-
   getSupportedIndividualVertexProperties() {
     return {
       textureCoordinates: true,
     };
   }
-
   strokeCap(cap) {
     this.curStrokeCap = cap;
   }
-
   strokeJoin(join) {
     this.curStrokeJoin = join;
   }
@@ -1050,17 +1022,14 @@ export class Renderer3D extends Renderer {
     this.pop();
     this.pop();
   }
-
   // Pass this off to the host instance so that we can treat a renderer and a
   // framebuffer the same in filter()
-
   pixelDensity(newDensity) {
     if (newDensity) {
       return this._pInst.pixelDensity(newDensity);
     }
     return this._pInst.pixelDensity();
   }
-
   blendMode(mode) {
     if (
       mode === constants.DARKEST ||
@@ -1087,7 +1056,6 @@ export class Renderer3D extends Renderer {
       );
     }
   }
-
   erase(opacityFill, opacityStroke) {
     if (!this._isErasing) {
       this.preEraseBlend = this.states.curBlendMode;
@@ -1099,7 +1067,6 @@ export class Renderer3D extends Renderer {
       this.states.setValue('curStrokeColor', [1, 1, 1, opacityStroke / 255]);
     }
   }
-
   noErase() {
     if (this._isErasing) {
       // Restore colors
@@ -1113,15 +1080,12 @@ export class Renderer3D extends Renderer {
       this._applyBlendMode();
     }
   }
-
   _applyBlendMode() {
     // By default, a noop
   }
-
   drawTarget() {
     return this.activeFramebuffers[this.activeFramebuffers.length - 1] || this;
   }
-
   beginClip(options = {}) {
     super.beginClip(options);
 
@@ -1134,7 +1098,6 @@ export class Renderer3D extends Renderer {
     if (this.states.fillColor) this.fill(0, 0);
     if (this.states.strokeColor) this.stroke(0, 0);
   }
-
   endClip() {
     this.pop();
 
@@ -1146,7 +1109,6 @@ export class Renderer3D extends Renderer {
 
     super.endClip();
   }
-
   _clearClip() {
     this._clearClipBuffer();
     if (this._clipDepths.length > 0) {
@@ -1154,7 +1116,6 @@ export class Renderer3D extends Renderer {
     }
     this.drawTarget()._isClipApplied = false;
   }
-
   /**
    * @private
    * @returns {p5.Framebuffer} A p5.Framebuffer set to match the size and settings
@@ -1172,15 +1133,12 @@ export class Renderer3D extends Renderer {
     }
     return this._tempFramebuffer;
   }
-
   //////////////////////////////////////////////
   // HASH | for geometry
   //////////////////////////////////////////////
-
   geometryInHash(gid) {
     return this.geometryBufferCache.isCached(gid);
   }
-
   /**
    * [resize description]
    * @private
@@ -1240,7 +1198,6 @@ export class Renderer3D extends Renderer {
       }
     }
   }
-
   applyMatrix(a, b, c, d, e, f) {
     this.states.setValue("uModelMatrix", this.states.uModelMatrix.clone());
     if (arguments.length === 16) {
@@ -1267,7 +1224,6 @@ export class Renderer3D extends Renderer {
       ]);
     }
   }
-
   /**
    * [translate description]
    * @private
@@ -1287,7 +1243,6 @@ export class Renderer3D extends Renderer {
     this.states.uModelMatrix.translate([x, y, z]);
     return this;
   }
-
   /**
    * Scales the Model View Matrix by a vector
    * @private
@@ -1301,7 +1256,6 @@ export class Renderer3D extends Renderer {
     this.states.uModelMatrix.scale(x, y, z);
     return this;
   }
-
   rotate(rad, axis) {
     if (typeof axis === "undefined") {
       return this.rotateZ(rad);
@@ -1310,31 +1264,18 @@ export class Renderer3D extends Renderer {
     Matrix.prototype.rotate4x4.apply(this.states.uModelMatrix, arguments);
     return this;
   }
-
   rotateX(rad) {
     this.rotate(rad, 1, 0, 0);
     return this;
   }
-
   rotateY(rad) {
     this.rotate(rad, 0, 1, 0);
     return this;
   }
-
   rotateZ(rad) {
     this.rotate(rad, 0, 0, 1);
     return this;
   }
-
-  push() {
-    super.push()
-    const saved = !!(this.states.textFont?.font);
-    if (saved) {
-      this.textDrawingContext().save()
-    }
-    this._textContextSavedStack.push(saved);
-  }
-
   pop(...args) {
     if (
       this._clipDepths.length > 0 &&
@@ -1348,7 +1289,6 @@ export class Renderer3D extends Renderer {
     super.pop(...args);
     this._applyStencilTestIfClipping();
   }
-
   resetMatrix() {
     this.states.setValue("uModelMatrix", this.states.uModelMatrix.clone());
     this.states.uModelMatrix.reset();
@@ -1356,11 +1296,9 @@ export class Renderer3D extends Renderer {
     this.states.uViewMatrix.set(this.states.curCamera.cameraMatrix);
     return this;
   }
-
   //////////////////////////////////////////////
   // SHADER
   //////////////////////////////////////////////
-
   _getStrokeShader() {
     // select the stroke shader to use
     const stroke = this.states.userStrokeShader;
@@ -1369,7 +1307,6 @@ export class Renderer3D extends Renderer {
     }
     return this._getLineShader();
   }
-
   /*
    * This method will handle both image shaders and
    * fill shaders, returning the appropriate shader
@@ -1400,23 +1337,18 @@ export class Renderer3D extends Renderer {
     // Default to color shader if no other conditions are met
     return this._getColorShader();
   }
-
   baseMaterialShader() {
     return this._getLightShader();
   }
-
   baseNormalShader() {
     return this._getNormalShader();
   }
-
   baseColorShader() {
     return this._getColorShader();
   }
-
   baseStrokeShader() {
     return this._getLineShader();
   }
-
   /**
    * @private
    * @returns {p5.Framebuffer|null} The currently active framebuffer, or null if
@@ -1425,11 +1357,9 @@ export class Renderer3D extends Renderer {
   activeFramebuffer() {
     return this.activeFramebuffers[this.activeFramebuffers.length - 1] || null;
   }
-
   createFramebuffer(options) {
     return new Framebuffer(this, options);
   }
-
   _setGlobalUniforms(shader) {
     const modelMatrix = this.states.uModelMatrix;
     const viewMatrix = this.states.uViewMatrix;
@@ -1466,7 +1396,6 @@ export class Renderer3D extends Renderer {
     }
     shader.setUniform("uViewport", this._viewport);
   }
-
   _setStrokeUniforms(strokeShader) {
     // set the uniform values
     strokeShader.setUniform("uSimpleLines", this._simpleLines);
@@ -1479,7 +1408,6 @@ export class Renderer3D extends Renderer {
       STROKE_JOIN_ENUM[this.curStrokeJoin]
     );
   }
-
   _setFillUniforms(fillShader) {
     this.mixedSpecularColor = [...this.states.curSpecularColor];
     const empty = this._getEmptyTexture();
@@ -1592,7 +1520,6 @@ export class Renderer3D extends Renderer {
       this.states.quadraticAttenuation
     );
   }
-
   // getting called from _setFillUniforms
   _setImageLightUniforms(shader) {
     //set uniform values
@@ -1611,7 +1538,6 @@ export class Renderer3D extends Renderer {
       shader.setUniform("environmentMapSpecular", this._getEmptyTexture());
     }
   }
-
   /**
    * @private
    * Note: DO NOT CALL THIS while in the middle of binding another texture,
@@ -1627,7 +1553,6 @@ export class Renderer3D extends Renderer {
     }
     return this._emptyTexture;
   }
-
   getTexture(input) {
     let src = input;
     if (src instanceof Framebuffer) {
@@ -1643,11 +1568,9 @@ export class Renderer3D extends Renderer {
     this.textures.set(src, tex);
     return tex;
   }
-
   //////////////////////////////////////////////
   // Buffers
   //////////////////////////////////////////////
-
   _normalizeBufferData(values, type = Float32Array) {
     if (!values) return null;
     if (values instanceof DataArray) {
@@ -1658,7 +1581,6 @@ export class Renderer3D extends Renderer {
     }
     return new type(values);
   }
-
   ///////////////////////////////
   //// UTILITY FUNCTIONS
   //////////////////////////////
@@ -1667,7 +1589,6 @@ export class Renderer3D extends Renderer {
     if (aLength !== b.length) return false;
     return a.every((ai, i) => ai === b[i]);
   }
-
   _isTypedArray(arr) {
     return [
       Float32Array,
@@ -1677,7 +1598,6 @@ export class Renderer3D extends Renderer {
       Uint32Array,
     ].some((x) => arr instanceof x);
   }
-
   /**
    * turn a p5.Vector Array into a one dimensional number array
    * @private
@@ -1689,7 +1609,49 @@ export class Renderer3D extends Renderer {
   _vToNArray(arr) {
     return arr.flatMap((item) => [item.x, item.y, item.z]);
   }
-
+  ///////////////////////////////
+  //// TEXT SUPPORT METHODS
+  //////////////////////////////
+  //This is helper function to reset the context anytime the attributes
+  //are changed with setAttributes()
+  //////////////////////////////////////////////
+  // Geometry Building
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Shape drawing
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Rendering
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Positioning
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // COLOR
+  //////////////////////////////////////////////
+  // Pass this off to the host instance so that we can treat a renderer and a
+  // framebuffer the same in filter()
+  //////////////////////////////////////////////
+  // HASH | for geometry
+  //////////////////////////////////////////////
+  push() {
+    super.push()
+    const saved = !!(this.states.textFont?.font);
+    if (saved) {
+      this.textDrawingContext().save()
+    }
+    this._textContextSavedStack.push(saved);
+  }
+  //////////////////////////////////////////////
+  // SHADER
+  //////////////////////////////////////////////
+  // getting called from _setFillUniforms
+  //////////////////////////////////////////////
+  // Buffers
+  //////////////////////////////////////////////
+  ///////////////////////////////
+  //// UTILITY FUNCTIONS
+  //////////////////////////////
   ///////////////////////////////
   //// TEXT SUPPORT METHODS
   //////////////////////////////
@@ -1991,13 +1953,6 @@ export class Renderer3D extends Renderer {
     throw new Error(
       "_finalizeMipmapTexture must be implemented by the renderer",
     );
-  }
-
-  remove() {
-    if (this._textCanvas) {
-      this._textCanvas.parentElement.removeChild(this._textCanvas);
-    }
-    super.remove();
   }
 }
 
