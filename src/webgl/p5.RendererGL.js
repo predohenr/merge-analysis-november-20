@@ -139,7 +139,9 @@ class RendererGL extends Renderer3D {
   }
 
   //////////////////////////////////////////////
+
   // Rendering
+
   //////////////////////////////////////////////
 
   /*_drawPoints(vertices, vertexBuffer) {
@@ -172,6 +174,7 @@ class RendererGL extends Renderer3D {
    * @param  {Number[]} color [description]
    * @return {Number[]}  Normalized numbers array
    */
+
   _applyBlendMode () {
     if (this._cachedBlendMode === this.states.curBlendMode) {
       return;
@@ -265,6 +268,7 @@ class RendererGL extends Renderer3D {
    * and disables them so that they don't affect rendering.
    * @private
    */
+
   _disableRemainingAttributes(shader) {
     for (const location of this.registerEnabled.values()) {
       if (
@@ -356,7 +360,9 @@ class RendererGL extends Renderer3D {
   }
 
   //////////////////////////////////////////////
+
   // Setting
+
   //////////////////////////////////////////////
 
   _setAttributeDefaults(pInst) {
@@ -448,6 +454,7 @@ class RendererGL extends Renderer3D {
   }
 
   //This is helper function to reset the context anytime the attributes
+
   //are changed with setAttributes()
 
   _resetContext(options, callback) {
@@ -565,6 +572,7 @@ class RendererGL extends Renderer3D {
   }
 
   // x,y are canvas-relative (pre-scaled by _pixelDensity)
+
   _getPixel(x, y) {
     const gl = this.GL;
     return readPixelWebGL(
@@ -585,6 +593,7 @@ class RendererGL extends Renderer3D {
    *
    * @private
    */
+
   loadPixels() {
     //@todo_FES
     if (this._pInst._glAttributes.preserveDrawingBuffer !== true) {
@@ -668,6 +677,7 @@ class RendererGL extends Renderer3D {
    * @param {Number} b normalized blue val.
    * @param {Number} a normalized alpha val.
    */
+
   clear(...args) {
     const _r = args[0] || 0;
     const _g = args[1] || 0;
@@ -698,6 +708,7 @@ class RendererGL extends Renderer3D {
    * Resets all depth information so that nothing previously drawn will
    * occlude anything subsequently drawn.
    */
+
   clearDepth(depth = 1) {
     this.GL.clearDepth(depth);
     this.GL.clear(this.GL.DEPTH_BUFFER_BIT);
@@ -718,9 +729,10 @@ class RendererGL extends Renderer3D {
     }
   }
 
-
   //////////////////////////////////////////////
+
   // SHADER
+
   //////////////////////////////////////////////
 
   /*
@@ -730,6 +742,7 @@ class RendererGL extends Renderer3D {
    */
 
   // TODO move to super class
+
   _getSphereMapping(img) {
     if (!this.sphereMapping) {
       this.sphereMapping = this._pInst.createFilterShader(sphereMapping);
@@ -971,6 +984,7 @@ class RendererGL extends Renderer3D {
   }
 
   // TODO move to super class
+
   /*
    *  used in imageLight,
    *  To create a blurry image from the input non blurry img, if it doesn't already exist
@@ -978,6 +992,7 @@ class RendererGL extends Renderer3D {
    *  Returns the blurry image
    *  maps a Image used by imageLight() to a p5.Framebuffer
    */
+
   getDiffusedTexture(input) {
     // if one already exists for a given input image
     if (this.diffusedTextures.get(input) != null) {
@@ -1014,6 +1029,7 @@ class RendererGL extends Renderer3D {
   }
 
   // TODO move to super class
+
   /*
    *  used in imageLight,
    *  To create a texture from the input non blurry image, if it doesn't already exist
@@ -1023,6 +1039,7 @@ class RendererGL extends Renderer3D {
    *  Storing the texture for input image in map called `specularTextures`
    *  maps the input Image to a p5.MipmapTexture
    */
+
   getSpecularTexture(input) {
     // check if already exits (there are tex of diff resolution so which one to check)
     // currently doing the whole array
@@ -1076,6 +1093,7 @@ class RendererGL extends Renderer3D {
    * when passed more than two arguments it also updates or initializes
    * the data associated with the buffer
    */
+
   _bindBuffer(buffer, target, values, type, usage) {
     const gl = this.GL;
     if (!target) target = gl.ARRAY_BUFFER;
@@ -1339,7 +1357,6 @@ class RendererGL extends Renderer3D {
     this.GL.deleteTexture(texture);
   }
 
-
   /**
    * @private blends colors according to color components.
    * If alpha value is less than 1, or non-standard blendMode
@@ -1349,6 +1366,7 @@ class RendererGL extends Renderer3D {
    * transparency internally, e.g. via vertex colors
    * @return {Number[]}  Normalized numbers array
    */
+
   _applyColorBlend(colors, hasTransparency) {
     const gl = this.GL;
 
@@ -1381,11 +1399,80 @@ class RendererGL extends Renderer3D {
   }
 
   //////////////////////////////////////////////
+
   // Shader hooks
+
   //////////////////////////////////////////////
+
   populateHooks(shader, src, shaderType) {
     return populateGLSLHooks(shader, src, shaderType);
   }
+
+  //////////////////////////////////////////////
+
+  // Geometry Building
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // Shape drawing
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // Rendering
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // Setting
+
+  //////////////////////////////////////////////
+
+  //This is helper function to reset the context anytime the attributes
+
+  //are changed with setAttributes()
+
+  //////////////////////////////////////////////
+
+  // Positioning
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // COLOR
+
+  //////////////////////////////////////////////
+
+  // Pass this off to the host instance so that we can treat a renderer and a
+
+  // framebuffer the same in filter()
+
+  // x,y are canvas-relative (pre-scaled by _pixelDensity)
+
+  //////////////////////////////////////////////
+
+  // HASH | for geometry
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // SHADER
+
+  //////////////////////////////////////////////
+
+  // getting called from _setFillUniforms
+
+  ///////////////////////////////
+
+  //// UTILITY FUNCTIONS
+
+  //////////////////////////////
 }
 
 function rendererGL(p5, fn) {
