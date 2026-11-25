@@ -437,7 +437,6 @@ class RendererGL extends Renderer {
   //////////////////////////////////////////////
   // Geometry Building
   //////////////////////////////////////////////
-
   /**
    * Starts creating a new p5.Geometry. Subsequent shapes drawn will be added
    * to the geometry and then returned when
@@ -460,7 +459,6 @@ class RendererGL extends Renderer {
     this.geometryBuilder.prevFillColor = this.states.fillColor;
     this.fill(new Color([-1, -1, -1, -1]));
   }
-
   /**
    * Finishes creating a new <a href="#/p5.Geometry">p5.Geometry</a> that was
    * started using <a href="#/p5/beginGeometry">beginGeometry()</a>. One can also
@@ -481,7 +479,6 @@ class RendererGL extends Renderer {
     this.geometryBuilder = undefined;
     return geometry;
   }
-
   /**
    * Creates a new <a href="#/p5.Geometry">p5.Geometry</a> that contains all
    * the shapes drawn in a provided callback function. The returned combined shape
@@ -503,17 +500,14 @@ class RendererGL extends Renderer {
     callback();
     return this.endGeometry();
   }
-
   //////////////////////////////////////////////
   // Shape drawing
   //////////////////////////////////////////////
-
   beginShape(...args) {
     super.beginShape(...args);
     // TODO remove when shape refactor is complete
     // this.shapeBuilder.beginShape(...args);
   }
-
   curveDetail(d) {
     if (d === undefined) {
       return this.states.curveDetail;
@@ -521,7 +515,6 @@ class RendererGL extends Renderer {
       this.states.setValue("curveDetail", d);
     }
   }
-
   drawShape(shape) {
     const visitor = new PrimitiveToVerticesConverter({
       curveDetail: this.states.curveDetail,
@@ -549,16 +542,13 @@ class RendererGL extends Renderer {
     }
     this.drawShapeCount = 1;
   }
-
   endShape(mode, count) {
     this.drawShapeCount = count;
     super.endShape(mode, count);
   }
-
   vertexProperty(...args) {
     this.currentShape.vertexProperty(...args);
   }
-
   normal(xorv, y, z) {
     if (xorv instanceof Vector) {
       this.states.setValue("_currentNormal", xorv);
@@ -567,7 +557,6 @@ class RendererGL extends Renderer {
     }
     this.updateShapeVertexProperties();
   }
-
   model(model, count = 1) {
     if (model.vertices.length > 0) {
       if (this.geometryBuilder) {
@@ -582,11 +571,9 @@ class RendererGL extends Renderer {
       }
     }
   }
-
   //////////////////////////////////////////////
   // Rendering
   //////////////////////////////////////////////
-
   _drawGeometry(geometry, { mode = constants.TRIANGLES, count = 1 } = {}) {
     for (const propName in geometry.userVertexProperties) {
       const prop = geometry.userVertexProperties[propName];
@@ -615,7 +602,6 @@ class RendererGL extends Renderer {
 
     this.buffers.user = [];
   }
-
   _drawGeometryScaled(model, scaleX, scaleY, scaleZ) {
     let originalModelMatrix = this.states.uModelMatrix;
     this.states.setValue("uModelMatrix", this.states.uModelMatrix.clone());
@@ -631,7 +617,6 @@ class RendererGL extends Renderer {
       this.states.setValue("uModelMatrix", originalModelMatrix);
     }
   }
-
   _drawFills(geometry, { count, mode } = {}) {
     this._useVertexColor = geometry.vertexColors.length > 0;
 
@@ -659,7 +644,6 @@ class RendererGL extends Renderer {
 
     shader.unbindShader();
   }
-
   _drawStrokes(geometry, { count } = {}) {
     const gl = this.GL;
 
@@ -701,7 +685,6 @@ class RendererGL extends Renderer {
 
     shader.unbindShader();
   }
-
   _drawPoints(vertices, vertexBuffer) {
     const gl = this.GL;
     const pointShader = this._getPointShader();
@@ -726,7 +709,6 @@ class RendererGL extends Renderer {
 
     pointShader.unbindShader();
   }
-
   _prepareUserAttributes(geometry, shader) {
     for (const buff of this.buffers.user) {
       if (!this._pInst.constructor.disableFriendleErrors) {
@@ -750,7 +732,6 @@ class RendererGL extends Renderer {
       buff._prepareBuffer(geometry, shader);
     }
   }
-
   _drawBuffers(geometry, { mode = this.GL.TRIANGLES, count }) {
     const gl = this.GL;
     const glBuffers = this.geometryBufferCache.getCached(geometry);
@@ -809,15 +790,12 @@ class RendererGL extends Renderer {
       }
     }
   }
-
   _getOrMakeCachedBuffers(geometry) {
     return this.geometryBufferCache.ensureCached(geometry);
   }
-
   //////////////////////////////////////////////
   // Setting
   //////////////////////////////////////////////
-
   _setAttributeDefaults(pInst) {
     // See issue #3850, safer to enable AA in Safari
     const applyAA = navigator.userAgent.toLowerCase().includes("safari");
@@ -838,7 +816,6 @@ class RendererGL extends Renderer {
     }
     return;
   }
-
   _initContext() {
     if (this._pInst._glAttributes?.version !== 1) {
       // Unless WebGL1 is explicitly asked for, try to create a WebGL2 context
@@ -876,12 +853,10 @@ class RendererGL extends Renderer {
       );
     }
   }
-
   _getMaxTextureSize() {
     const gl = this.drawingContext;
     return gl.getParameter(gl.MAX_TEXTURE_SIZE);
   }
-
   _adjustDimensions(width, height) {
     if (!this._maxTextureSize) {
       this._maxTextureSize = this._getMaxTextureSize();
@@ -903,10 +878,8 @@ class RendererGL extends Renderer {
 
     return { adjustedWidth, adjustedHeight };
   }
-
   //This is helper function to reset the context anytime the attributes
   //are changed with setAttributes()
-
   _resetContext(options, callback) {
     const w = this.width;
     const h = this.height;
@@ -973,7 +946,6 @@ class RendererGL extends Renderer {
       }, 0);
     }
   }
-
   _update() {
     // reset model view and apply initial camera transform
     // (containing only look at info; no projection).
@@ -1012,7 +984,6 @@ class RendererGL extends Renderer {
     this.GL.clear(this.GL.DEPTH_BUFFER_BIT | this.GL.STENCIL_BUFFER_BIT);
     this.GL.disable(this.GL.STENCIL_TEST);
   }
-
   /**
    * [background description]
    */
@@ -1020,29 +991,23 @@ class RendererGL extends Renderer {
     const _col = this._pInst.color(...args);
     this.clear(..._col._getRGBA());
   }
-
   //////////////////////////////////////////////
   // Positioning
   //////////////////////////////////////////////
-
   get uModelMatrix() {
     return this.states.uModelMatrix;
   }
-
   get uViewMatrix() {
     return this.states.uViewMatrix;
   }
-
   get uPMatrix() {
     return this.states.uPMatrix;
   }
-
   get uMVMatrix() {
     const m = this.uModelMatrix.copy();
     m.mult(this.uViewMatrix);
     return m;
   }
-
   /**
    * Get a matrix from world-space to screen-space
    */
@@ -1060,7 +1025,6 @@ class RendererGL extends Renderer {
     const worldToScreenMatrix = modelViewProjectionMatrix.mult(projectedToScreenMatrix);
     return worldToScreenMatrix;
   }
-
   //////////////////////////////////////////////
   // COLOR
   //////////////////////////////////////////////
@@ -1104,7 +1068,6 @@ class RendererGL extends Renderer {
     this.states.setValue("_useNormalMaterial", false);
     this.states.setValue("_tex", null);
   }
-
   /**
    * Basic stroke material for geometry with a given color
    * @param  {Number|Number[]|String|p5.Color} v1  gray value,
@@ -1139,7 +1102,6 @@ class RendererGL extends Renderer {
     // const color = fn.color.apply(this._pInst, arguments);
     this.states.setValue("curStrokeColor", this.states.strokeColor._array);
   }
-
   getCommonVertexProperties() {
     if (!this.states) debugger;
     return {
@@ -1149,17 +1111,14 @@ class RendererGL extends Renderer {
       normal: this.states._currentNormal,
     };
   }
-
   getSupportedIndividualVertexProperties() {
     return {
       textureCoordinates: true,
     };
   }
-
   strokeCap(cap) {
     this.curStrokeCap = cap;
   }
-
   strokeJoin(join) {
     this.curStrokeJoin = join;
   }
@@ -1326,17 +1285,14 @@ class RendererGL extends Renderer {
     this.pop();
     this.pop();
   }
-
   // Pass this off to the host instance so that we can treat a renderer and a
   // framebuffer the same in filter()
-
   pixelDensity(newDensity) {
     if (newDensity) {
       return this._pInst.pixelDensity(newDensity);
     }
     return this._pInst.pixelDensity();
   }
-
   blendMode(mode) {
     if (
       mode === constants.DARKEST ||
@@ -1363,7 +1319,6 @@ class RendererGL extends Renderer {
       );
     }
   }
-
   erase(opacityFill, opacityStroke) {
     if (!this._isErasing) {
       this.preEraseBlend = this.states.curBlendMode;
@@ -1375,7 +1330,6 @@ class RendererGL extends Renderer {
       this.states.setValue("curStrokeColor", [1, 1, 1, opacityStroke / 255]);
     }
   }
-
   noErase() {
     if (this._isErasing) {
       // Restore colors
@@ -1389,11 +1343,9 @@ class RendererGL extends Renderer {
       this._applyBlendMode();
     }
   }
-
   drawTarget() {
     return this.activeFramebuffers[this.activeFramebuffers.length - 1] || this;
   }
-
   beginClip(options = {}) {
     super.beginClip(options);
 
@@ -1421,7 +1373,6 @@ class RendererGL extends Renderer {
     if (this.states.fillColor) this.fill(0, 0);
     if (this.states.strokeColor) this.stroke(0, 0);
   }
-
   endClip() {
     this.pop();
 
@@ -1444,7 +1395,6 @@ class RendererGL extends Renderer {
 
     super.endClip();
   }
-
   _clearClip() {
     this.GL.clearStencil(1);
     this.GL.clear(this.GL.STENCIL_BUFFER_BIT);
@@ -1453,7 +1403,6 @@ class RendererGL extends Renderer {
     }
     this.drawTarget()._isClipApplied = false;
   }
-
   // x,y are canvas-relative (pre-scaled by _pixelDensity)
   _getPixel(x, y) {
     const gl = this.GL;
@@ -1467,7 +1416,6 @@ class RendererGL extends Renderer {
       this._pInst.height * this._pInst.pixelDensity()
     );
   }
-
   /**
    * Loads the pixels data for this canvas into the pixels[] attribute.
    * Note that updatePixels() and set() do not work.
@@ -1501,7 +1449,6 @@ class RendererGL extends Renderer {
       this.height * pd
     );
   }
-
   updatePixels() {
     const fbo = this._getTempFramebuffer();
     fbo.pixels = this.pixels;
@@ -1525,7 +1472,6 @@ class RendererGL extends Renderer {
     this.GL.clearDepth(1);
     this.GL.clear(this.GL.DEPTH_BUFFER_BIT);
   }
-
   /**
    * @private
    * @returns {p5.Framebuffer} A p5.Framebuffer set to match the size and settings
@@ -1543,20 +1489,16 @@ class RendererGL extends Renderer {
     }
     return this._tempFramebuffer;
   }
-
   //////////////////////////////////////////////
   // HASH | for geometry
   //////////////////////////////////////////////
-
   geometryInHash(gid) {
     return this.geometryBufferCache.isCached(gid);
   }
-
   viewport(w, h) {
     this._viewport = [0, 0, w, h];
     this.GL.viewport(0, 0, w, h);
   }
-
   /**
    * [resize description]
    * @private
@@ -1616,7 +1558,6 @@ class RendererGL extends Renderer {
       }
     }
   }
-
   /**
    * clears color and depth buffers
    * with r,g,b,a
@@ -1651,7 +1592,6 @@ class RendererGL extends Renderer {
     this.GL.clearDepth(1);
     this.GL.clear(this.GL.COLOR_BUFFER_BIT | this.GL.DEPTH_BUFFER_BIT);
   }
-
   /**
    * Resets all depth information so that nothing previously drawn will
    * occlude anything subsequently drawn.
@@ -1660,7 +1600,6 @@ class RendererGL extends Renderer {
     this.GL.clearDepth(depth);
     this.GL.clear(this.GL.DEPTH_BUFFER_BIT);
   }
-
   applyMatrix(a, b, c, d, e, f) {
     this.states.setValue("uModelMatrix", this.states.uModelMatrix.clone());
     if (arguments.length === 16) {
@@ -1687,7 +1626,6 @@ class RendererGL extends Renderer {
       ]);
     }
   }
-
   /**
    * [translate description]
    * @private
@@ -1707,7 +1645,6 @@ class RendererGL extends Renderer {
     this.states.uModelMatrix.translate([x, y, z]);
     return this;
   }
-
   /**
    * Scales the Model View Matrix by a vector
    * @private
@@ -1721,7 +1658,6 @@ class RendererGL extends Renderer {
     this.states.uModelMatrix.scale(x, y, z);
     return this;
   }
-
   rotate(rad, axis) {
     if (typeof axis === "undefined") {
       return this.rotateZ(rad);
@@ -1730,22 +1666,18 @@ class RendererGL extends Renderer {
     Matrix.prototype.rotate4x4.apply(this.states.uModelMatrix, arguments);
     return this;
   }
-
   rotateX(rad) {
     this.rotate(rad, 1, 0, 0);
     return this;
   }
-
   rotateY(rad) {
     this.rotate(rad, 0, 1, 0);
     return this;
   }
-
   rotateZ(rad) {
     this.rotate(rad, 0, 0, 1);
     return this;
   }
-
   pop(...args) {
     if (
       this._clipDepths.length > 0 &&
@@ -1775,17 +1707,14 @@ class RendererGL extends Renderer {
     this.states.uViewMatrix.set(this.states.curCamera.cameraMatrix);
     return this;
   }
-
   //////////////////////////////////////////////
   // SHADER
   //////////////////////////////////////////////
-
   /*
    * shaders are created and cached on a per-renderer basis,
    * on the grounds that each renderer will have its own gl context
    * and the shader must be valid in that context.
    */
-
   _getStrokeShader() {
     // select the stroke shader to use
     const stroke = this.states.userStrokeShader;
@@ -1794,7 +1723,6 @@ class RendererGL extends Renderer {
     }
     return this._getLineShader();
   }
-
   _getSphereMapping(img) {
     if (!this.sphereMapping) {
       this.sphereMapping = this._pInst.createFilterShader(sphereMapping);
@@ -1807,7 +1735,6 @@ class RendererGL extends Renderer {
     this.sphereMapping.setUniform("uSampler", img);
     return this.sphereMapping;
   }
-
   /*
    * This method will handle both image shaders and
    * fill shaders, returning the appropriate shader
@@ -1838,7 +1765,6 @@ class RendererGL extends Renderer {
     // Default to color shader if no other conditions are met
     return this._getColorShader();
   }
-
   _getPointShader() {
     // select the point shader to use
     const point = this.states.userPointShader;
@@ -1848,6 +1774,33 @@ class RendererGL extends Renderer {
     return point;
   }
 
+  _getPointShader() {
+    if (!this._defaultPointShader) {
+      this._defaultPointShader = new Shader(
+        this,
+        this._webGL2CompatibilityPrefix("vert", "mediump") +
+          defaultShaders.pointVert,
+        this._webGL2CompatibilityPrefix("frag", "mediump") +
+          defaultShaders.pointFrag,
+        {
+          vertex: {
+            "void beforeVertex": "() {}",
+            "vec3 getLocalPosition": "(vec3 position) { return position; }",
+            "vec3 getWorldPosition": "(vec3 position) { return position; }",
+            "float getPointSize": "(float size) { return size; }",
+            "void afterVertex": "() {}",
+          },
+          fragment: {
+            "void beforeFragment": "() {}",
+            "vec4 getFinalColor": "(vec4 color) { return color; }",
+            "bool shouldDiscard": "(bool outside) { return outside; }",
+            "void afterFragment": "() {}",
+          },
+        }
+      );
+    }
+    return this._defaultPointShader;
+  }
   baseMaterialShader() {
     if (!this._pInst._glAttributes.perPixelLighting) {
       throw new Error(
@@ -1856,7 +1809,6 @@ class RendererGL extends Renderer {
     }
     return this._getLightShader();
   }
-
   _getLightShader() {
     if (!this._defaultLightShader) {
       if (this._pInst._glAttributes.perPixelLighting) {
@@ -1904,11 +1856,9 @@ class RendererGL extends Renderer {
 
     return this._defaultLightShader;
   }
-
   baseNormalShader() {
     return this._getNormalShader();
   }
-
   _getNormalShader() {
     if (!this._defaultNormalShader) {
       this._defaultNormalShader = new Shader(
@@ -1936,11 +1886,9 @@ class RendererGL extends Renderer {
 
     return this._defaultNormalShader;
   }
-
   baseColorShader() {
     return this._getColorShader();
   }
-
   _getColorShader() {
     if (!this._defaultColorShader) {
       this._defaultColorShader = new Shader(
@@ -1968,7 +1916,6 @@ class RendererGL extends Renderer {
 
     return this._defaultColorShader;
   }
-
   /**
    * TODO(dave): un-private this when there is a way to actually override the
    * shader used for points
@@ -1996,39 +1943,9 @@ class RendererGL extends Renderer {
   pointShader() {
     return this._getPointShader();
   }
-
-  _getPointShader() {
-    if (!this._defaultPointShader) {
-      this._defaultPointShader = new Shader(
-        this,
-        this._webGL2CompatibilityPrefix("vert", "mediump") +
-          defaultShaders.pointVert,
-        this._webGL2CompatibilityPrefix("frag", "mediump") +
-          defaultShaders.pointFrag,
-        {
-          vertex: {
-            "void beforeVertex": "() {}",
-            "vec3 getLocalPosition": "(vec3 position) { return position; }",
-            "vec3 getWorldPosition": "(vec3 position) { return position; }",
-            "float getPointSize": "(float size) { return size; }",
-            "void afterVertex": "() {}",
-          },
-          fragment: {
-            "void beforeFragment": "() {}",
-            "vec4 getFinalColor": "(vec4 color) { return color; }",
-            "bool shouldDiscard": "(bool outside) { return outside; }",
-            "void afterFragment": "() {}",
-          },
-        }
-      );
-    }
-    return this._defaultPointShader;
-  }
-
   baseStrokeShader() {
     return this._getLineShader();
   }
-
   _getLineShader() {
     if (!this._defaultLineShader) {
       this._defaultLineShader = new Shader(
@@ -2061,7 +1978,6 @@ class RendererGL extends Renderer {
 
     return this._defaultLineShader;
   }
-
   _getFontShader() {
     if (!this._defaultFontShader) {
       if (this.webglVersion === constants.WEBGL) {
@@ -2077,28 +1993,6 @@ class RendererGL extends Renderer {
     }
     return this._defaultFontShader;
   }
-
-  baseFilterShader() {
-    if (!this._baseFilterShader) {
-      this._baseFilterShader = new Shader(
-        this,
-        this._webGL2CompatibilityPrefix("vert", "highp") +
-          defaultShaders.filterBaseVert,
-        this._webGL2CompatibilityPrefix("frag", "highp") +
-          defaultShaders.filterBaseFrag,
-        {
-            vertex: {},
-            fragment: {
-              "vec4 getColor": `(FilterInputs inputs, in sampler2D canvasContent) {
-                return getTexture(canvasContent, inputs.texCoord);
-              }`,
-            },
-          }
-      );
-    }
-    return this._baseFilterShader;
-  }
-
   _webGL2CompatibilityPrefix(shaderType, floatPrecision) {
     let code = "";
     if (this.webglVersion === constants.WEBGL2) {
@@ -2114,7 +2008,6 @@ class RendererGL extends Renderer {
     }
     return code;
   }
-
   /**
    * @private
    * Note: DO NOT CALL THIS while in the middle of binding another texture,
@@ -2130,7 +2023,6 @@ class RendererGL extends Renderer {
     }
     return this._emptyTexture;
   }
-
   getTexture(input) {
     let src = input;
     if (src instanceof Framebuffer) {
@@ -2187,7 +2079,6 @@ class RendererGL extends Renderer {
     this.diffusedTextures.set(input, newFramebuffer);
     return newFramebuffer;
   }
-
   /*
    *  used in imageLight,
    *  To create a texture from the input non blurry image, if it doesn't already exist
@@ -2245,7 +2136,6 @@ class RendererGL extends Renderer {
     this.specularTextures.set(input, tex);
     return tex;
   }
-
   /**
    * @private
    * @returns {p5.Framebuffer|null} The currently active framebuffer, or null if
@@ -2254,11 +2144,9 @@ class RendererGL extends Renderer {
   activeFramebuffer() {
     return this.activeFramebuffers[this.activeFramebuffers.length - 1] || null;
   }
-
   createFramebuffer(options) {
     return new Framebuffer(this, options);
   }
-
   _setGlobalUniforms(shader) {
     const modelMatrix = this.states.uModelMatrix;
     const viewMatrix = this.states.uViewMatrix;
@@ -2299,7 +2187,6 @@ class RendererGL extends Renderer {
     }
     shader.setUniform("uViewport", this._viewport);
   }
-
   _setStrokeUniforms(strokeShader) {
     // set the uniform values
     strokeShader.setUniform("uSimpleLines", this._simpleLines);
@@ -2312,7 +2199,6 @@ class RendererGL extends Renderer {
       STROKE_JOIN_ENUM[this.curStrokeJoin]
     );
   }
-
   _setFillUniforms(fillShader) {
     this.mixedSpecularColor = [...this.states.curSpecularColor];
 
@@ -2418,7 +2304,6 @@ class RendererGL extends Renderer {
       this.states.quadraticAttenuation
     );
   }
-
   // getting called from _setFillUniforms
   _setImageLightUniforms(shader) {
     //set uniform values
@@ -2434,7 +2319,6 @@ class RendererGL extends Renderer {
       shader.setUniform("environmentMapSpecular", specularLight);
     }
   }
-
   _setPointUniforms(pointShader) {
     // set the uniform values
     pointShader.setUniform("uMaterialColor", this.states.curStrokeColor);
@@ -2445,7 +2329,6 @@ class RendererGL extends Renderer {
       this.states.strokeWeight * this._pixelDensity
     );
   }
-
   /* Binds a buffer to the drawing context
    * when passed more than two arguments it also updates or initializes
    * the data associated with the buffer
@@ -2463,7 +2346,56 @@ class RendererGL extends Renderer {
       this.GL.bufferData(target, data, usage || this.GL.STATIC_DRAW);
     }
   }
-
+  ///////////////////////////////
+  //// UTILITY FUNCTIONS
+  //////////////////////////////
+  //////////////////////////////////////////////
+  // Geometry Building
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Shape drawing
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Rendering
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // Setting
+  //////////////////////////////////////////////
+  //This is helper function to reset the context anytime the attributes
+  //are changed with setAttributes()
+  //////////////////////////////////////////////
+  // COLOR
+  //////////////////////////////////////////////
+  // Pass this off to the host instance so that we can treat a renderer and a
+  // framebuffer the same in filter()
+  // x,y are canvas-relative (pre-scaled by _pixelDensity)
+  //////////////////////////////////////////////
+  // HASH | for geometry
+  //////////////////////////////////////////////
+  //////////////////////////////////////////////
+  // SHADER
+  //////////////////////////////////////////////
+  baseFilterShader() {
+    if (!this._baseFilterShader) {
+      this._baseFilterShader = new Shader(
+        this,
+        this._webGL2CompatibilityPrefix("vert", "highp") +
+          defaultShaders.filterBaseVert,
+        this._webGL2CompatibilityPrefix("frag", "highp") +
+          defaultShaders.filterBaseFrag,
+        {
+            vertex: {},
+            fragment: {
+              "vec4 getColor": `(FilterInputs inputs, in sampler2D canvasContent) {
+                return getTexture(canvasContent, inputs.texCoord);
+              }`,
+            },
+          }
+      );
+    }
+    return this._baseFilterShader;
+  }
+  // getting called from _setFillUniforms
   ///////////////////////////////
   //// UTILITY FUNCTIONS
   //////////////////////////////
