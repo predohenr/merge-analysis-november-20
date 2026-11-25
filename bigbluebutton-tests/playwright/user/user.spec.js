@@ -28,7 +28,7 @@ test.describe.parallel('User', { tag: '@ci' }, () => {
       await timer.stopwatchTest();
     });
 
-    test('Timer', { tag: '@flaky-3.1' }, async ({ browser, context, page })=> {
+    test('Timer', { tag: '@flaky-3.1' }, async ({ browser, context, page }) => {
       const timer = new Timer(browser, context);
       await timer.initModPage(page, true);
       await timer.timerTest();
