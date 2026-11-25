@@ -49,84 +49,163 @@ import { TouchManager } from "../touch_manager.js";
 class AnnotationEditor {
   #accessibilityData = null;
 
-  #allResizerDivs = null;
+  #allResizerDivs = null
 
-  #altText = null;
+;
 
-  #comment = null;
+  #altText = null
 
-  #commentStandaloneButton = null;
+;
 
-  #disabled = false;
+  #comment = null
 
-  #dragPointerId = null;
+;
 
-  #dragPointerType = "";
+  #commentStandaloneButton = null
 
-  #resizersDiv = null;
+;
 
-  #lastPointerCoords = null;
+  #disabled = false
 
-  #savedDimensions = null;
+;
 
-  #focusAC = null;
+  #dragPointerId = null
 
-  #focusedResizerName = "";
+;
 
-  #hasBeenClicked = false;
+  #dragPointerType = ""
 
-  #initialRect = null;
+;
 
-  #isEditing = false;
+  #resizersDiv = null
 
-  #isInEditMode = false;
+;
 
-  #isResizerEnabledForKeyboard = false;
+  #lastPointerCoords = null
 
-  #moveInDOMTimeout = null;
+;
 
-  #prevDragX = 0;
+  #savedDimensions = null
 
-  #prevDragY = 0;
+;
 
-  #telemetryTimeouts = null;
+  #focusAC = null
 
-  #touchManager = null;
+;
 
-  isSelected = false;
+  #focusedResizerName = ""
 
-  _isCopy = false;
+;
 
-  _editToolbar = null;
+  #hasBeenClicked = false
 
-  _initialOptions = Object.create(null);
+;
 
-  _initialData = null;
+  #initialRect = null
 
-  _isVisible = true;
+;
 
-  _uiManager = null;
+  #isEditing = false
 
-  _focusEventsAllowed = true;
+;
 
-  static _l10n = null;
+  #isInEditMode = false
 
-  static _l10nResizer = null;
+;
 
-  #isDraggable = false;
+  #isResizerEnabledForKeyboard = false
 
-  #zIndex = AnnotationEditor._zIndex++;
+;
 
-  static _borderLineWidth = -1;
+  #moveInDOMTimeout = null
 
-  static _colorManager = new ColorManager();
+;
 
-  static _zIndex = 1;
+  #prevDragX = 0
+
+;
+
+  #prevDragY = 0
+
+;
+
+  #telemetryTimeouts = null
+
+;
+
+  #touchManager = null
+
+;
+
+  isSelected = false
+
+;
+
+  _isCopy = false
+
+;
+
+  _editToolbar = null
+
+;
+
+  _initialOptions = Object.create(null)
+
+;
+
+  _initialData = null
+
+;
+
+  _isVisible = true
+
+;
+
+  _uiManager = null
+
+;
+
+  _focusEventsAllowed = true
+
+;
+
+  static _l10n = null
+
+;
+
+  static _l10nResizer = null
+
+;
+
+  #isDraggable = false
+
+;
+
+  #zIndex = AnnotationEditor._zIndex++
+
+;
+
+  static _borderLineWidth = -1
+
+;
+
+  static _colorManager = new ColorManager()
+
+;
+
+  static _zIndex = 1
+
+;
 
   // Time to wait (in ms) before sending the telemetry data.
+
   // We wait a bit to avoid sending too many requests when changing something
+
   // like the thickness of a line.
-  static _telemetryTimeout = 1000;
+
+  static _telemetryTimeout = 1000
+
+;
 
   static get _resizerKeyboardManager() {
     const resize = AnnotationEditor.prototype._resizeWithKeyboard;
@@ -164,6 +243,7 @@ class AnnotationEditor {
   /**
    * @param {AnnotationEditorParameters} parameters
    */
+
   constructor(parameters) {
     if (
       (typeof PDFJSDev === "undefined" || PDFJSDev.test("TESTING")) &&
@@ -241,6 +321,7 @@ class AnnotationEditor {
    * Initialize the l10n stuff for this type of editor.
    * @param {Object} l10n
    */
+
   static initialize(l10n, _uiManager) {
     AnnotationEditor._l10n ??= l10n;
 
@@ -268,12 +349,14 @@ class AnnotationEditor {
    * @param {number} _type
    * @param {*} _value
    */
+
   static updateDefaultParams(_type, _value) {}
 
   /**
    * Get the default properties to set in the UI for this type of editor.
    * @returns {Array}
    */
+
   static get defaultPropertiesToUpdate() {
     return [];
   }
@@ -284,6 +367,7 @@ class AnnotationEditor {
    * @param {string} mime
    * @returns {boolean}
    */
+
   static isHandlingMimeForPasting(mime) {
     return false;
   }
@@ -294,6 +378,7 @@ class AnnotationEditor {
    * @param {DataTransferItem} item
    * @param {AnnotationEditorLayer} parent
    */
+
   static paste(item, parent) {
     unreachable("Not implemented");
   }
@@ -302,6 +387,7 @@ class AnnotationEditor {
    * Get the properties to update in the UI for this editor.
    * @returns {Array}
    */
+
   get propertiesToUpdate() {
     return [];
   }
@@ -322,6 +408,7 @@ class AnnotationEditor {
   /**
    * @returns {boolean} true if the editor handles the Enter key itself.
    */
+
   get isEnterHandled() {
     return true;
   }
@@ -353,6 +440,7 @@ class AnnotationEditor {
    * Add some commands into the CommandManager (undo/redo stuff).
    * @param {Object} params
    */
+
   addCommands(params) {
     this._uiManager.addCommands(params);
   }
@@ -364,6 +452,7 @@ class AnnotationEditor {
   /**
    * This editor will be behind the others.
    */
+
   setInBackground() {
     this.div.style.zIndex = 0;
   }
@@ -371,6 +460,7 @@ class AnnotationEditor {
   /**
    * This editor will be in the foreground.
    */
+
   setInForeground() {
     this.div.style.zIndex = this.#zIndex;
   }
@@ -389,6 +479,7 @@ class AnnotationEditor {
   /**
    * onfocus callback.
    */
+
   focusin(event) {
     if (!this._focusEventsAllowed) {
       return;
@@ -404,6 +495,7 @@ class AnnotationEditor {
    * onblur callback.
    * @param {FocusEvent} event
    */
+
   focusout(event) {
     if (!this._focusEventsAllowed) {
       return;
@@ -440,6 +532,7 @@ class AnnotationEditor {
   /**
    * Commit the data contained in this editor.
    */
+
   commit() {
     if (!this.isInEditMode()) {
       return;
@@ -458,6 +551,7 @@ class AnnotationEditor {
    * @param {number} tx - x-translation in screen coordinates.
    * @param {number} ty - y-translation in screen coordinates.
    */
+
   setAt(x, y, tx, ty) {
     const [width, height] = this.parentDimensions;
     [tx, ty] = this.screenToPageTranslation(tx, ty);
@@ -495,6 +589,7 @@ class AnnotationEditor {
    * @param {number} x - x-translation in screen coordinates.
    * @param {number} y - y-translation in screen coordinates.
    */
+
   translate(x, y) {
     // We don't change the initial position because the move here hasn't been
     // done by the user.
@@ -507,6 +602,7 @@ class AnnotationEditor {
    * @param {number} x - x-translation in page coordinates.
    * @param {number} y - y-translation in page coordinates.
    */
+
   translateInPage(x, y) {
     this.#initialRect ||= [this.x, this.y, this.width, this.height];
     this.#translate(this.pageDimensions, x, y);
@@ -563,6 +659,7 @@ class AnnotationEditor {
    * @param {number} x - in page coordinates.
    * @param {number} y - in page coordinates.
    */
+
   _onTranslating(x, y) {}
 
   /**
@@ -570,6 +667,7 @@ class AnnotationEditor {
    * @param {number} x - in page coordinates.
    * @param {number} y - in page coordinates.
    */
+
   _onTranslated(x, y) {}
 
   get _hasBeenMoved() {
@@ -594,6 +692,7 @@ class AnnotationEditor {
    * position.
    * @returns {Array<number>}
    */
+
   getBaseTranslation() {
     const [parentWidth, parentHeight] = this.parentDimensions;
     const { _borderLineWidth } = AnnotationEditor;
@@ -615,6 +714,7 @@ class AnnotationEditor {
    * @returns {boolean} true if position must be fixed (i.e. make the x and y
    * living in the page).
    */
+
   get _mustFixPosition() {
     return true;
   }
@@ -623,6 +723,7 @@ class AnnotationEditor {
    * Fix the position of the editor in order to keep it inside its parent page.
    * @param {number} [rotation] - the rotation of the page.
    */
+
   fixAndSetPosition(rotation = this.rotation) {
     const {
       div: { style },
@@ -686,6 +787,7 @@ class AnnotationEditor {
    * @param {number} x
    * @param {number} y
    */
+
   screenToPageTranslation(x, y) {
     return AnnotationEditor.#rotatePoint(x, y, this.parentRotation);
   }
@@ -695,6 +797,7 @@ class AnnotationEditor {
    * @param {number} x
    * @param {number} y
    */
+
   pageTranslationToScreen(x, y) {
     return AnnotationEditor.#rotatePoint(x, y, 360 - this.parentRotation);
   }
@@ -735,6 +838,7 @@ class AnnotationEditor {
   /**
    * Set the dimensions of this editor.
    */
+
   setDims() {
     const {
       div: { style },
@@ -749,6 +853,7 @@ class AnnotationEditor {
    * Get the translation used to position this editor when it's created.
    * @returns {Array<number>}
    */
+
   getInitialTranslation() {
     return [0, 0];
   }
@@ -859,6 +964,7 @@ class AnnotationEditor {
   /**
    * Called when the editor has been resized.
    */
+
   _onResized() {}
 
   #addResizeToUndoStack() {
@@ -1037,11 +1143,13 @@ class AnnotationEditor {
   /**
    * Called when the editor is being resized.
    */
+
   _onResizing() {}
 
   /**
    * Called when the alt text dialog is closed.
    */
+
   altTextFinish() {
     this.#altText?.finish();
   }
@@ -1050,6 +1158,7 @@ class AnnotationEditor {
    * Get the toolbar buttons for this editor.
    * @returns {Array<Array<string|object|null>>|null}
    */
+
   get toolbarButtons() {
     return null;
   }
@@ -1058,6 +1167,7 @@ class AnnotationEditor {
    * Add a toolbar for this editor.
    * @returns {Promise<EditorToolbar|null>}
    */
+
   async addEditToolbar() {
     if (this._editToolbar || this.#isInEditMode) {
       return this._editToolbar;
@@ -1116,6 +1226,7 @@ class AnnotationEditor {
    * Create the alt text for this editor.
    * @returns {object}
    */
+
   createAltText() {
     if (!this.#altText) {
       AltText.initialize(AnnotationEditor._l10n);
@@ -1131,16 +1242,16 @@ class AnnotationEditor {
   get altTextData() {
     return this.#altText?.data;
   }
-
-  /**
-   * Set the alt text data.
-   */
   set altTextData(data) {
     if (!this.#altText) {
       return;
     }
     this.#altText.data = data;
   }
+
+  /**
+   * Set the alt text data.
+   */
 
   get guessedAltText() {
     return this.#altText?.guessedText;
@@ -1292,6 +1403,7 @@ class AnnotationEditor {
    * Render this editor in a div.
    * @returns {HTMLDivElement | null}
    */
+
   render() {
     const div = (this.div = document.createElement("div"));
     div.setAttribute("data-editor-rotation", (360 - this.rotation) % 360);
@@ -1415,6 +1527,7 @@ class AnnotationEditor {
    * Onpointerdown callback.
    * @param {PointerEvent} event
    */
+
   pointerdown(event) {
     const { isMac } = FeatureTest.platform;
     if (event.button !== 0 || (event.ctrlKey && isMac)) {
@@ -1572,6 +1685,7 @@ class AnnotationEditor {
    * @param {number} ty - y-translation in screen coordinates.
    * @param {number} [rotation] - the rotation of the page.
    */
+
   getRect(tx, ty, rotation = this.rotation) {
     const scale = this.parentScale;
     const [pageWidth, pageHeight] = this.pageDimensions;
@@ -1642,6 +1756,7 @@ class AnnotationEditor {
    * It's used when serializing the editor.
    * @returns {Array<number>}
    */
+
   getPDFRect() {
     return this.getRect(0, 0);
   }
@@ -1658,6 +1773,7 @@ class AnnotationEditor {
   /**
    * The color has been changed.
    */
+
   onUpdatedColor() {
     this.#comment?.onUpdatedColor();
   }
@@ -1688,12 +1804,14 @@ class AnnotationEditor {
    * Executed once this editor has been rendered.
    * @param {boolean} focus - true if the editor should be focused.
    */
+
   onceAdded(focus) {}
 
   /**
    * Check if the editor contains something.
    * @returns {boolean}
    */
+
   isEmpty() {
     return false;
   }
@@ -1702,6 +1820,7 @@ class AnnotationEditor {
    * Enable edit mode.
    * @returns {boolean} - true if the edit mode has been enabled.
    */
+
   enableEditMode() {
     if (this.isInEditMode()) {
       return false;
@@ -1716,6 +1835,7 @@ class AnnotationEditor {
    * Disable edit mode.
    * @returns {boolean} - true if the edit mode has been disabled.
    */
+
   disableEditMode() {
     if (!this.isInEditMode()) {
       return false;
@@ -1730,6 +1850,7 @@ class AnnotationEditor {
    * Check if the editor is edited.
    * @returns {boolean}
    */
+
   isInEditMode() {
     return this.#isInEditMode;
   }
@@ -1739,6 +1860,7 @@ class AnnotationEditor {
    * events itself.
    * @returns {boolean}
    */
+
   shouldGetKeyboardEvents() {
     return this.#isResizerEnabledForKeyboard;
   }
@@ -1747,6 +1869,7 @@ class AnnotationEditor {
    * Check if this editor needs to be rebuilt or not.
    * @returns {boolean}
    */
+
   needsToBeRebuilt() {
     return this.div && !this.isAttachedToDOM;
   }
@@ -1773,6 +1896,7 @@ class AnnotationEditor {
    *
    * To implement in subclasses.
    */
+
   rebuild() {
     this.#addFocusListeners();
   }
@@ -1781,17 +1905,20 @@ class AnnotationEditor {
    * Rotate the editor when the page is rotated.
    * @param {number} angle
    */
+
   rotate(_angle) {}
 
   /**
    * Resize the editor when the page is resized.
    */
+
   resize() {}
 
   /**
    * Serialize the editor when it has been deleted.
    * @returns {Object}
    */
+
   serializeDeleted() {
     return {
       id: this.annotationElementId,
@@ -1811,6 +1938,7 @@ class AnnotationEditor {
    * @param {Object | null} [context]
    * @returns {Object | null}
    */
+
   serialize(isForCopying = false, context = null) {
     return {
       annotationType: this.mode,
@@ -1831,6 +1959,7 @@ class AnnotationEditor {
    * @param {AnnotationEditorUIManager} uiManager
    * @returns {Promise<AnnotationEditor | null>}
    */
+
   static async deserialize(data, parent, uiManager) {
     const editor = new this.prototype.constructor({
       parent,
@@ -1863,6 +1992,7 @@ class AnnotationEditor {
    * modified.
    * @returns {boolean}
    */
+
   get hasBeenModified() {
     return (
       !!this.annotationElementId && (this.deleted || this.serialize() !== null)
@@ -1873,6 +2003,7 @@ class AnnotationEditor {
    * Remove this editor.
    * It's used on ctrl+backspace action.
    */
+
   remove() {
     this.#focusAC?.abort();
     this.#focusAC = null;
@@ -1908,6 +2039,7 @@ class AnnotationEditor {
   /**
    * @returns {boolean} true if this editor can be resized.
    */
+
   get isResizable() {
     return false;
   }
@@ -1915,6 +2047,7 @@ class AnnotationEditor {
   /**
    * Add the resizers to this editor.
    */
+
   makeResizable() {
     if (this.isResizable) {
       this.#createResizers();
@@ -1930,6 +2063,7 @@ class AnnotationEditor {
    * Get the position of the comment button.
    * @returns {Array<number>|null}
    */
+
   get commentButtonPosition() {
     return this._uiManager.direction === "ltr" ? [1, 0] : [0, 0];
   }
@@ -1980,6 +2114,7 @@ class AnnotationEditor {
    * onkeydown callback.
    * @param {KeyboardEvent} event
    */
+
   keydown(event) {
     if (
       !this.isResizable ||
@@ -2106,6 +2241,7 @@ class AnnotationEditor {
   /**
    * Select this editor.
    */
+
   select() {
     if (this.isSelected && this._editToolbar) {
       this._editToolbar.show();
@@ -2128,6 +2264,90 @@ class AnnotationEditor {
     this._editToolbar?.show();
     this.#altText?.toggleAltTextBadge(false);
   }
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  // Time to wait (in ms) before sending the telemetry data.
+
+  // We wait a bit to avoid sending too many requests when changing something
+
+  // like the thickness of a line.
+
+;
 
   focus() {
     if (this.div && !this.div.contains(document.activeElement)) {
@@ -2241,11 +2461,6 @@ class AnnotationEditor {
   get isEditing() {
     return this.#isEditing;
   }
-
-  /**
-   * When set to true, it means that this editor is currently edited.
-   * @param {boolean} value
-   */
   set isEditing(value) {
     this.#isEditing = value;
     if (!this.parent) {
@@ -2258,6 +2473,11 @@ class AnnotationEditor {
       this.parent.setActiveEditor(null);
     }
   }
+
+  /**
+   * When set to true, it means that this editor is currently edited.
+   * @param {boolean} value
+   */
 
   static get MIN_SIZE() {
     return 16;
