@@ -140,7 +140,9 @@ class RendererGL extends Renderer3D {
   }
 
   //////////////////////////////////////////////
+
   // Rendering
+
   //////////////////////////////////////////////
 
   /*_drawPoints(vertices, vertexBuffer) {
@@ -173,6 +175,7 @@ class RendererGL extends Renderer3D {
    * @param  {Number[]} color [description]
    * @return {Number[]}  Normalized numbers array
    */
+
   _applyBlendMode () {
     if (this._cachedBlendMode === this.states.curBlendMode) {
       return;
@@ -266,6 +269,7 @@ class RendererGL extends Renderer3D {
    * and disables them so that they don't affect rendering.
    * @private
    */
+
   _disableRemainingAttributes(shader) {
     for (const location of this.registerEnabled.values()) {
       if (
@@ -357,7 +361,9 @@ class RendererGL extends Renderer3D {
   }
 
   //////////////////////////////////////////////
+
   // Setting
+
   //////////////////////////////////////////////
 
   _setAttributeDefaults(pInst) {
@@ -503,6 +509,34 @@ class RendererGL extends Renderer3D {
       this._internalDisable.call(this.GL, this.GL.STENCIL_TEST);
     }
   }
+
+  //////////////////////////////////////////////
+
+  // Geometry Building
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // Shape drawing
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // Positioning
+
+  //////////////////////////////////////////////
+
+  //////////////////////////////////////////////
+
+  // COLOR
+
+  //////////////////////////////////////////////
+
+  // Pass this off to the host instance so that we can treat a renderer and a
+
+  // framebuffer the same in filter()
 
   _applyClip() {
     const gl = this.GL;
