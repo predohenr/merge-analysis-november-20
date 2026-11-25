@@ -88,93 +88,178 @@ const SPACE_FOR_DRAG_MARKER_WHEN_NO_NEXT_ELEMENT = 15;
 class PDFThumbnailViewer {
   static #draggingScaleFactor = 0;
 
-  #enableMerge = false;
+  #enableMerge = false
 
-  #enableSplitMerge = false;
+;
 
-  #dragAC = null;
+  #enableSplitMerge = false
 
-  #draggedContainer = null;
+;
 
-  #thumbnailsPositions = null;
+  #dragAC = null
 
-  #lastDraggedOverIndex = NaN;
+;
 
-  #selectedPages = null;
+  #draggedContainer = null
 
-  #draggedImageX = 0;
+;
 
-  #draggedImageY = 0;
+  #thumbnailsPositions = null
 
-  #draggedImageWidth = 0;
+;
 
-  #draggedImageHeight = 0;
+  #lastDraggedOverIndex = NaN
 
-  #draggedImageOffsetX = 0;
+;
 
-  #draggedImageOffsetY = 0;
+  #selectedPages = null
 
-  #dragMarker = null;
+;
 
-  #pageNumberToRemove = NaN;
+  #draggedImageX = 0
 
-  #currentScrollBottom = 0;
+;
 
-  #currentScrollTop = 0;
+  #draggedImageY = 0
 
-  #pagesMapper = null;
+;
 
-  #manageExportButton = null;
+  #draggedImageWidth = 0
 
-  #manageDeleteButton = null;
+;
 
-  #manageCopyButton = null;
+  #draggedImageHeight = 0
 
-  #manageCutButton = null;
+;
 
-  #copiedThumbnails = null;
+  #draggedImageOffsetX = 0
 
-  #savedThumbnails = null;
+;
 
-  #deletedPageNumbers = null;
+  #draggedImageOffsetY = 0
 
-  #copiedPageNumbers = null;
+;
 
-  #boundPastePages = this.#pastePages.bind(this);
+  #dragMarker = null
 
-  #isCut = false;
+;
 
-  #isOneColumnView = false;
+  #pageNumberToRemove = NaN
 
-  #scrollableContainerWidth = 0;
+;
 
-  #scrollableContainerHeight = 0;
+  #currentScrollBottom = 0
 
-  #statusLabel = null;
+;
 
-  #statusBar = null;
+  #currentScrollTop = 0
 
-  #deselectButton = null;
+;
 
-  #undoBar = null;
+  #pagesMapper = null
 
-  #undoLabel = null;
+;
 
-  #undoButton = null;
+  #manageExportButton = null
 
-  #undoCloseButton = null;
+;
 
-  #waitingBar = null;
+  #manageDeleteButton = null
 
-  #isInPasteMode = false;
+;
 
-  #hasUndoBarVisible = false;
+  #manageCopyButton = null
 
-  #newBadge = null;
+;
+
+  #manageCutButton = null
+
+;
+
+  #copiedThumbnails = null
+
+;
+
+  #savedThumbnails = null
+
+;
+
+  #deletedPageNumbers = null
+
+;
+
+  #copiedPageNumbers = null
+
+;
+
+  #boundPastePages = this.#pastePages.bind(this)
+
+;
+
+  #isCut = false
+
+;
+
+  #isOneColumnView = false
+
+;
+
+  #scrollableContainerWidth = 0
+
+;
+
+  #scrollableContainerHeight = 0
+
+;
+
+  #statusLabel = null
+
+;
+
+  #statusBar = null
+
+;
+
+  #deselectButton = null
+
+;
+
+  #undoBar = null
+
+;
+
+  #undoLabel = null
+
+;
+
+  #undoButton = null
+
+;
+
+  #undoCloseButton = null
+
+;
+
+  #waitingBar = null
+
+;
+
+  #isInPasteMode = false
+
+;
+
+  #hasUndoBarVisible = false
+
+;
+
+  #newBadge = null
+
+;
 
   /**
    * @param {PDFThumbnailViewerOptions} options
    */
+
   constructor({
     container,
     eventBus,
@@ -495,6 +580,7 @@ class PDFThumbnailViewer {
   /**
    * @param {PDFDocumentProxy} pdfDocument
    */
+
   setDocument(pdfDocument) {
     if (this.pdfDocument) {
       this.#cancelRendering();
@@ -560,6 +646,7 @@ class PDFThumbnailViewer {
   /**
    * @param {Array|null} labels
    */
+
   setPageLabels(labels) {
     if (!this.pdfDocument) {
       return;
@@ -584,6 +671,7 @@ class PDFThumbnailViewer {
    * @param {PDFThumbnailView} thumbView
    * @returns {Promise<PDFPageProxy | null>}
    */
+
   async #ensurePdfPageLoaded(thumbView) {
     if (thumbView.pdfPage) {
       return thumbView.pdfPage;
@@ -1562,6 +1650,7 @@ class PDFThumbnailViewer {
    * @param {boolean} focusCheckbox - If true, focus checkbox; otherwise focus
    *   image
    */
+
   #focusThumbnailElement(thumbnail, focusCheckbox) {
     if (focusCheckbox && thumbnail.checkbox) {
       thumbnail.checkbox.focus();
@@ -1578,6 +1667,7 @@ class PDFThumbnailViewer {
    * @param {boolean} navigateCheckboxes - If true, focus checkboxes;
    *   otherwise focus images
    */
+
   #goToNextItem(element, forward, horizontal, navigateCheckboxes = false) {
     let currentPageNumber = parseInt(
       element.parentElement.getAttribute("page-number"),
@@ -1626,14 +1716,129 @@ class PDFThumbnailViewer {
   }
 
   // Given the drag center (x, y), find the drop slot index: the drag marker
+
   // will be placed after thumbnail[index], or before all thumbnails if index
+
   // is -1. Returns null when the drop slot hasn't changed (no marker update
+
   // needed), or [index, space] where space is the gap (in px) between
+
   // thumbnails at that slot, used to position the marker.
+
   //
+
   // positionsX holds the x-center of each column, positionsY the y-center of
+
   // each row. positionsLastX holds the x-centers for an incomplete last row
+
   // (when the total number of thumbnails is not a multiple of the column
+
+  // count).
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  // Given the drag center (x, y), find the drop slot index: the drag marker
+
+  // will be placed after thumbnail[index], or before all thumbnails if index
+
+  // is -1. Returns null when the drop slot hasn't changed (no marker update
+
+  // needed), or [index, space] where space is the gap (in px) between
+
+  // thumbnails at that slot, used to position the marker.
+
+  //
+
+  // positionsX holds the x-center of each column, positionsY the y-center of
+
+  // each row. positionsLastX holds the x-centers for an incomplete last row
+
+  // (when the total number of thumbnails is not a multiple of the column
+
   // count).
   #findClosestThumbnail(x, y) {
     if (!this.#thumbnailsPositions) {
