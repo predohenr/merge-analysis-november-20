@@ -79,63 +79,118 @@ const SPACE_FOR_DRAG_MARKER_WHEN_NO_NEXT_ELEMENT = 15;
 class PDFThumbnailViewer {
   static #draggingScaleFactor = 0;
 
-  #enableSplitMerge = false;
+  #enableSplitMerge = false
 
-  #dragAC = null;
+;
 
-  #draggedContainer = null;
+  #dragAC = null
 
-  #thumbnailsPositions = null;
+;
 
-  #lastDraggedOverIndex = NaN;
+  #draggedContainer = null
 
-  #selectedPages = null;
+;
 
-  #draggedImageX = 0;
+  #thumbnailsPositions = null
 
-  #draggedImageY = 0;
+;
 
-  #draggedImageWidth = 0;
+  #lastDraggedOverIndex = NaN
 
-  #draggedImageHeight = 0;
+;
 
-  #draggedImageOffsetX = 0;
+  #selectedPages = null
 
-  #draggedImageOffsetY = 0;
+;
 
-  #dragMarker = null;
+  #draggedImageX = 0
 
-  #pageNumberToRemove = NaN;
+;
 
-  #currentScrollBottom = 0;
+  #draggedImageY = 0
 
-  #currentScrollTop = 0;
+;
 
-  #pagesMapper = null;
+  #draggedImageWidth = 0
 
-  #manageSaveAsButton = null;
+;
 
-  #manageDeleteButton = null;
+  #draggedImageHeight = 0
 
-  #manageCopyButton = null;
+;
 
-  #manageCutButton = null;
+  #draggedImageOffsetX = 0
 
-  #copiedThumbnails = null;
+;
 
-  #copiedPageNumbers = null;
+  #draggedImageOffsetY = 0
 
-  #isCut = false;
+;
 
-  #isOneColumnView = false;
+  #dragMarker = null
 
-  #scrollableContainerWidth = 0;
+;
 
-  #scrollableContainerHeight = 0;
+  #pageNumberToRemove = NaN
+
+;
+
+  #currentScrollBottom = 0
+
+;
+
+  #currentScrollTop = 0
+
+;
+
+  #pagesMapper = null
+
+;
+
+  #manageSaveAsButton = null
+
+;
+
+  #manageDeleteButton = null
+
+;
+
+  #manageCopyButton = null
+
+;
+
+  #manageCutButton = null
+
+;
+
+  #copiedThumbnails = null
+
+;
+
+  #copiedPageNumbers = null
+
+;
+
+  #isCut = false
+
+;
+
+  #isOneColumnView = false
+
+;
+
+  #scrollableContainerWidth = 0
+
+;
+
+  #scrollableContainerHeight = 0
+
+;
 
   /**
    * @param {PDFThumbnailViewerOptions} options
    */
+
   constructor({
     container,
     eventBus,
@@ -296,6 +351,7 @@ class PDFThumbnailViewer {
   /**
    * @param {PDFDocumentProxy} pdfDocument
    */
+
   setDocument(pdfDocument) {
     if (this.pdfDocument) {
       this.#cancelRendering();
@@ -359,6 +415,7 @@ class PDFThumbnailViewer {
   /**
    * @param {Array|null} labels
    */
+
   setPageLabels(labels) {
     if (!this.pdfDocument) {
       return;
@@ -383,6 +440,7 @@ class PDFThumbnailViewer {
    * @param {PDFThumbnailView} thumbView
    * @returns {Promise<PDFPageProxy | null>}
    */
+
   async #ensurePdfPageLoaded(thumbView) {
     if (thumbView.pdfPage) {
       return thumbView.pdfPage;
@@ -425,14 +483,6 @@ class PDFThumbnailViewer {
       return true;
     }
     return false;
-  }
-
-  hasStructuralChanges() {
-    return this.#pagesMapper?.hasBeenAltered() || false;
-  }
-
-  getStructuralChanges() {
-    return this.#pagesMapper?.getPageMappingForSaving() || null;
   }
 
   static #getScaleFactor(image) {
@@ -618,15 +668,6 @@ class PDFThumbnailViewer {
       this._thumbnails[pageNumber - 1].toggleSelected(false);
     }
     this.#selectedPages.clear();
-  }
-
-  #saveExtractedPages() {
-    this.eventBus.dispatch("saveextractedpages", {
-      source: this,
-      data: this.#pagesMapper.extractPages(this.#selectedPages),
-    });
-    this.#clearSelection();
-    this.#toggleMenuEntries(false);
   }
 
   #copyPages(clearSelection = true) {
@@ -1156,6 +1197,7 @@ class PDFThumbnailViewer {
    * @param {boolean} focusCheckbox - If true, focus checkbox; otherwise focus
    *   image
    */
+
   #focusThumbnailElement(thumbnail, focusCheckbox) {
     if (focusCheckbox && thumbnail.checkbox) {
       thumbnail.checkbox.focus();
@@ -1172,6 +1214,7 @@ class PDFThumbnailViewer {
    * @param {boolean} navigateCheckboxes - If true, focus checkboxes;
    *   otherwise focus images
    */
+
   #goToNextItem(element, forward, horizontal, navigateCheckboxes = false) {
     let currentPageNumber = parseInt(
       element.parentElement.getAttribute("page-number"),
@@ -1220,14 +1263,116 @@ class PDFThumbnailViewer {
   }
 
   // Given the drag center (x, y), find the drop slot index: the drag marker
+
   // will be placed after thumbnail[index], or before all thumbnails if index
+
   // is -1. Returns null when the drop slot hasn't changed (no marker update
+
   // needed), or [index, space] where space is the gap (in px) between
+
   // thumbnails at that slot, used to position the marker.
+
   //
+
   // positionsX holds the x-center of each column, positionsY the y-center of
+
   // each row. positionsLastX holds the x-centers for an incomplete last row
+
   // (when the total number of thumbnails is not a multiple of the column
+
+  // count).
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  hasStructuralChanges() {
+    return this.#pagesMapper?.hasBeenAltered() || false;
+  }
+
+  getStructuralChanges() {
+    return this.#pagesMapper?.getPageMappingForSaving() || null;
+  }
+
+  #saveExtractedPages() {
+    this.eventBus.dispatch("saveextractedpages", {
+      source: this,
+      data: this.#pagesMapper.extractPages(this.#selectedPages),
+    });
+    this.#clearSelection();
+    this.#toggleMenuEntries(false);
+  }
+
+  // Given the drag center (x, y), find the drop slot index: the drag marker
+
+  // will be placed after thumbnail[index], or before all thumbnails if index
+
+  // is -1. Returns null when the drop slot hasn't changed (no marker update
+
+  // needed), or [index, space] where space is the gap (in px) between
+
+  // thumbnails at that slot, used to position the marker.
+
+  //
+
+  // positionsX holds the x-center of each column, positionsY the y-center of
+
+  // each row. positionsLastX holds the x-centers for an incomplete last row
+
+  // (when the total number of thumbnails is not a multiple of the column
+
   // count).
   #findClosestThumbnail(x, y) {
     if (!this.#thumbnailsPositions) {
