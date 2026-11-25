@@ -57,32 +57,44 @@ class Eleventy {
 	 */
 	#projectPackageJson;
 	/** @type {ProjectTemplateFormats|undefined} */
-	#templateFormats;
+	#templateFormats
+;
 	/** @type {ConsoleLogger|undefined} */
-	#logger;
+	#logger
+;
 	/** @type {ProjectDirectories|undefined} */
-	#directories;
+	#directories
+;
 	/** @type {boolean|undefined} */
-	#verboseOverride;
+	#verboseOverride
+;
 	/** @type {boolean} */
-	#isVerboseMode = true;
+	#isVerboseMode = true
+;
 	/** @type {boolean|undefined} */
-	#preInitVerbose;
+	#preInitVerbose
+;
 	/** @type {boolean} */
-	#hasConfigInitialized = false;
+	#hasConfigInitialized = false
+;
 	/** @type {boolean} */
-	#needsInit = true;
+	#needsInit = true
+;
 	/** @type {Promise|undefined} */
-	#initPromise;
+	#initPromise
+;
 	/** @type {EleventyErrorHandler|undefined} */
-	#errorHandler;
+	#errorHandler
+;
 	/** @type {Map} */
-	#privateCaches = new Map();
+	#privateCaches = new Map()
+;
 	/** @type {boolean} */
-	#isStopping = false;
+	#isStopping = false
+;
 	/** @type {boolean|undefined} */
-	#isEsm;
-
+	#isEsm
+;
 	/**
 	 * @typedef {object} EleventyOptions
 	 * @property {'cli'|'script'=} source
@@ -186,7 +198,6 @@ class Eleventy {
 		 */
 		this.start = this.getNewTimestamp();
 	}
-
 	/**
 	 * @type {string|undefined}
 	 * @description An override of Eleventy's default config file paths
@@ -195,7 +206,6 @@ class Eleventy {
 	get configPath() {
 		return this.options.configPath;
 	}
-
 	/**
 	 * @type {string}
 	 * @description The top level directory the site pretends to reside in
@@ -204,7 +214,6 @@ class Eleventy {
 	get pathPrefix() {
 		return this.options.pathPrefix || "/";
 	}
-
 	async initializeConfig(initOverrides) {
 		if (!this.eleventyConfig) {
 			this.eleventyConfig = new TemplateConfig(null, this.configPath);
@@ -289,14 +298,12 @@ class Eleventy {
 
 		this.setIsVerbose(this.#preInitVerbose ?? !this.config.quietMode);
 	}
-
 	getNewTimestamp() {
 		if (performance) {
 			return performance.now();
 		}
 		return new Date().getTime();
 	}
-
 	/** @type {ProjectDirectories} */
 	get directories() {
 		if (!this.#directories) {
@@ -311,34 +318,28 @@ class Eleventy {
 
 		return this.#directories;
 	}
-
 	/** @type {string} */
 	get input() {
 		return this.directories.inputFile || this.directories.input || this.config.dir.input;
 	}
-
 	/** @type {string} */
 	get inputFile() {
 		return this.directories.inputFile;
 	}
-
 	/** @type {string} */
 	get inputDir() {
 		return this.directories.input;
 	}
-
 	// Not used internally, removed in 3.0.
 	setInputDir() {
 		throw new Error(
 			"Eleventy->setInputDir was removed in 3.0. Use the inputDir option to the constructor",
 		);
 	}
-
 	/** @type {string} */
 	get outputDir() {
 		return this.directories.output || this.config.dir.output;
 	}
-
 	/**
 	 * Updates the dry-run mode of Eleventy.
 	 *
@@ -347,7 +348,6 @@ class Eleventy {
 	setDryRun(isDryRun) {
 		this.isDryRun = !!isDryRun;
 	}
-
 	/**
 	 * Sets the incremental build mode.
 	 *
@@ -363,7 +363,6 @@ class Eleventy {
 			this.writer.setIncrementalBuild(this.isIncremental);
 		}
 	}
-
 	/**
 	 * Set whether or not to do an initial build
 	 *
@@ -377,7 +376,6 @@ class Eleventy {
 			this.writer.setRunInitialBuild(this.isRunInitialBuild);
 		}
 	}
-
 	/**
 	 * Updates the path prefix used in the config.
 	 *
@@ -390,7 +388,6 @@ class Eleventy {
 			// this.config = this.eleventyConfig.getConfig();
 		}
 	}
-
 	/**
 	 * Restarts Eleventy.
 	 */
@@ -403,7 +400,6 @@ class Eleventy {
 		this.eleventyFiles.restart();
 		this.extensionMap.reset();
 	}
-
 	/**
 	 * Logs some statistics after a complete run of Eleventy.
 	 *
@@ -461,7 +457,6 @@ class Eleventy {
 
 		return ret.join(" ");
 	}
-
 	#cache(key, inst) {
 		if (!("caches" in inst)) {
 			throw new Error("To use #cache you need a `caches` getter object");
@@ -482,7 +477,6 @@ class Eleventy {
 			this.#privateCaches.set(key, c);
 		}
 	}
-
 	/**
 	 * Starts Eleventy.
 	 */
@@ -578,7 +572,6 @@ Verbose Output: ${this.verboseMode}`;
 
 		this.#needsInit = false;
 	}
-
 	// These are all set as initial global data under eleventy.env.* (see TemplateData->environmentVariables)
 	getEnvironmentVariableValues() {
 		let values = {
@@ -606,7 +599,6 @@ Verbose Output: ${this.verboseMode}`;
 
 		return values;
 	}
-
 	/**
 	 * Set process.ENV variables for use in Eleventy projects
 	 *
@@ -624,17 +616,14 @@ Verbose Output: ${this.verboseMode}`;
 		process.env.ELEVENTY_SOURCE = env.source;
 		process.env.ELEVENTY_RUN_MODE = env.runMode;
 	}
-
 	/** @param {boolean} value */
 	set verboseMode(value) {
 		this.setIsVerbose(value);
 	}
-
-	/** @type {boolean} */
 	get verboseMode() {
 		return this.#isVerboseMode;
 	}
-
+	/** @type {boolean} */
 	/** @type {ConsoleLogger} */
 	get logger() {
 		if (!this.#logger) {
@@ -644,17 +633,14 @@ Verbose Output: ${this.verboseMode}`;
 
 		return this.#logger;
 	}
-
-	/** @param {ConsoleLogger} logger */
 	set logger(logger) {
 		this.eleventyConfig.setLogger(logger);
 		this.#logger = logger;
 	}
-
+	/** @param {ConsoleLogger} logger */
 	disableLogger() {
 		this.logger.overrideLogger(false);
 	}
-
 	/** @type {EleventyErrorHandler} */
 	get errorHandler() {
 		if (!this.#errorHandler) {
@@ -665,7 +651,6 @@ Verbose Output: ${this.verboseMode}`;
 
 		return this.#errorHandler;
 	}
-
 	/**
 	 * Updates the verbose mode of Eleventy.
 	 *
@@ -700,7 +685,6 @@ Verbose Output: ${this.verboseMode}`;
 		// Set verbose mode in config file
 		this.eleventyConfig.verbose = isVerbose;
 	}
-
 	get templateFormats() {
 		if (!this.#templateFormats) {
 			let tf = new ProjectTemplateFormats();
@@ -709,7 +693,6 @@ Verbose Output: ${this.verboseMode}`;
 
 		return this.#templateFormats;
 	}
-
 	/**
 	 * Updates the template formats of Eleventy.
 	 *
@@ -719,7 +702,6 @@ Verbose Output: ${this.verboseMode}`;
 	setFormats(formats) {
 		this.templateFormats.setViaCommandLine(formats);
 	}
-
 	/**
 	 * Updates the run mode of Eleventy.
 	 *
@@ -729,7 +711,6 @@ Verbose Output: ${this.verboseMode}`;
 	setRunMode(runMode) {
 		this.runMode = runMode;
 	}
-
 	/**
 	 * Set the file that needs to be rendered/compiled/written for an incremental build.
 	 * This method is also wired up to the CLI --incremental=incrementalFile
@@ -745,7 +726,6 @@ Verbose Output: ${this.verboseMode}`;
 			this.programmaticApiIncrementalFile = TemplatePath.addLeadingDotSlash(incrementalFile);
 		}
 	}
-
 	unsetIncrementalFile() {
 		// only applies to initial build, no re-runs (--watch/--serve)
 		if (this.programmaticApiIncrementalFile) {
@@ -756,7 +736,6 @@ Verbose Output: ${this.verboseMode}`;
 		// reset back to false
 		this.setIgnoreInitial(false);
 	}
-
 	/**
 	 * Reads the version of Eleventy.
 	 *
@@ -766,14 +745,12 @@ Verbose Output: ${this.verboseMode}`;
 	static getVersion() {
 		return pkg.version;
 	}
-
-	/**
-	 * @deprecated since 1.0.1, use static Eleventy.getVersion()
-	 */
 	getVersion() {
 		return Eleventy.getVersion();
 	}
-
+	/**
+	 * @deprecated since 1.0.1, use static Eleventy.getVersion()
+	 */
 	/**
 	 * Shows a help message including usage.
 	 *
@@ -837,14 +814,12 @@ Arguments:
 
      --help`;
 	}
-
-	/**
-	 * @deprecated since 1.0.1, use static Eleventy.getHelp()
-	 */
 	getHelp() {
 		return Eleventy.getHelp();
 	}
-
+	/**
+	 * @deprecated since 1.0.1, use static Eleventy.getHelp()
+	 */
 	/**
 	 * Resets the config of Eleventy.
 	 *
@@ -863,7 +838,6 @@ Arguments:
 
 		EventBusUtil.resetForConfig();
 	}
-
 	/**
 	 * @param {string} changedFilePath - File that triggered a re-run (added or modified)
 	 * @param {boolean} [isResetConfig] - are we doing a config reset
@@ -891,7 +865,6 @@ Arguments:
 
 		this.watchManager.addToPendingQueue(changedFilePath);
 	}
-
 	shouldTriggerConfigReset(changedFiles) {
 		let configFilePaths = new Set(this.eleventyConfig.getLocalProjectConfigFiles());
 		let resetConfigGlobs = EleventyWatchTargets.normalizeToGlobs(
@@ -919,7 +892,6 @@ Arguments:
 
 		return false;
 	}
-
 	// Checks the build queue to see if any configuration related files have changed
 	#shouldResetConfig(activeQueue = []) {
 		if (!activeQueue.length) {
@@ -932,7 +904,6 @@ Arguments:
 			}),
 		);
 	}
-
 	async #watch(isResetConfig = false) {
 		if (this.watchManager.isBuildRunning()) {
 			return;
@@ -1014,14 +985,12 @@ Arguments:
 			this.logger.log("Watching…");
 		}
 	}
-
 	/**
 	 * @returns {module:11ty/eleventy/src/Benchmark/BenchmarkGroup~BenchmarkGroup}
 	 */
 	get watcherBench() {
 		return this.bench.get("Watcher");
 	}
-
 	/**
 	 * Set up watchers and benchmarks.
 	 *
@@ -1049,7 +1018,47 @@ Arguments:
 		await this.#initWatchDependencies();
 		benchmark.after();
 	}
-
+	// fetch from project’s package.json
+;
+	/** @type {ProjectTemplateFormats|undefined} */
+;
+	/** @type {ConsoleLogger|undefined} */
+;
+	/** @type {ProjectDirectories|undefined} */
+;
+	/** @type {boolean|undefined} */
+;
+	/** @type {boolean} */
+;
+	/** @type {boolean|undefined} */
+;
+	/** @type {boolean} */
+;
+	/** @type {boolean} */
+;
+	/** @type {Promise|undefined} */
+;
+	/** @type {EleventyErrorHandler|undefined} */
+;
+	/** @type {Map} */
+;
+	/** @type {boolean} */
+;
+	/** @type {boolean|undefined} */
+;
+	/** @type {ProjectDirectories} */
+	/** @type {string} */
+	/** @type {string} */
+	/** @type {string} */
+	// Not used internally, removed in 3.0.
+	/** @type {string} */
+	// These are all set as initial global data under eleventy.env.* (see TemplateData->environmentVariables)
+	/** @param {boolean} value */
+	/** @type {boolean} */
+	/** @type {ConsoleLogger} */
+	/** @param {ConsoleLogger} logger */
+	/** @type {EleventyErrorHandler} */
+	// Checks the build queue to see if any configuration related files have changed
 	// fetch from project’s package.json
 	get projectPackageJson() {
 		if (!this.#projectPackageJson) {
