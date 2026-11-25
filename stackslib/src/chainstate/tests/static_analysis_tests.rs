@@ -435,7 +435,7 @@ fn static_check_error_could_not_determine_serialization_type() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::IllegalOrUnknownFunctionApplication`]
-/// Caused by: calling `map` with `if` (a non-function) as its function argument.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_illegal_or_unknown_function_application() {
@@ -446,7 +446,7 @@ fn static_check_error_illegal_or_unknown_function_application() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::UnknownFunction`]
-/// Caused by: invoking the undefined function `ynot`.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_unknown_function() {
@@ -457,7 +457,7 @@ fn static_check_error_unknown_function() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::IncorrectArgumentCount`]
-/// Caused by: `len` receives two arguments even though it expects exactly one.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_incorrect_argument_count() {
@@ -468,7 +468,7 @@ fn static_check_error_incorrect_argument_count() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::BadLetSyntax`]
-/// Caused by: `let` is used without a binding list.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_bad_let_syntax() {
@@ -479,7 +479,7 @@ fn static_check_error_bad_let_syntax() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::BadSyntaxBinding`]
-/// Caused by: `let` binding `((1))` is not a two-element list.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_bad_syntax_binding() {
@@ -501,7 +501,7 @@ fn static_check_error_expected_optional_or_response_type() {
 }
 
 /// StaticCheckErrorKind: [`StaticCheckErrorKind::DefineTraitBadSignature`]
-/// Caused by: calling `define-trait` with a method signature that is not valid.
+/// Caused by:
 /// Outcome: block accepted.
 #[test]
 fn static_check_error_define_trait_bad_signature() {
