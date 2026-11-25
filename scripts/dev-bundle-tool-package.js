@@ -49,8 +49,8 @@ var packageJson = {
     "wordwrap": "1.0.0",
     "moment": "2.30.1",
     "rimraf": "2.6.2",
-    "glob": "11.0.1",
     ignore: "7.0.5",
+    "glob": "11.0.1",
     // XXX: When we update this, see if it fixes this Github issue:
     // https://github.com/jgm/CommonMark/issues/276 . If it does, remove the
     // workaround from the tool.
