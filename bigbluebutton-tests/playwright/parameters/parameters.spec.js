@@ -596,7 +596,7 @@ test.describe.parallel('Custom Parameters', { tag: '@ci' }, () => {
     });
   });
 
-  test.describe.parallel('Presentation', () => {
+  test.describe.parallel('Hide Presentation On Join', () => {
     test('Hide Presentation on join', { tag: '@flaky-3.1' }, async ({ browser, context, page }) => {
       const customParam = new CustomParameters(browser, context);
       await customParam.initModPage(page, true, { joinParameter: c.hidePresentationOnJoin });

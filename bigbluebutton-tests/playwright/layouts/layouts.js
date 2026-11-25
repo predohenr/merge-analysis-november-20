@@ -49,19 +49,15 @@ class Layouts extends MultiUsers {
     await this.modPage.wasRemoved(e.toastContainer);
     await checkScreenshots(this, 'should be on custom layout', 'video', 'custom-layout', 1);
     // checking the default location being reset when dropping into a non-available location
-    await this.modPage.getLocator(e.webcamContainer).first().hover({ timeout: 5000 });
-    await this.modPage.page.mouse.down();
-    await this.modPage.getLocator(e.whiteboard).hover({ timeout: 5000 });
-    // checking all dropAreas being displayed
-    await this.modPage.hasElement(e.dropAreaBottom);
-    await this.modPage.hasElement(e.dropAreaLeft);
-    await this.modPage.hasElement(e.dropAreaRight);
-    await this.modPage.hasElement(e.dropAreaTop);
-    await this.modPage.hasElement(e.dropAreaSidebarBottom);
-    await this.modPage.page.mouse.up();
     await checkDefaultLocationReset(this.modPage);
     
-    await this.modPage.wasRemoved(e.sendButton, 'should not be displayed the send button');
+    await this.modPage.dragAndDropWebcams(e.dropAreaSidebarBottom);
+    await checkScreenshots(this, 'should be on custom layout', 'video', 'custom-layout', 2);
+    await this.modPage.dragAndDropWebcams(e.dropAreaSidebarBottom);
+    await checkScreenshots(this, 'should be on custom layout', 'video', 'custom-layout', 3);
+    await this.modPage.waitAndClick(e.userListToggleBtn);
+    await this.userPage.waitAndClick(e.userListToggleBtn);
+    await this.modPage.wasRemoved(e.chatButton, 'should not be displayed the chat button');
 
     await checkScreenshots(this, 'should be on custom layout', 'video', 'custom-layout', 4);
     await reopenChatSidebar(this.modPage);
