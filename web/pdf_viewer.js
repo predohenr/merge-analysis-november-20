@@ -214,65 +214,120 @@ class PDFPageViewBuffer {
 class PDFViewer {
   #buffer = null;
 
-  #altTextManager = null;
+  #altTextManager = null
 
-  #annotationEditorHighlightColors = null;
+;
 
-  #annotationEditorMode = AnnotationEditorType.NONE;
+  #annotationEditorHighlightColors = null
 
-  #annotationEditorUIManager = null;
+;
 
-  #annotationMode = AnnotationMode.ENABLE_FORMS;
+  #annotationEditorMode = AnnotationEditorType.NONE
 
-  #containerTopLeft = null;
+;
 
-  #editorUndoBar = null;
+  #annotationEditorUIManager = null
 
-  #enableHWA = false;
+;
 
-  #enableHighlightFloatingButton = false;
+  #annotationMode = AnnotationMode.ENABLE_FORMS
 
-  #enablePermissions = false;
+;
 
-  #enableUpdatedAddImage = false;
+  #containerTopLeft = null
 
-  #enableNewAltTextWhenAddingImage = false;
+;
 
-  #enableAutoLinking = true;
+  #editorUndoBar = null
 
-  #eventAbortController = null;
+;
 
-  #mlManager = null;
+  #enableHWA = false
 
-  #scrollTimeoutId = null;
+;
 
-  #switchAnnotationEditorModeAC = null;
+  #enableHighlightFloatingButton = false
 
-  #switchAnnotationEditorModeTimeoutId = null;
+;
 
-  #getAllTextInProgress = false;
+  #enablePermissions = false
 
-  #hiddenCopyElement = null;
+;
 
-  #interruptCopyCondition = false;
+  #enableUpdatedAddImage = false
 
-  #previousContainerHeight = 0;
+;
 
-  #resizeObserver = new ResizeObserver(this.#resizeObserverCallback.bind(this));
+  #enableNewAltTextWhenAddingImage = false
 
-  #scrollModePageState = null;
+;
 
-  #scaleTimeoutId = null;
+;
 
-  #signatureManager = null;
+  #eventAbortController = null
 
-  #supportsPinchToZoom = true;
+;
 
-  #textLayerMode = TextLayerMode.ENABLE;
+  #mlManager = null
+
+;
+
+  #scrollTimeoutId = null
+
+;
+
+  #switchAnnotationEditorModeAC = null
+
+;
+
+  #switchAnnotationEditorModeTimeoutId = null
+
+;
+
+  #getAllTextInProgress = false
+
+;
+
+  #hiddenCopyElement = null
+
+;
+
+  #interruptCopyCondition = false
+
+;
+
+  #previousContainerHeight = 0
+
+;
+
+  #resizeObserver = new ResizeObserver(this.#resizeObserverCallback.bind(this))
+
+;
+
+  #scrollModePageState = null
+
+;
+
+  #scaleTimeoutId = null
+
+;
+
+  #signatureManager = null
+
+;
+
+  #supportsPinchToZoom = true
+
+;
+
+  #textLayerMode = TextLayerMode.ENABLE
+
+;
 
   /**
    * @param {PDFViewerOptions} options
    */
+
   constructor(options) {
     const viewerVersion =
       typeof PDFJSDev !== "undefined" ? PDFJSDev.eval("BUNDLE_VERSION") : null;
@@ -414,6 +469,7 @@ class PDFViewer {
   /**
    * @type {boolean} - True if all {PDFPageView} objects are initialized.
    */
+
   get pageViewsReady() {
     // Prevent printing errors when 'disableAutoFetch' is set, by ensuring
     // that *all* pages have in fact been completely loaded.
@@ -423,6 +479,7 @@ class PDFViewer {
   /**
    * @type {boolean}
    */
+
   get renderForms() {
     return this.#annotationMode === AnnotationMode.ENABLE_FORMS;
   }
@@ -430,6 +487,7 @@ class PDFViewer {
   /**
    * @type {boolean}
    */
+
   get enableScripting() {
     return !!this._scriptingManager;
   }
@@ -437,13 +495,10 @@ class PDFViewer {
   /**
    * @type {number}
    */
+
   get currentPageNumber() {
     return this._currentPageNumber;
   }
-
-  /**
-   * @param {number} val - The page number.
-   */
   set currentPageNumber(val) {
     if (!Number.isInteger(val)) {
       throw new Error("Invalid page number.");
@@ -458,9 +513,14 @@ class PDFViewer {
   }
 
   /**
+   * @param {number} val - The page number.
+   */
+
+  /**
    * @returns {boolean} Whether the pageNumber is valid (within bounds).
    * @private
    */
+
   _setCurrentPageNumber(val, resetCurrentPageView = false) {
     if (this._currentPageNumber === val) {
       if (resetCurrentPageView) {
@@ -492,13 +552,10 @@ class PDFViewer {
    * @type {string|null} Returns the current page label, or `null` if no page
    *   labels exist.
    */
+
   get currentPageLabel() {
     return this._pageLabels?.[this._currentPageNumber - 1] ?? null;
   }
-
-  /**
-   * @param {string} val - The page label.
-   */
   set currentPageLabel(val) {
     if (!this.pdfDocument) {
       return;
@@ -517,17 +574,18 @@ class PDFViewer {
   }
 
   /**
+   * @param {string} val - The page label.
+   */
+
+  /**
    * @type {number}
    */
+
   get currentScale() {
     return this._currentScale !== UNKNOWN_SCALE
       ? this._currentScale
       : DEFAULT_SCALE;
   }
-
-  /**
-   * @param {number} val - Scale of the pages in percents.
-   */
   set currentScale(val) {
     if (isNaN(val)) {
       throw new Error("Invalid numeric scale.");
@@ -539,15 +597,16 @@ class PDFViewer {
   }
 
   /**
+   * @param {number} val - Scale of the pages in percents.
+   */
+
+  /**
    * @type {string}
    */
+
   get currentScaleValue() {
     return this._currentScaleValue;
   }
-
-  /**
-   * @param val - The scale of the pages (in percent or predefined value).
-   */
   set currentScaleValue(val) {
     if (!this.pdfDocument) {
       return;
@@ -556,15 +615,16 @@ class PDFViewer {
   }
 
   /**
+   * @param val - The scale of the pages (in percent or predefined value).
+   */
+
+  /**
    * @type {number}
    */
+
   get pagesRotation() {
     return this._pagesRotation;
   }
-
-  /**
-   * @param {number} rotation - The rotation of the pages (0, 90, 180, 270).
-   */
   set pagesRotation(rotation) {
     if (!isValidRotation(rotation)) {
       throw new Error("Invalid pages rotation angle.");
@@ -602,6 +662,10 @@ class PDFViewer {
       this.update();
     }
   }
+
+  /**
+   * @param {number} rotation - The rotation of the pages (0, 90, 180, 270).
+   */
 
   get firstPagePromise() {
     return this.pdfDocument ? this._firstPageCapability.promise : null;
@@ -649,6 +713,7 @@ class PDFViewer {
    * Currently only *some* permissions are supported.
    * @returns {Object}
    */
+
   #initializePermissions(permissions) {
     const params = {
       annotationEditorMode: this.#annotationEditorMode,
@@ -815,6 +880,7 @@ class PDFViewer {
   /**
    * @param {PDFDocumentProxy} pdfDocument
    */
+
   setDocument(pdfDocument) {
     if (this.pdfDocument) {
       this.eventBus.dispatch("pagesdestroy", { source: this });
@@ -1112,6 +1178,7 @@ class PDFViewer {
   /**
    * @param {Array|null} labels
    */
+
   setPageLabels(labels) {
     if (!this.pdfDocument) {
       return;
@@ -1294,6 +1361,7 @@ class PDFViewer {
    * Prevent unnecessary re-rendering of all pages when the scale changes
    * only because of limited numerical precision.
    */
+
   #isSameScale(newScale) {
     return (
       newScale === this._currentScale ||
@@ -1464,6 +1532,7 @@ class PDFViewer {
   /**
    * Refreshes page view: scrolls to the current page and updates the scale.
    */
+
   #resetCurrentPageView() {
     const pageView = this._pages[this._currentPageNumber - 1];
 
@@ -1479,6 +1548,7 @@ class PDFViewer {
    * @returns {number|null} The page number corresponding to the page label,
    *   or `null` when no page labels exist and/or the input is invalid.
    */
+
   pageLabelToPageNumber(label) {
     if (!this._pageLabels) {
       return null;
@@ -1505,6 +1575,7 @@ class PDFViewer {
    * Scrolls page into view.
    * @param {ScrollPageIntoViewParameters} params
    */
+
   scrollPageIntoView({
     pageNumber,
     destArray = null,
@@ -1810,6 +1881,7 @@ class PDFViewer {
   /**
    * @private
    */
+
   _cancelRendering() {
     for (const pageView of this._pages) {
       pageView.cancelRendering();
@@ -1820,6 +1892,7 @@ class PDFViewer {
    * @param {PDFPageView} pageView
    * @returns {Promise<PDFPageProxy | null>}
    */
+
   async #ensurePdfPageLoaded(pageView) {
     if (pageView.pdfPage) {
       return pageView.pdfPage;
@@ -1892,6 +1965,7 @@ class PDFViewer {
    * @type {boolean} Whether all pages of the PDF document have identical
    *   widths and heights.
    */
+
   get hasEqualPageSizes() {
     const firstPageView = this._pages[0];
     for (let i = 1, ii = this._pages.length; i < ii; ++i) {
@@ -1910,6 +1984,7 @@ class PDFViewer {
    * Returns sizes of the pages.
    * @returns {Array} Array of objects with width/height/rotation fields.
    */
+
   getPagesOverview() {
     let initialOrientation;
     return this._pages.map(pageView => {
@@ -1939,6 +2014,7 @@ class PDFViewer {
   /**
    * @type {Promise<OptionalContentConfig | null>}
    */
+
   get optionalContentConfigPromise() {
     if (!this.pdfDocument) {
       return Promise.resolve(null);
@@ -1951,11 +2027,6 @@ class PDFViewer {
     }
     return this._optionalContentConfigPromise;
   }
-
-  /**
-   * @param {Promise<OptionalContentConfig>} promise - A promise that is
-   *   resolved with an {@link OptionalContentConfig} instance.
-   */
   set optionalContentConfigPromise(promise) {
     if (!(promise instanceof Promise)) {
       throw new Error(`Invalid optionalContentConfigPromise: ${promise}`);
@@ -1979,17 +2050,17 @@ class PDFViewer {
   }
 
   /**
+   * @param {Promise<OptionalContentConfig>} promise - A promise that is
+   *   resolved with an {@link OptionalContentConfig} instance.
+   */
+
+  /**
    * @type {number} One of the values in {ScrollMode}.
    */
+
   get scrollMode() {
     return this._scrollMode;
   }
-
-  /**
-   * @param {number} mode - The direction in which the document pages should be
-   *   laid out within the scrolling container.
-   *   The constants from {ScrollMode} should be used.
-   */
   set scrollMode(mode) {
     if (
       typeof PDFJSDev === "undefined"
@@ -2016,6 +2087,12 @@ class PDFViewer {
 
     this._updateScrollMode(/* pageNumber = */ this._currentPageNumber);
   }
+
+  /**
+   * @param {number} mode - The direction in which the document pages should be
+   *   laid out within the scrolling container.
+   *   The constants from {ScrollMode} should be used.
+   */
 
   _updateScrollMode(pageNumber = null) {
     const scrollMode = this._scrollMode,
@@ -2051,15 +2128,10 @@ class PDFViewer {
   /**
    * @type {number} One of the values in {SpreadMode}.
    */
+
   get spreadMode() {
     return this._spreadMode;
   }
-
-  /**
-   * @param {number} mode - Group the pages in spreads, starting with odd- or
-   *   even-number pages (unless `SpreadMode.NONE` is used).
-   *   The constants from {SpreadMode} should be used.
-   */
   set spreadMode(mode) {
     if (
       typeof PDFJSDev === "undefined"
@@ -2081,6 +2153,12 @@ class PDFViewer {
 
     this._updateSpreadMode(/* pageNumber = */ this._currentPageNumber);
   }
+
+  /**
+   * @param {number} mode - Group the pages in spreads, starting with odd- or
+   *   even-number pages (unless `SpreadMode.NONE` is used).
+   *   The constants from {SpreadMode} should be used.
+   */
 
   _updateSpreadMode(pageNumber = null) {
     if (!this.pdfDocument) {
@@ -2128,6 +2206,94 @@ class PDFViewer {
     this._setCurrentPageNumber(pageNumber, /* resetCurrentPageView = */ true);
     this.update();
   }
+
+  /**
+   * @private
+   */
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  #enableAutoLinking = true
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  /**
+   * @type {boolean}
+   */
+
+  /**
+   * @type {boolean}
+   */
+
+  /**
+   * @type {number}
+   */
+
+  /**
+   * @type {number}
+   */
+
+  /**
+   * @type {number}
+   */
+
+  /**
+   * @private
+   */
 
   /**
    * @private
@@ -2378,18 +2544,6 @@ class PDFViewer {
       ? this.#annotationEditorMode
       : AnnotationEditorType.DISABLE;
   }
-
-  /**
-   * @typedef {Object} AnnotationEditorModeOptions
-   * @property {number} mode - The editor mode (none, FreeText, ink, ...).
-   * @property {string|null} [editId] - ID of the existing annotation to edit.
-   * @property {boolean} [isFromKeyboard] - True if the mode change is due to a
-   *   keyboard action.
-   */
-
-  /**
-   * @param {AnnotationEditorModeOptions} options
-   */
   set annotationEditorMode({ mode, editId = null, isFromKeyboard = false }) {
     if (!this.#annotationEditorUIManager) {
       throw new Error(`The AnnotationEditor is not enabled.`);
@@ -2469,6 +2623,18 @@ class PDFViewer {
     }
     updater();
   }
+
+  /**
+   * @typedef {Object} AnnotationEditorModeOptions
+   * @property {number} mode - The editor mode (none, FreeText, ink, ...).
+   * @property {string|null} [editId] - ID of the existing annotation to edit.
+   * @property {boolean} [isFromKeyboard] - True if the mode change is due to a
+   *   keyboard action.
+   */
+
+  /**
+   * @param {AnnotationEditorModeOptions} options
+   */
 
   refresh(noUpdate = false, updateArgs = Object.create(null)) {
     if (!this.pdfDocument) {
