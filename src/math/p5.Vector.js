@@ -55,7 +55,6 @@ class Vector {
     // Vector class from the one imported in the main p5.js bundle.
     this.isVector = true;
   }
-
   /**
    * Gets the values of the N-dimensional vector.
    *
@@ -68,7 +67,16 @@ class Vector {
   get values() {
     return this._values;
   }
-
+  set values(newValues) {
+    let dimensions = newValues.length;
+    if (dimensions === 0) {
+      this.dimensions = 2;
+      this._values = [0, 0, 0];
+    } else {
+      this.dimensions = dimensions;
+      this._values = newValues.slice();
+    }
+  }
   /**
    * Sets the values of the vector.
    *
@@ -81,17 +89,6 @@ class Vector {
    * @param {Array<number>} newValues - An array of numbers representing the new values for the vector.
    *
    */
-  set values(newValues) {
-    let dimensions = newValues.length;
-    if (dimensions === 0) {
-      this.dimensions = 2;
-      this._values = [0, 0, 0];
-    } else {
-      this.dimensions = dimensions;
-      this._values = newValues.slice();
-    }
-  }
-
   /**
    * Gets the x component of the vector.
    *
@@ -104,7 +101,11 @@ class Vector {
   get x() {
     return this._values[0] || 0;
   }
-
+  set x(xVal) {
+    if (this._values.length > 1) {
+      this._values[0] = xVal;
+    }
+  }
   /**
    * Retrieves the value at the specified index from the vector.
    *
@@ -132,7 +133,6 @@ class Vector {
       );
     }
   }
-
   /**
    * Sets the value at the specified index of the vector.
    *
@@ -157,7 +157,6 @@ class Vector {
       );
     }
   }
-
   /**
    * Gets the y component of the vector.
    *
@@ -170,7 +169,11 @@ class Vector {
   get y() {
     return this._values[1] || 0;
   }
-
+  set y(yVal) {
+    if (this._values.length > 1) {
+      this._values[1] = yVal;
+    }
+  }
   /**
    * Gets the z component of the vector.
    *
@@ -183,7 +186,11 @@ class Vector {
   get z() {
     return this._values[2] || 0;
   }
-
+  set z(zVal) {
+    if (this._values.length > 2) {
+      this._values[2] = zVal;
+    }
+  }
   /**
    * Gets the w component of the vector.
    *
@@ -196,7 +203,11 @@ class Vector {
   get w() {
     return this._values[3] || 0;
   }
-
+  set w(wVal) {
+    if (this._values.length > 3) {
+      this._values[3] = wVal;
+    }
+  }
   /**
    * Sets the x component of the vector.
    *
@@ -206,12 +217,6 @@ class Vector {
    *
    * @param {Number} xVal - The new value for the x component.
    */
-  set x(xVal) {
-    if (this._values.length > 1) {
-      this._values[0] = xVal;
-    }
-  }
-
   /**
    * Sets the y component of the vector.
    *
@@ -221,12 +226,6 @@ class Vector {
    *
    * @param {Number} yVal - The new value for the y component.
    */
-  set y(yVal) {
-    if (this._values.length > 1) {
-      this._values[1] = yVal;
-    }
-  }
-
   /**
    * Sets the z component of the vector.
    *
@@ -236,12 +235,6 @@ class Vector {
    *
    * @param {Number} zVal - The new value for the z component.
    */
-  set z(zVal) {
-    if (this._values.length > 2) {
-      this._values[2] = zVal;
-    }
-  }
-
   /**
    * Sets the w component of the vector.
    *
@@ -251,12 +244,6 @@ class Vector {
    *
    * @param {Number} wVal - The new value for the w component.
    */
-  set w(wVal) {
-    if (this._values.length > 3) {
-      this._values[3] = wVal;
-    }
-  }
-
   /**
    * Returns a string representation of a vector.
    *
@@ -277,7 +264,6 @@ class Vector {
   toString() {
     return `vector[${this._values.join(', ')}]`;
   }
-
   /**
    * Sets the vector's `x`, `y`, and `z` components.
    *
@@ -342,7 +328,6 @@ class Vector {
     this.dimensions = this._values.length;
     return this;
   }
-
   /**
    * Returns a copy of the <a href="#/p5.Vector">p5.Vector</a> object.
    *
@@ -374,7 +359,9 @@ class Vector {
       return new Vector(...this._values);
     }
   }
-
+  static copy(v) {
+    return v.copy(v);
+  }
   /**
    * Adds to a vector's components.
    *
@@ -510,7 +497,21 @@ class Vector {
     });
     return this;
   }
-
+  static add(v1, v2, target) {
+    if (!target) {
+      target = v1.copy();
+      if (arguments.length === 3) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.add'
+        );
+      }
+    } else {
+      target.set(v1);
+    }
+    target.add(v2);
+    return target;
+  }
   /**
    * Performs modulo (remainder) division with a vector's `x`, `y`, and `z`
    * components.
@@ -672,7 +673,13 @@ class Vector {
       }
     }
   }
-
+  static rem(v1, v2) {
+    if (v1 instanceof Vector && v2 instanceof Vector) {
+      let target = v1.copy();
+      target.rem(v2);
+      return target;
+    }
+  }
   /**
    * Subtracts from a vector's `x`, `y`, and `z` components.
    *
@@ -808,7 +815,21 @@ class Vector {
     }
     return this;
   }
-
+  static sub(v1, v2, target) {
+    if (!target) {
+      target = v1.copy();
+      if (arguments.length === 3) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.sub'
+        );
+      }
+    } else {
+      target.set(v1);
+    }
+    target.sub(v2);
+    return target;
+  }
   /**
    * Multiplies a vector's `x`, `y`, and `z` components.
    *
@@ -1023,168 +1044,21 @@ class Vector {
     }
     return this;
   }
-
-  /**
-   * Divides a vector's `x`, `y`, and `z` components.
-   *
-   * `div()` can use separate numbers, as in `v.div(1, 2, 3)`, another
-   * <a href="#/p5.Vector">p5.Vector</a> object, as in `v.div(v2)`, or an array
-   * of numbers, as in `v.div([1, 2, 3])`.
-   *
-   * If only one value is provided, as in `v.div(2)`, then all the components
-   * will be divided by 2. If a value isn't provided for a component, it
-   * won't change. For example, `v.div(4, 5)` divides `v.x` by 4, `v.y` by 5,
-   * and `v.z` by 1. Calling `div()` with no arguments, as in `v.div()`, has
-   * no effect.
-   *
-   * The static version of `div()`, as in `p5.Vector.div(v, 2)`, returns a new
-   * <a href="#/p5.Vector">p5.Vector</a> object and doesn't change the
-   * originals.
-   *
-   * @param  {Number}    n The number to divide the vector by
-   * @chainable
-   * @example
-   * function setup() {
-   *   createCanvas(100, 100);
-   *
-   *   background(200);
-   *
-   *   // Style the points.
-   *   strokeWeight(5);
-   *
-   *   // Center.
-   *   let p = createVector(50, 50);
-   *   point(p);
-   *
-   *   // Top-left.
-   *   // Divide p.x / 2 and p.y / 2
-   *   p.div(2);
-   *   point(p);
-   *
-   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the center.');
-   * }
-   *
-   * @example
-   * function setup() {
-   *   createCanvas(100, 100);
-   *
-   *   background(200);
-   *
-   *   // Style the points.
-   *   strokeWeight(5);
-   *
-   *   // Bottom-right.
-   *   let p = createVector(50, 75);
-   *   point(p);
-   *
-   *   // Top-left.
-   *   // Divide p.x / 2 and p.y / 3
-   *   p.div(2, 3);
-   *   point(p);
-   *
-   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
-   * }
-   *
-   * @example
-   * function setup() {
-   *   createCanvas(100, 100);
-   *
-   *   background(200);
-   *
-   *   // Style the points.
-   *   strokeWeight(5);
-   *
-   *   // Bottom-right.
-   *   let p = createVector(50, 75);
-   *   point(p);
-   *
-   *   // Top-left.
-   *   // Divide p.x / 2 and p.y / 3
-   *   let arr = [2, 3];
-   *   p.div(arr);
-   *   point(p);
-   *
-   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
-   * }
-   *
-   * @example
-   * function setup() {
-   *   createCanvas(100, 100);
-   *
-   *   background(200);
-   *
-   *   // Style the points.
-   *   strokeWeight(5);
-   *
-   *   // Bottom-right.
-   *   let p = createVector(50, 75);
-   *   point(p);
-   *
-   *   // Top-left.
-   *   // Divide p.x / 2 and p.y / 3
-   *   let p2 = createVector(2, 3);
-   *   p.div(p2);
-   *   point(p);
-   *
-   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
-   * }
-   *
-   * @example
-   * function setup() {
-   *   createCanvas(100, 100);
-   *
-   *   background(200);
-   *
-   *   // Style the points.
-   *   strokeWeight(5);
-   *
-   *   // Bottom-right.
-   *   let p = createVector(50, 75);
-   *   point(p);
-   *
-   *   // Top-left.
-   *   // Create a new p5.Vector with
-   *   // p3.x = p.x / p2.x
-   *   // p3.y = p.y / p2.y
-   *   let p2 = createVector(2, 3);
-   *   let p3 = p5.Vector.div(p, p2);
-   *   point(p3);
-   *
-   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
-   * }
-   *
-   * @example
-   * function draw() {
-   *   background(200);
-   *
-   *   let origin = createVector(0, 0);
-   *
-   *   // Draw the red arrow.
-   *   let v1 = createVector(50, 50);
-   *   drawArrow(origin, v1, 'red');
-   *
-   *   // Draw the blue arrow.
-   *   let v2 = p5.Vector.div(v1, 2);
-   *   drawArrow(origin, v2, 'blue');
-   *
-   *   describe('Two arrows extending from the top left corner. The blue arrow is half the length of the red arrow.');
-   * }
-   *
-   * // Draws an arrow between two vectors.
-   * function drawArrow(base, vec, myColor) {
-   *   push();
-   *   stroke(myColor);
-   *   strokeWeight(3);
-   *   fill(myColor);
-   *   translate(base.x, base.y);
-   *   line(0, 0, vec.x, vec.y);
-   *   rotate(vec.heading());
-   *   let arrowSize = 7;
-   *   translate(vec.mag() - arrowSize, 0);
-   *   triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
-   *   pop();
-   * }
-   */
+  static mult(v, n, target) {
+    if (!target) {
+      target = v.copy();
+      if (arguments.length === 3) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.mult'
+        );
+      }
+    } else {
+      target.set(v);
+    }
+    target.mult(n);
+    return target;
+  }
   /**
    * @param  {Number} x number to divide with the x component of the vector.
    * @param  {Number} y number to divide with the y component of the vector.
@@ -1254,7 +1128,22 @@ class Vector {
 
     return this;
   }
+  static div(v, n, target) {
+    if (!target) {
+      target = v.copy();
 
+      if (arguments.length === 3) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.div'
+        );
+      }
+    } else {
+      target.set(v);
+    }
+    target.div(n);
+    return target;
+  }
   /**
    * Calculates the magnitude (length) of the vector.
    *
@@ -1289,7 +1178,9 @@ class Vector {
   mag() {
     return Math.sqrt(this.magSq());
   }
-
+  static mag(vecT) {
+    return vecT.mag();
+  }
   /**
    * Calculates the magnitude (length) of the vector squared.
    *
@@ -1323,7 +1214,9 @@ class Vector {
       0
     );
   }
-
+  static magSq(vecT) {
+    return vecT.magSq();
+  }
   /**
    * Calculates the dot product of two vectors.
    *
@@ -1428,7 +1321,9 @@ class Vector {
       return sum + component * (args[index] || 0);
     }, 0);
   }
-
+  static dot(v1, v2) {
+    return v1.dot(v2);
+  }
   /**
    * Calculates the cross product of two vectors.
    *
@@ -1480,7 +1375,9 @@ class Vector {
       return new Vector(x, y, z);
     }
   }
-
+  static cross(v1, v2) {
+    return v1.cross(v2);
+  }
   /**
    * Calculates the distance between two points represented by vectors.
    *
@@ -1583,7 +1480,9 @@ class Vector {
   dist(v) {
     return v.copy().sub(this).mag();
   }
-
+  static dist(v1, v2) {
+    return v1.dist(v2);
+  }
   /**
    * Scales the components of a <a href="#/p5.Vector">p5.Vector</a> object so
    * that its magnitude is 1.
@@ -1683,7 +1582,20 @@ class Vector {
     if (len !== 0) this.mult(1 / len);
     return this;
   }
-
+  static normalize(v, target) {
+    if (arguments.length < 2) {
+      target = v.copy();
+    } else {
+      if (!(target instanceof Vector)) {
+        p5._friendlyError(
+          'The target parameter should be of type p5.Vector',
+          'p5.Vector.normalize'
+        );
+      }
+      target.set(v);
+    }
+    return target.normalize();
+  }
   /**
    * Limits a vector's magnitude to a maximum value.
    *
@@ -1772,7 +1684,20 @@ class Vector {
     }
     return this;
   }
-
+  static limit(v, max, target) {
+    if (arguments.length < 3) {
+      target = v.copy();
+    } else {
+      if (!(target instanceof Vector)) {
+        p5._friendlyError(
+          'The target parameter should be of type p5.Vector',
+          'p5.Vector.limit'
+        );
+      }
+      target.set(v);
+    }
+    return target.limit(max);
+  }
   /**
    * Sets a vector's magnitude to a given value.
    *
@@ -1856,7 +1781,20 @@ class Vector {
   setMag(n) {
     return this.normalize().mult(n);
   }
-
+  static setMag(v, len, target) {
+    if (arguments.length < 3) {
+      target = v.copy();
+    } else {
+      if (!(target instanceof Vector)) {
+        p5._friendlyError(
+          'The target parameter should be of type p5.Vector',
+          'p5.Vector.setMag'
+        );
+      }
+      target.set(v);
+    }
+    return target.setMag(len);
+  }
   /**
    * Calculates the angle a 2D vector makes with the positive x-axis.
    *
@@ -1955,7 +1893,9 @@ class Vector {
     if (this.isPInst) return this._fromRadians(h);
     return h;
   }
-
+  static heading(v) {
+    return v.heading();
+  }
   /**
    * Rotates a 2D vector to a specific angle without changing its magnitude.
    *
@@ -2061,7 +2001,6 @@ class Vector {
     this.y = m * Math.sin(a);
     return this;
   }
-
   /**
    * Rotates a 2D vector by an angle without changing its magnitude.
    *
@@ -2194,7 +2133,21 @@ class Vector {
     this.y = Math.sin(newHeading) * mag;
     return this;
   }
-
+  static rotate(v, a, target) {
+    if (arguments.length === 2) {
+      target = v.copy();
+    } else {
+      if (!(target instanceof Vector)) {
+        p5._friendlyError(
+          'The target parameter should be of type p5.Vector',
+          'p5.Vector.rotate'
+        );
+      }
+      target.set(v);
+    }
+    target.rotate(a);
+    return target;
+  }
   /**
    * Calculates the angle between two vectors.
    *
@@ -2335,7 +2288,9 @@ class Vector {
     }
     return angle;
   }
-
+  static angleBetween(v1, v2) {
+    return v1.angleBetween(v2);
+  }
   /**
    * Calculates new `x`, `y`, and `z` components that are proportionally the
    * same distance between two vectors.
@@ -2452,7 +2407,21 @@ class Vector {
     this.z += (z - this.z) * amt || 0;
     return this;
   }
-
+  static lerp(v1, v2, amt, target) {
+    if (!target) {
+      target = v1.copy();
+      if (arguments.length === 4) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.lerp'
+        );
+      }
+    } else {
+      target.set(v1);
+    }
+    target.lerp(v2, amt);
+    return target;
+  }
   /**
    * Calculates a new heading and magnitude that are between two vectors.
    *
@@ -2649,7 +2618,21 @@ class Vector {
 
     return this;
   }
-
+  static slerp(v1, v2, amt, target) {
+    if (!target) {
+      target = v1.copy();
+      if (arguments.length === 4) {
+        p5._friendlyError(
+          'The target parameter is undefined, it should be of type p5.Vector',
+          'p5.Vector.slerp'
+        );
+      }
+    } else {
+      target.set(v1);
+    }
+    target.slerp(v2, amt);
+    return target;
+  }
   /**
    * Reflects a vector about a line in 2D or a plane in 3D.
    *
@@ -2750,7 +2733,20 @@ class Vector {
     const surfaceNormalCopy = Vector.normalize(surfaceNormal);
     return this.sub(surfaceNormalCopy.mult(2 * this.dot(surfaceNormalCopy)));
   }
-
+  static reflect(incidentVector, surfaceNormal, target) {
+    if (arguments.length < 3) {
+      target = incidentVector.copy();
+    } else {
+      if (!(target instanceof Vector)) {
+        p5._friendlyError(
+          'The target parameter should be of type p5.Vector',
+          'p5.Vector.reflect'
+        );
+      }
+      target.set(incidentVector);
+    }
+    return target.reflect(surfaceNormal);
+  }
   /**
    * Returns the vector's components as an array of numbers.
    *
@@ -2768,7 +2764,9 @@ class Vector {
   array() {
     return [this.x || 0, this.y || 0, this.z || 0];
   }
-
+  static array(v) {
+    return v.array();
+  }
   /**
    * Checks whether all the vector's components are equal to another vector's.
    *
@@ -2855,7 +2853,20 @@ class Vector {
     }
     return true;
   }
-
+  static equals(v1, v2) {
+    let v;
+    if (v1 instanceof Vector) {
+      v = v1;
+    } else if (v1 instanceof Array) {
+      v = new Vector().set(v1);
+    } else {
+      p5._friendlyError(
+        'The v1 parameter should be of type Array or p5.Vector',
+        'p5.Vector.equals'
+      );
+    }
+    return v.equals(v2);
+  }
   /**
    * Replaces the components of a <a href="#/p5.Vector">p5.Vector</a> that are very close to zero with zero.
    *
@@ -2874,7 +2885,6 @@ class Vector {
     }
     return this;
   }
-
   /**
    * Helper function for clampToZero
    * @private
@@ -2882,9 +2892,7 @@ class Vector {
   _clampToZero(val) {
     return Math.abs((val || 0) - 0) <= Number.EPSILON ? 0 : val;
   }
-
   // Static Methods
-
   /**
    * Creates a new 2D vector from an angle.
    *
@@ -2953,7 +2961,6 @@ class Vector {
     }
     return new Vector(length * Math.cos(angle), length * Math.sin(angle));
   }
-
   /**
    * Creates a new 3D vector from a pair of ISO spherical angles.
    *
@@ -3018,7 +3025,6 @@ class Vector {
       length * sinTheta * cosPhi
     );
   }
-
   /**
    * Creates a new 2D unit vector with a random heading.
    *
@@ -3079,7 +3085,6 @@ class Vector {
   static random2D() {
     return this.fromAngle(Math.random() * constants.TWO_PI);
   }
-
   /**
    * Creates a new 3D unit vector with a random heading.
    *
@@ -3104,17 +3109,12 @@ class Vector {
     const vy = vzBase * Math.sin(angle);
     return new Vector(vx, vy, vz);
   }
-
   // Returns a copy of a vector.
   /**
    * @static
    * @param  {p5.Vector} v the <a href="#/p5.Vector">p5.Vector</a> to create a copy of
    * @return {p5.Vector} the copy of the <a href="#/p5.Vector">p5.Vector</a> object
    */
-  static copy(v) {
-    return v.copy(v);
-  }
-
   // Adds two vectors together and returns a new one.
   /**
    * @static
@@ -3123,22 +3123,6 @@ class Vector {
    * @param  {p5.Vector} [target] vector to receive the result.
    * @return {p5.Vector} resulting <a href="#/p5.Vector">p5.Vector</a>.
    */
-  static add(v1, v2, target) {
-    if (!target) {
-      target = v1.copy();
-      if (arguments.length === 3) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.add'
-        );
-      }
-    } else {
-      target.set(v1);
-    }
-    target.add(v2);
-    return target;
-  }
-
   // Returns a vector remainder when it is divided by another vector
   /**
    * @static
@@ -3151,14 +3135,6 @@ class Vector {
    * @param  {p5.Vector} v2
    * @return {p5.Vector} The resulting <a href="#/p5.Vector">p5.Vector</a>
    */
-  static rem(v1, v2) {
-    if (v1 instanceof Vector && v2 instanceof Vector) {
-      let target = v1.copy();
-      target.rem(v2);
-      return target;
-    }
-  }
-
   /*
    * Subtracts one <a href="#/p5.Vector">p5.Vector</a> from another and returns a new one.  The second
    * vector (`v2`) is subtracted from the first (`v1`), resulting in `v1-v2`.
@@ -3170,22 +3146,6 @@ class Vector {
    * @param  {p5.Vector} [target] vector to receive the result.
    * @return {p5.Vector} The resulting <a href="#/p5.Vector">p5.Vector</a>
    */
-  static sub(v1, v2, target) {
-    if (!target) {
-      target = v1.copy();
-      if (arguments.length === 3) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.sub'
-        );
-      }
-    } else {
-      target.set(v1);
-    }
-    target.sub(v2);
-    return target;
-  }
-
   /**
    * Multiplies a vector by a scalar and returns a new vector.
    */
@@ -3214,22 +3174,6 @@ class Vector {
    * @param  {Number[]} arr
    * @param  {p5.Vector} [target]
    */
-  static mult(v, n, target) {
-    if (!target) {
-      target = v.copy();
-      if (arguments.length === 3) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.mult'
-        );
-      }
-    } else {
-      target.set(v);
-    }
-    target.mult(n);
-    return target;
-  }
-
   /**
    * Rotates the vector (only 2D vectors) by the given angle; magnitude remains the same. Returns a new vector.
    */
@@ -3239,22 +3183,6 @@ class Vector {
    * @param  {Number} angle
    * @param  {p5.Vector} [target] The vector to receive the result
    */
-  static rotate(v, a, target) {
-    if (arguments.length === 2) {
-      target = v.copy();
-    } else {
-      if (!(target instanceof Vector)) {
-        p5._friendlyError(
-          'The target parameter should be of type p5.Vector',
-          'p5.Vector.rotate'
-        );
-      }
-      target.set(v);
-    }
-    target.rotate(a);
-    return target;
-  }
-
   /**
    * Divides a vector by a scalar and returns a new vector.
    */
@@ -3283,22 +3211,197 @@ class Vector {
    * @param  {Number[]} arr
    * @param  {p5.Vector} [target]
    */
-  static div(v, n, target) {
-    if (!target) {
-      target = v.copy();
-
-      if (arguments.length === 3) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.div'
-        );
-      }
-    } else {
-      target.set(v);
-    }
-    target.div(n);
-    return target;
-  }
+  // This is how it comes in with createVector()
+  // This check if the first argument is a function
+  /**
+   * Divides a vector's `x`, `y`, and `z` components.
+   *
+   * `div()` can use separate numbers, as in `v.div(1, 2, 3)`, another
+   * <a href="#/p5.Vector">p5.Vector</a> object, as in `v.div(v2)`, or an array
+   * of numbers, as in `v.div([1, 2, 3])`.
+   *
+   * If only one value is provided, as in `v.div(2)`, then all the components
+   * will be divided by 2. If a value isn't provided for a component, it
+   * won't change. For example, `v.div(4, 5)` divides `v.x` by 4, `v.y` by 5,
+   * and `v.z` by 1. Calling `div()` with no arguments, as in `v.div()`, has
+   * no effect.
+   *
+   * The static version of `div()`, as in `p5.Vector.div(v, 2)`, returns a new
+   * <a href="#/p5.Vector">p5.Vector</a> object and doesn't change the
+   * originals.
+   *
+   * @param  {Number}    n The number to divide the vector by
+   * @chainable
+   * @example
+   * function setup() {
+   *   createCanvas(100, 100);
+   *
+   *   background(200);
+   *
+   *   // Style the points.
+   *   strokeWeight(5);
+   *
+   *   // Center.
+   *   let p = createVector(50, 50);
+   *   point(p);
+   *
+   *   // Top-left.
+   *   // Divide p.x / 2 and p.y / 2
+   *   p.div(2);
+   *   point(p);
+   *
+   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the center.');
+   * }
+   *
+   * @example
+   * function setup() {
+   *   createCanvas(100, 100);
+   *
+   *   background(200);
+   *
+   *   // Style the points.
+   *   strokeWeight(5);
+   *
+   *   // Bottom-right.
+   *   let p = createVector(50, 75);
+   *   point(p);
+   *
+   *   // Top-left.
+   *   // Divide p.x / 2 and p.y / 3
+   *   p.div(2, 3);
+   *   point(p);
+   *
+   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
+   * }
+   *
+   * @example
+   * function setup() {
+   *   createCanvas(100, 100);
+   *
+   *   background(200);
+   *
+   *   // Style the points.
+   *   strokeWeight(5);
+   *
+   *   // Bottom-right.
+   *   let p = createVector(50, 75);
+   *   point(p);
+   *
+   *   // Top-left.
+   *   // Divide p.x / 2 and p.y / 3
+   *   let arr = [2, 3];
+   *   p.div(arr);
+   *   point(p);
+   *
+   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
+   * }
+   *
+   * @example
+   * function setup() {
+   *   createCanvas(100, 100);
+   *
+   *   background(200);
+   *
+   *   // Style the points.
+   *   strokeWeight(5);
+   *
+   *   // Bottom-right.
+   *   let p = createVector(50, 75);
+   *   point(p);
+   *
+   *   // Top-left.
+   *   // Divide p.x / 2 and p.y / 3
+   *   let p2 = createVector(2, 3);
+   *   p.div(p2);
+   *   point(p);
+   *
+   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
+   * }
+   *
+   * @example
+   * function setup() {
+   *   createCanvas(100, 100);
+   *
+   *   background(200);
+   *
+   *   // Style the points.
+   *   strokeWeight(5);
+   *
+   *   // Bottom-right.
+   *   let p = createVector(50, 75);
+   *   point(p);
+   *
+   *   // Top-left.
+   *   // Create a new p5.Vector with
+   *   // p3.x = p.x / p2.x
+   *   // p3.y = p.y / p2.y
+   *   let p2 = createVector(2, 3);
+   *   let p3 = p5.Vector.div(p, p2);
+   *   point(p3);
+   *
+   *   describe('Two black dots drawn on a gray square. One dot is in the top left corner and the other is in the bottom center.');
+   * }
+   *
+   * @example
+   * function draw() {
+   *   background(200);
+   *
+   *   let origin = createVector(0, 0);
+   *
+   *   // Draw the red arrow.
+   *   let v1 = createVector(50, 50);
+   *   drawArrow(origin, v1, 'red');
+   *
+   *   // Draw the blue arrow.
+   *   let v2 = p5.Vector.div(v1, 2);
+   *   drawArrow(origin, v2, 'blue');
+   *
+   *   describe('Two arrows extending from the top left corner. The blue arrow is half the length of the red arrow.');
+   * }
+   *
+   * // Draws an arrow between two vectors.
+   * function drawArrow(base, vec, myColor) {
+   *   push();
+   *   stroke(myColor);
+   *   strokeWeight(3);
+   *   fill(myColor);
+   *   translate(base.x, base.y);
+   *   line(0, 0, vec.x, vec.y);
+   *   rotate(vec.heading());
+   *   let arrowSize = 7;
+   *   translate(vec.mag() - arrowSize, 0);
+   *   triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+   *   pop();
+   * }
+   */
+  // Static Methods
+  // Returns a copy of a vector.
+  // Adds two vectors together and returns a new one.
+  // Returns a vector remainder when it is divided by another vector
+  /**
+   * @static
+   * @param  {p5.Vector} v0
+   * @param  {p5.Vector} v1
+   * @param  {p5.Vector} [target]
+   */
+  /**
+   * @static
+   * @param  {p5.Vector} v0
+   * @param  {Number[]} arr
+   * @param  {p5.Vector} [target]
+   */
+  /**
+   * @static
+   * @param  {p5.Vector} v0
+   * @param  {p5.Vector} v1
+   * @param  {p5.Vector} [target]
+   */
+  /**
+   * @static
+   * @param  {p5.Vector} v0
+   * @param  {Number[]} arr
+   * @param  {p5.Vector} [target]
+   */
 
   /**
    * Calculates the dot product of two vectors.
@@ -3309,9 +3412,6 @@ class Vector {
    * @param  {p5.Vector} v2 second <a href="#/p5.Vector">p5.Vector</a>.
    * @return {Number}     dot product.
    */
-  static dot(v1, v2) {
-    return v1.dot(v2);
-  }
 
   /**
    * Calculates the cross product of two vectors.
@@ -3322,9 +3422,6 @@ class Vector {
    * @param  {p5.Vector} v2 second <a href="#/p5.Vector">p5.Vector</a>.
    * @return {p5.Vector}     cross product.
    */
-  static cross(v1, v2) {
-    return v1.cross(v2);
-  }
 
   /**
    * Calculates the Euclidean distance between two points (considering a
@@ -3336,9 +3433,6 @@ class Vector {
    * @param  {p5.Vector} v2 The second <a href="#/p5.Vector">p5.Vector</a>
    * @return {Number}     The distance
    */
-  static dist(v1, v2) {
-    return v1.dist(v2);
-  }
 
   /**
    * Linear interpolate a vector to another vector and return the result as a
@@ -3352,21 +3446,6 @@ class Vector {
    * @param {p5.Vector} [target] The vector to receive the result
    * @return {p5.Vector}      The lerped value
    */
-  static lerp(v1, v2, amt, target) {
-    if (!target) {
-      target = v1.copy();
-      if (arguments.length === 4) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.lerp'
-        );
-      }
-    } else {
-      target.set(v1);
-    }
-    target.lerp(v2, amt);
-    return target;
-  }
 
   /**
    * Performs spherical linear interpolation with the other vector
@@ -3382,21 +3461,6 @@ class Vector {
    * @param {p5.Vector} [target] vector to receive the result.
    * @return {p5.Vector} slerped vector between v1 and v2
    */
-  static slerp(v1, v2, amt, target) {
-    if (!target) {
-      target = v1.copy();
-      if (arguments.length === 4) {
-        p5._friendlyError(
-          'The target parameter is undefined, it should be of type p5.Vector',
-          'p5.Vector.slerp'
-        );
-      }
-    } else {
-      target.set(v1);
-    }
-    target.slerp(v2, amt);
-    return target;
-  }
 
   /**
    * Calculates the magnitude (length) of the vector and returns the result as
@@ -3407,9 +3471,6 @@ class Vector {
    * @param {p5.Vector} vecT The vector to return the magnitude of
    * @return {Number}        The magnitude of vecT
    */
-  static mag(vecT) {
-    return vecT.mag();
-  }
 
   /**
    * Calculates the squared magnitude of the vector and returns the result
@@ -3422,9 +3483,6 @@ class Vector {
    * @param {p5.Vector} vecT the vector to return the squared magnitude of
    * @return {Number}        the squared magnitude of vecT
    */
-  static magSq(vecT) {
-    return vecT.magSq();
-  }
 
   /**
    * Normalize the vector to length 1 (make it a unit vector).
@@ -3435,20 +3493,6 @@ class Vector {
    * @param {p5.Vector} [target] The vector to receive the result
    * @return {p5.Vector}   The vector v, normalized to a length of 1
    */
-  static normalize(v, target) {
-    if (arguments.length < 2) {
-      target = v.copy();
-    } else {
-      if (!(target instanceof Vector)) {
-        p5._friendlyError(
-          'The target parameter should be of type p5.Vector',
-          'p5.Vector.normalize'
-        );
-      }
-      target.set(v);
-    }
-    return target.normalize();
-  }
 
   /**
    * Limit the magnitude of the vector to the value used for the <b>max</b>
@@ -3461,20 +3505,6 @@ class Vector {
    * @param {p5.Vector} [target] the vector to receive the result (Optional)
    * @return {p5.Vector} v with a magnitude limited to max
    */
-  static limit(v, max, target) {
-    if (arguments.length < 3) {
-      target = v.copy();
-    } else {
-      if (!(target instanceof Vector)) {
-        p5._friendlyError(
-          'The target parameter should be of type p5.Vector',
-          'p5.Vector.limit'
-        );
-      }
-      target.set(v);
-    }
-    return target.limit(max);
-  }
 
   /**
    * Set the magnitude of the vector to the value used for the <b>len</b>
@@ -3487,20 +3517,6 @@ class Vector {
    * @param {p5.Vector} [target] the vector to receive the result (Optional)
    * @return {p5.Vector} v with a magnitude set to len
    */
-  static setMag(v, len, target) {
-    if (arguments.length < 3) {
-      target = v.copy();
-    } else {
-      if (!(target instanceof Vector)) {
-        p5._friendlyError(
-          'The target parameter should be of type p5.Vector',
-          'p5.Vector.setMag'
-        );
-      }
-      target.set(v);
-    }
-    return target.setMag(len);
-  }
 
   /**
    * Calculate the angle of rotation for this vector (only 2D vectors).
@@ -3513,9 +3529,6 @@ class Vector {
    * @param {p5.Vector} v the vector to find the angle of
    * @return {Number} the angle of rotation
    */
-  static heading(v) {
-    return v.heading();
-  }
 
   /**
    * Calculates and returns the angle between two vectors. This function will take
@@ -3528,9 +3541,6 @@ class Vector {
    * @param  {p5.Vector}    v2 the second vector.
    * @return {Number}       angle between the two vectors.
    */
-  static angleBetween(v1, v2) {
-    return v1.angleBetween(v2);
-  }
 
   /**
    * Reflect a vector about a normal to a line in 2D, or about a normal to a
@@ -3543,20 +3553,6 @@ class Vector {
    * @param  {p5.Vector} [target] vector to receive the result.
    * @return {p5.Vector} the reflected vector
    */
-  static reflect(incidentVector, surfaceNormal, target) {
-    if (arguments.length < 3) {
-      target = incidentVector.copy();
-    } else {
-      if (!(target instanceof Vector)) {
-        p5._friendlyError(
-          'The target parameter should be of type p5.Vector',
-          'p5.Vector.reflect'
-        );
-      }
-      target.set(incidentVector);
-    }
-    return target.reflect(surfaceNormal);
-  }
 
   /**
    * Return a representation of this vector as a float array. This is only
@@ -3569,9 +3565,6 @@ class Vector {
    * @param  {p5.Vector} v the vector to convert to an array
    * @return {Number[]} an Array with the 3 values
    */
-  static array(v) {
-    return v.array();
-  }
 
   /**
    * Equality check against a <a href="#/p5.Vector">p5.Vector</a>
@@ -3582,20 +3575,6 @@ class Vector {
    * @param {p5.Vector|Array} v2 the second vector to compare
    * @return {Boolean}
    */
-  static equals(v1, v2) {
-    let v;
-    if (v1 instanceof Vector) {
-      v = v1;
-    } else if (v1 instanceof Array) {
-      v = new Vector().set(v1);
-    } else {
-      p5._friendlyError(
-        'The v1 parameter should be of type Array or p5.Vector',
-        'p5.Vector.equals'
-      );
-    }
-    return v.equals(v2);
-  }
 }
 
 function vector(p5, fn) {
