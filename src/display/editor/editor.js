@@ -49,84 +49,247 @@ import { TouchManager } from "../touch_manager.js";
 class AnnotationEditor {
   #accessibilityData = null;
 
-  #allResizerDivs = null;
+  #allResizerDivs = null
 
-  #altText = null;
+;
 
-  #comment = null;
+  #altText = null
 
-  #disabled = false;
+;
 
-  #dragPointerId = null;
+  #comment = null
 
-  #dragPointerType = "";
+;
 
-  #keepAspectRatio = false;
+  #disabled = false
 
-  #resizersDiv = null;
+;
 
-  #lastPointerCoords = null;
+  #dragPointerId = null
 
-  #savedDimensions = null;
+;
 
-  #focusAC = null;
+  #dragPointerType = ""
 
-  #focusedResizerName = "";
+;
 
-  #hasBeenClicked = false;
+  #keepAspectRatio = false
 
-  #initialRect = null;
+;
 
-  #isEditing = false;
+  #resizersDiv = null
 
-  #isInEditMode = false;
+;
 
-  #isResizerEnabledForKeyboard = false;
+  #lastPointerCoords = null
 
-  #moveInDOMTimeout = null;
+;
 
-  #prevDragX = 0;
+  #savedDimensions = null
 
-  #prevDragY = 0;
+;
 
-  #telemetryTimeouts = null;
+  #focusAC = null
 
-  #touchManager = null;
+;
 
-  isSelected = false;
+  #focusedResizerName = ""
 
-  _isCopy = false;
+;
 
-  _editToolbar = null;
+  #hasBeenClicked = false
 
-  _initialOptions = Object.create(null);
+;
 
-  _initialData = null;
+  #initialRect = null
 
-  _isVisible = true;
+;
 
-  _uiManager = null;
+  #isEditing = false
 
-  _focusEventsAllowed = true;
+;
 
-  static _l10n = null;
+  #isInEditMode = false
 
-  static _l10nResizer = null;
+;
 
-  #isDraggable = false;
+  #isResizerEnabledForKeyboard = false
 
-  #zIndex = AnnotationEditor._zIndex++;
+;
 
-  static _borderLineWidth = -1;
+  #moveInDOMTimeout = null
 
-  static _colorManager = new ColorManager();
+;
 
-  static _zIndex = 1;
+  #prevDragX = 0
+
+;
+
+  #prevDragY = 0
+
+;
+
+  #telemetryTimeouts = null
+
+;
+
+  #touchManager = null
+
+;
+
+  isSelected = false
+
+;
+
+  _isCopy = false
+
+;
+
+  _editToolbar = null
+
+;
+
+  _initialOptions = Object.create(null)
+
+;
+
+  _initialData = null
+
+;
+
+  _isVisible = true
+
+;
+
+  _uiManager = null
+
+;
+
+  _focusEventsAllowed = true
+
+;
+
+  static _l10n = null
+
+;
+
+  static _l10nResizer = null
+
+;
+
+  #isDraggable = false
+
+;
+
+  #zIndex = AnnotationEditor._zIndex++
+
+;
+
+  static _borderLineWidth = -1
+
+;
+
+  static _colorManager = new ColorManager()
+
+;
+
+  static _zIndex = 1
+
+;
 
   // Time to wait (in ms) before sending the telemetry data.
+
   // We wait a bit to avoid sending too many requests when changing something
+
   // like the thickness of a line.
-  static _telemetryTimeout = 1000;
+
+  static _telemetryTimeout = 1000
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+;
+
+  // Time to wait (in ms) before sending the telemetry data.
+
+  // We wait a bit to avoid sending too many requests when changing something
+
+  // like the thickness of a line.
+
+;
 
   static get _resizerKeyboardManager() {
     const resize = AnnotationEditor.prototype._resizeWithKeyboard;
@@ -1134,16 +1297,16 @@ class AnnotationEditor {
   get altTextData() {
     return this.#altText?.data;
   }
-
-  /**
-   * Set the alt text data.
-   */
   set altTextData(data) {
     if (!this.#altText) {
       return;
     }
     this.#altText.data = data;
   }
+
+  /**
+   * Set the alt text data.
+   */
 
   get guessedAltText() {
     return this.#altText?.guessedText;
@@ -2052,11 +2215,6 @@ class AnnotationEditor {
   get isEditing() {
     return this.#isEditing;
   }
-
-  /**
-   * When set to true, it means that this editor is currently edited.
-   * @param {boolean} value
-   */
   set isEditing(value) {
     this.#isEditing = value;
     if (!this.parent) {
@@ -2069,6 +2227,11 @@ class AnnotationEditor {
       this.parent.setActiveEditor(null);
     }
   }
+
+  /**
+   * When set to true, it means that this editor is currently edited.
+   * @param {boolean} value
+   */
 
   /**
    * Set the aspect ratio to use when resizing.
