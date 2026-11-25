@@ -26,8 +26,8 @@ use crate::chainstate::stacks::index::{trie_sql, ClarityMarfTrieId, Error, MARFV
 
 mod clarity;
 mod index;
-mod sortition;
 mod spv;
+mod sortition;
 
 /// Create a source `index.sqlite`
 fn create_source_db(path: &std::path::Path) -> Connection {
