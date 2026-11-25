@@ -34,7 +34,7 @@ test.describe.parallel('User', { tag: '@ci' }, () => {
       await timer.stopwatchTest();
     });
 
-    test('Timer', { tag: '@flaky-3.1' }, async ({ browser, context, page })=> {
+    test('Timer', { tag: '@flaky-3.1' }, async ({ browser, context, page }, testInfo)=> {
       const timer = new Timer(browser, context);
       await timer.initModPage(page, true, { testInfo });
       await timer.timerTest();
@@ -50,7 +50,7 @@ test.describe.parallel('User', { tag: '@ci' }, () => {
   });
 
   test.describe.parallel('Reactions', () => {
-    test('Use reactions', async ({ browser, context, page }) => {
+    test('Use reactions', async ({ browser, context, page }, testInfo) => {
       const multiusers = new MultiUsers(browser, context);
       await multiusers.initModPage(page, true, { testInfo });
       await multiusers.initUserPage(true, context, { testInfo });
