@@ -3960,7 +3960,6 @@ func testAccCheckReplicationGroupIsNotInGlobalGroup(ctx context.Context, t *test
 				)
 			}
 		}
-
 		return nil
 	}
 }
