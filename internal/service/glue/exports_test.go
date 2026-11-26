@@ -31,19 +31,16 @@ var (
 	FindClassifierByName            = findClassifierByName
 	FindConnectionByTwoPartKey      = findConnectionByTwoPartKey
 	FindCrawlerByName               = findCrawlerByName
-	FindDatabase                    = findDatabase
 	FindDatabaseByTwoPartKey        = findDatabaseByTwoPartKey
 	FindDataQualityRulesetByName    = findDataQualityRulesetByName
 	FindDevEndpointByName           = findDevEndpointByName
-	FindFederatedCatalogByID        = findFederatedCatalogByID
+	FindFederatedCatalogByID     = findFederatedCatalogByID
 	FindJobByName                   = findJobByName
 	FindPartitionByValues           = findPartitionByValues
 	FindPartitionIndexByFourPartKey = findPartitionIndexByFourPartKey
-	FindPartitionIndex              = findPartitionIndex
 	FindRegistryByID                = findRegistryByID
 	FindResourcePolicy              = findResourcePolicy
 	FindSchemaByID                  = findSchemaByID
-	FindTable                       = findTable
 	FindTableByThreePartKey         = findTableByThreePartKey
 	FindTriggerByName               = findTriggerByName
 )
