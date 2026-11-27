@@ -1192,9 +1192,9 @@ class ModuleBayTestCase(TestCase):
     def test_moving_module_reparents_child_module_bays(self):
         """
         When a module is moved to a different module bay, each child ModuleBay
-        (a bay that belongs to the module) must have its parent updated to the
-        new host bay. Without the fix the children stay parented to the old bay
-        even though Module.module_bay_id has changed.
+        (a bay that belongs to the module) must have its MPTT parent updated
+        to the new host bay. Without the fix the children stay parented to the
+        old bay even though Module.module_bay_id has changed.
         """
         device_type = DeviceType.objects.first()
         device_role = DeviceRole.objects.first()
@@ -1229,20 +1229,19 @@ class ModuleBayTestCase(TestCase):
         child_2.refresh_from_db()
         self.assertEqual(child_1.parent_id, bay_b.pk)
         self.assertEqual(child_2.parent_id, bay_b.pk)
-        # Children must be re-rooted under bay_b in the ltree hierarchy.
+        # Children must share the same MPTT tree as their new parent.
         bay_b.refresh_from_db()
-        self.assertTrue(str(child_1.path).startswith(f'{bay_b.path}.'))
-        self.assertTrue(str(child_2.path).startswith(f'{bay_b.path}.'))
+        self.assertEqual(child_1.tree_id, bay_b.tree_id)
+        self.assertEqual(child_2.tree_id, bay_b.tree_id)
 
     @tag('regression')  # #22251
     def test_moving_module_reparents_grandchild_module_bays(self):
         """
         When a module is moved, grandchild ModuleBays (bays inside a module
         that is itself installed inside a child bay of the moved module) must
-        also land in the new ltree subtree. The trigger cascade moves subtrees
-        atomically, so calling save() only on direct children is sufficient —
-        this test documents and preserves that invariant for future tree-backend
-        changes.
+        also land in the new MPTT tree. MPTT moves subtrees atomically, so
+        calling save() only on direct children is sufficient — this test
+        documents and preserves that invariant for future tree-backend changes.
         """
         device_type = DeviceType.objects.first()
         device_role = DeviceRole.objects.first()
@@ -1270,8 +1269,7 @@ class ModuleBayTestCase(TestCase):
 
         self.assertEqual(child_bay.parent_id, bay_a.pk)
         self.assertEqual(grandchild_bay.parent_id, child_bay.pk)
-        bay_a.refresh_from_db()
-        self.assertTrue(str(grandchild_bay.path).startswith(f'{bay_a.path}.'))
+        self.assertEqual(grandchild_bay.tree_id, bay_a.tree_id)
 
         # Move the top-level module to bay_b.
         module_1.module_bay = bay_b
@@ -1282,10 +1280,10 @@ class ModuleBayTestCase(TestCase):
         bay_b.refresh_from_db()
 
         self.assertEqual(child_bay.parent_id, bay_b.pk)
-        self.assertTrue(str(child_bay.path).startswith(f'{bay_b.path}.'))
+        self.assertEqual(child_bay.tree_id, bay_b.tree_id)
         # Grandchild's direct parent (child_bay) is unchanged; only tree placement moves.
         self.assertEqual(grandchild_bay.parent_id, child_bay.pk)
-        self.assertTrue(str(grandchild_bay.path).startswith(f'{bay_b.path}.'))
+        self.assertEqual(grandchild_bay.tree_id, bay_b.tree_id)
 
     def test_single_module_token(self):
         device_type = DeviceType.objects.first()
