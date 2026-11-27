@@ -1524,19 +1524,19 @@ class MACAddress(PrimaryModel):
     def __str__(self):
         return str(self.mac_address)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Denote the original assigned object (if any) for validation in clean()
-        self._original_assigned_object_id = self.__dict__.get('assigned_object_id')
-        self._original_assigned_object_type_id = self.__dict__.get('assigned_object_type_id')
-
     @cached_property
     def is_primary(self):
         if self.assigned_object and hasattr(self.assigned_object, 'primary_mac_address'):
             if self.assigned_object.primary_mac_address and self.assigned_object.primary_mac_address.pk == self.pk:
                 return True
         return False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Denote the original assigned object (if any) for validation in clean()
+        self._original_assigned_object_id = self.__dict__.get('assigned_object_id')
+        self._original_assigned_object_type_id = self.__dict__.get('assigned_object_type_id')
 
     def clean(self, *args, **kwargs):
         super().clean()
