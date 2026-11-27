@@ -74,6 +74,7 @@ class CausalLMOutputWithCrossAttentionsAuto(CausalLMOutputWithCrossAttentions):
 
 logger = logging.getLogger(__name__)
 
+
 try:
     from paddle.incubate.nn.functional import (
         fused_rotary_position_embedding as fused_rope,
