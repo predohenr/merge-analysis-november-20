@@ -514,6 +514,18 @@ permissions: RrWw""")
         assert event2_calendar_data.text
         assert "UID:c6be8b2c-3d72-453c-b698-4f25cdf1569e" in event2_calendar_data.text
 
+    def test_report_with_expand_property_all_day_event_overridden(self) -> None:
+        self._test_expand(
+            "event_full_day_rrule_overridden",
+            "20060101T000000Z",
+            "20060111T235959Z",
+            ["RECURRENCE-ID:20060102", "RECURRENCE-ID:20060104", "RECURRENCE-ID:20060103"],
+            ["DTSTART:20060102", "DTSTART:20060104", "DTSTART:20060110"],
+            ["DTEND:20060103", "DTEND:20060105", "DTEND:20060111"],
+            ONLY_DATES,
+            2
+        )
+
     def test_report_getetag_expand_filter(self) -> None:
         """Test getetag with time-range filter and expand (example from #1880)."""
         self.mkcalendar("/test/")
@@ -698,15 +710,3 @@ permissions: RrWw""")
         status, responses = self.report("/test", request)
         assert status == 207
         assert len(responses) == 0
-
-    def test_report_with_expand_property_all_day_event_overridden(self) -> None:
-        self._test_expand(
-            "event_full_day_rrule_overridden",
-            "20060101T000000Z",
-            "20060111T235959Z",
-            ["RECURRENCE-ID:20060102", "RECURRENCE-ID:20060104", "RECURRENCE-ID:20060103"],
-            ["DTSTART:20060102", "DTSTART:20060104", "DTSTART:20060110"],
-            ["DTEND:20060103", "DTEND:20060105", "DTEND:20060111"],
-            ONLY_DATES,
-            2
-        )
