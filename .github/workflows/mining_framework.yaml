@@ -1,0 +1,43 @@
+
+name: Mining Framework Check
+on: [push]
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Fetch git submodules
+              run: git submodule update --init --recursive || echo "Could not fetch some submodules"
+
+            - name: Set up Python 3.14
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.14'
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install pytest
+                if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+                for f in requirements-dev.txt dev-requirements.txt requirements-test.txt test-requirements.txt requirements/test.txt requirements/dev.txt; do
+                  if [ -f "$f" ]; then pip install -r "$f" || true; fi
+                done
+                if [ -f pyproject.toml ] || [ -f setup.py ]; then
+                  pip install -e ".[test,tests,testing,dev]" || pip install -e ".[test,tests,testing]" || pip install -e . || pip install . || true
+                fi
+            - name: Run Tests
+              uses: nick-fields/retry@v3
+              with:
+                timeout_minutes: 30
+                max_attempts: 3
+                shell: bash
+                command: |
+                  status=0
+                  python -m pytest || status=$?
+                  if [ $status -eq 5 ]; then
+                    python -m unittest discover -v 2>&1 | tee unittest.log
+                    status=${PIPESTATUS[0]}
+                    if grep -q "^Ran 0 tests" unittest.log; then echo "NO TESTS RAN"; exit 1; fi
+                  fi
+                  exit $status
+        
+        
