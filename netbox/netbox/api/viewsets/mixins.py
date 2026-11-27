@@ -10,10 +10,10 @@ from rest_framework.reverse import reverse
 from core.models import ObjectType
 from extras.models import ExportTemplate
 from netbox.api.serializers import BulkOperationSerializer
-from netbox.api.serializers.bulk import get_bulk_update_serializer_class
 from netbox.jobs import AsyncAPIJob
 from utilities.exceptions import RQWorkerNotRunningException
 from utilities.rqworker import any_workers_for_queue
+from netbox.api.serializers.bulk import get_bulk_update_serializer_class
 
 __all__ = (
     'BackgroundOperationMixin',
