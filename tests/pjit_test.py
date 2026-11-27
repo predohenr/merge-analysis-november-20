@@ -10054,7 +10054,6 @@ class ShardingInTypesTest(jtu.JaxTestCase):
       return disc_loss, gen_loss
 
     jax.jit(jax.grad(lambda t1, t2: g(t1, t2)[0]))(arr1, arr2)  # doesn't crash
-
   @jtu.with_explicit_mesh((2,), 'x')
   def test_reshard_zero_cotangent(self, mesh):
     @jax.custom_vjp
