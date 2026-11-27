@@ -48,25 +48,4 @@ from cupy.linalg._solve import cho_solve
 from numpy.linalg import LinAlgError  # NOQA
 
 
-__all__ = [
-    "matrix_power",
-    "cholesky",
-    "qr",
-    "svd",
-    "eigh",
-    "eig",
-    "eigvalsh",
-    "eigvals",
-    "norm",
-    "cond",
-    "det",
-    "matrix_rank",
-    "slogdet",
-    "solve",
-    "tensorsolve",
-    "inv",
-    "pinv",
-    "tensorinv",
-    "LinAlgError",
-    "cho_solve",
-]
+__all__ = ["matrix_power", "cholesky", "qr", "svd", "eigh", "eigvalsh", "norm", "det", "matrix_rank", "slogdet", "solve", "tensorsolve", "inv", "pinv", "tensorinv", "LinAlgError", "cho_solve", "eig", "eigvals", "cond", ]
