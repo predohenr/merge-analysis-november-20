@@ -18,8 +18,16 @@ from extras.models import (
     ConfigContext,
     ConfigContextProfile,
     ConfigTemplate,
-    EventRule,
     ExportTemplate,
+    ImageAttachment,
+    Tag,
+    TaggedItem,
+)
+from extras.models import (
+    ConfigContext,
+    ConfigContextProfile,
+    ConfigTemplate,
+    EventRule,
     ImageAttachment,
     Tag,
     TaggedItem,
