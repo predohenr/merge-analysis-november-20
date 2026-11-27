@@ -7,7 +7,6 @@ from django.utils._os import safe_join
 
 from common.utils import is_macos
 from common.utils.yml import sanitize_ansible_inventory_json, sanitize_ansible_playbook
-
 from ..utils import get_ansible_log_verbosity
 from .callback import DefaultCallback
 from .exception import CommandInBlackListException
@@ -153,6 +152,7 @@ class PlaybookRunner:
         if self.inventory_safety == "json_escape":
             sanitize_ansible_inventory_json(self.inventory, self.inventory)
             os.chmod(self.inventory, 0o600)
+
     @property
     def playbook_project_dir(self):
         return os.path.join(self.project_dir, 'project')
