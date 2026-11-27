@@ -5,20 +5,16 @@
 # (see spyder/__init__.py for details)
 
 """Editor config page."""
-
 from itertools import combinations
-
 from qtpy.QtWidgets import (QGridLayout, QGroupBox, QHBoxLayout, QLabel,
                             QVBoxLayout, QDialog, QDialogButtonBox, QWidget,
                             QCheckBox, QSizePolicy)
 from qtpy.QtCore import Qt, Signal
-
 from spyder.api.config.decorators import on_conf_change
 from spyder.api.config.mixins import SpyderConfigurationObserver
 from spyder.api.preferences import PluginConfigPage
 from spyder.config.base import _
 from spyder.config.manager import CONF
-from spyder.utils.icon_manager import ima
 from spyder.widgets.helperwidgets import TipWidget
 
 
