@@ -415,8 +415,6 @@ class JitTest(jtu.BufferDonationTestCase):
 
     self.assertEqual(f(list(range(500))), sum(range(500)))
 
-  # Jit and Donate arguments
-
   def test_donate_argnames_signature_fail(self):
     class NoSignature:
       @property
@@ -1146,9 +1144,6 @@ class JitTest(jtu.BufferDonationTestCase):
     assert f_mixed(1, y=3) == 1
     x_is_tracer, y_is_tracer = False, True
     assert f_mixed(x='foo', y=3) == 1
-
-  # TODO(zhangqiaorjc): Test pruning constants after DCE pass prunes primitive
-  # applications.
   @parameterized.parameters(2, 3, 4)
   def test_jit_with_pruned_args(self, num_args):
     def f(*args):
@@ -1533,8 +1528,6 @@ class JitTest(jtu.BufferDonationTestCase):
     expected = jax.vmap(f, axis_name="i", axis_size=3, out_axes=None)()
     ans = jax.vmap(g, axis_name="i", axis_size=3, out_axes=None)()
     self.assertEqual(ans, expected)
-
-  # Since stackless, the vmap(f) version gets compiled a second time
   @unittest.skip
   def test_caches_dont_depend_on_unnamed_axis_env(self):
     # https://github.com/jax-ml/jax/issues/9187
@@ -1598,6 +1591,13 @@ class JitTest(jtu.BufferDonationTestCase):
 
     with self.subTest("jit closure"):
       self.assertEqual(jax.jit(lambda: jnp.sum(mask))(), N)
+
+  # Jit and Donate arguments
+
+  # TODO(zhangqiaorjc): Test pruning constants after DCE pass prunes primitive
+  # applications.
+
+  # Since stackless, the vmap(f) version gets compiled a second time
 
 
 class APITest(jtu.JaxTestCase):
@@ -7638,13 +7638,8 @@ class Remat3Test(RematTest):
     jaxpr_text = str(jaxpr)
     self.assertEqual(jaxpr_text.count(' sin '), 0)
     self.assertEqual(jaxpr_text.count(' cos '), 0)
-
-  # We don't support everything_saveable with remat3
   def test_remat_custom_policy_save_anything_new_remat(self): pass
   def test_remat_residual_logging(self): pass
-
-  # The latter part of RematTest.test_remat_eval_counter used core.call_p, which
-  # need not be supported by remat3.
   def test_remat_eval_counter(self):
     # https://github.com/jax-ml/jax/issues/2737
     add_one_p = core.Primitive('add_one')
@@ -7753,6 +7748,11 @@ class Remat3Test(RematTest):
     self.assertNotIn('cos', fwd_str)
     self.assertIn('cos ', bwd_str)
     jtu.check_grads(f, (3.,), order=2, modes=['rev'])
+
+  # We don't support everything_saveable with remat3
+
+  # The latter part of RematTest.test_remat_eval_counter used core.call_p, which
+  # need not be supported by remat3.
 
 
 
