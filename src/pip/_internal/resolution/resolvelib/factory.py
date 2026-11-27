@@ -4,8 +4,9 @@ import contextlib
 import copy
 import functools
 import logging
-import re
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+import re
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
     NamedTuple,
