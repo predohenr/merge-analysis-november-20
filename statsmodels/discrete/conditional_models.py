@@ -5,9 +5,7 @@ Conditional logistic, Poisson, and multinomial logit regression
 import collections
 import itertools
 import warnings
-
 import numpy as np
-
 import statsmodels.base.model as base
 import statsmodels.base.wrapper as wrap
 from statsmodels.discrete.discrete_model import (
@@ -16,6 +14,7 @@ from statsmodels.discrete.discrete_model import (
 )
 from statsmodels.formula.formulatools import advance_eval_env
 import statsmodels.regression.linear_model as lm
+from scipy.special import logsumexp
 
 
 class _ConditionalModel(base.LikelihoodModel):
